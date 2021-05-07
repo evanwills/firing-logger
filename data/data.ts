@@ -147,7 +147,7 @@ type reportRow = {
 
 type app = {
     currentUser: user,
-    reports: [firingReport]
+    reports: [firingReport],
     view: view,
     stateSlice: kilns | allFiringPrograms | firingLogs | maintenance | issues | users | diary
 }

@@ -3,94 +3,94 @@
 
 
 type kiln = {
-    id: string,
-    name: string,
-    brand: string,
-    width: number,
-    depth: number,
-    height: number,
-    maxTemp: number,
-    glaze: boolean,
-    bisque: boolean,
-    singleFire: boolean,
-    electric: boolean
+  id: string,
+  name: string,
+  brand: string,
+  energy: energySource,
+  type: kilnType,
+  maxTemp: number,
+  width: number,
+  depth: number,
+  height: number,
+  glaze: boolean,
+  bisque: boolean,
+  singleFire: boolean,
+  
+  isWorking: boolean,
+  isInUse: boolean,
+  isHot: boolean
 }
 
-type kilnMaintenanceLogEntry = {
-    kilnID: string,
-    date: Date,
-    person: string,
-    action: string,
-    notes: string
-}
-
-type kilnIssueLogEntry = {
-    kilnID: string,
-    date: Date,
-    reporter: string,
-    shortDesc: string,
-    Description: string
+type  equipmentLogEntry = {
+  id: string,
+  equipmentID: string,
+  date: Date,
+  type: equipmentLogType,
+  user: string,
+  shortDesc: string,
+  longDesc: string,
+  parentID: string | null,
+  verifiedDate: Date | null,
+  verifiedBy: string | null
 }
 
 type firingProgram = {
-    id: string,
-    name: string,
-    description: string,
-    steps: [firingStep],
-    created: Date,
-    createdBy: string
+  id: string,
+  name: string,
+  description: string,
+  steps: [firingStep],
+  created: Date,
+  createdBy: string
 }
 
 type firingStep = {
-    endTemp: number, // positive degrees
-    rate: number,    // degrees per hour
-    hold: number     // minutes to hold at end temperature
+  endTemp: number, // positive degrees
+  rate: number,    // degrees per hour
+  hold: number     // minutes to hold at end temperature
 }
 
 
 type firingLog = {
-    id: string,
-    kilnID: string,
-    programID: string,
-    diaryID: string,
-    firingType: firingType,
-    start: Date,
-    end: Date,
-    responsibleUserID: string,
-    notes: string,
-    tempLog: [temperatureLogEntry]
-    responsibleLog: [responsibleLogEntry]
+  id: string,
+  kilnID: string,
+  programID: string,
+  diaryID: string,
+  firingType: firingType,
+  start: Date,
+  end: Date,
+  responsibleUserID: string,
+  notes: string,
+  tempLog: [temperatureLogEntry]
+  responsibleLog: [responsibleLogEntry]
 }
 
 type temperatureLogEntry = {
-    time: Date,
-    temp: number,
-    state: temperatureState,
-    notes: string
+  time: Date,
+  temp: number,
+  state: temperatureState,
+  notes: string
 }
 
 type responsibleLogEntry = {
-    time: Date,
-    userID: string,
-    isStart: boolean
+  time: Date,
+  userID: string,
+  isStart: boolean
 }
 
 type kilns = [kiln]
 type allFiringPrograms = [firingProgram]
 type firingLogs = [firingLog]
-type maintenance = [kilnMaintenanceLogEntry]
-type issues = [kilnIssueLogEntry]
+type equipmentLog = [equipmentLogEntry]
 type users = [user]
 type diary = [diaryEntry]
 
 type studio = {
-    kilns: [kiln],
-    firingPrograms: allFiringPrograms,
-    firingLogs: firingLogs,
-    maintenance: maintenance,
-    issues: issues,
-    users: users,
-    diary: [diaryEntry]
+  kilns: [kiln],
+  firingPrograms: allFiringPrograms,
+  firingLogs: firingLogs,
+  equipmentLogs: equipmentLog,
+  users: users,
+  diary: [diaryEntry]
 }
 
 type diaryEntry = {
@@ -186,6 +186,27 @@ enum view {
     programs,
     report,
     users
+}
+
+enum energySource {
+  electric,
+  gas,
+  wood,
+  oil,
+}
+
+enum kilnType {
+  'general',
+  'raku',
+  'platter',
+  'black firing',
+  'annagamma'
+}
+
+enum equipmentLogType {
+  usage,
+  maintenance,
+  problem
 }
 
 

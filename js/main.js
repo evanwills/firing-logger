@@ -10,8 +10,9 @@ if (window.Worker) {
 
   stateWorker.onmessage = (e) => {
     if (e.data.type === 'url') {
-
+      // Update location history
     } else {
+      // Update view
       firingLoggerView(e.data, eHandler)
     }
   }

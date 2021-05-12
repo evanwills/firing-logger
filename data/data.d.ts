@@ -4,8 +4,10 @@
 
 type kiln = {
   id: string,
-  name: string,
   brand: string,
+  model: string,
+  name: string,
+  installDate: DateTime,
   energy: energySource,
   type: kilnType,
   maxTemp: number,
@@ -15,7 +17,7 @@ type kiln = {
   glaze: boolean,
   bisque: boolean,
   singleFire: boolean,
-
+  retired: false,
   isWorking: boolean,
   isInUse: boolean,
   isHot: boolean
@@ -36,11 +38,16 @@ type  equipmentLogEntry = {
 
 type firingProgram = {
   id: string,
+  kilnID: string,
+  controllerProgramID: number,
   name: string,
+  version: number,
   description: string,
   steps: [firingStep],
   created: Date,
-  createdBy: string
+  createdBy: string,
+  superseded: boolean,
+  used: boolean
 }
 
 type firingStep = {
@@ -66,7 +73,8 @@ type firingLog = {
 
 type temperatureLogEntry = {
   time: Date,
-  temp: number,
+  tempExpected: number,
+  tempActual: number,
   state: temperatureState,
   notes: string
 }
@@ -207,6 +215,12 @@ enum equipmentLogType {
   usage,
   maintenance,
   problem
+}
+
+enum programStatus {
+  unused,
+  selected,
+  used
 }
 
 

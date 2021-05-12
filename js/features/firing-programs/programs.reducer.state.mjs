@@ -6,6 +6,7 @@ export const initialPrograms = [{
   id: 1,
   kilnID: 'woodrow1',
   controllerProgramID: '1',
+  version: 1,
   type: 'bisque',
   name: 'Slow bisque',
   description: 'Good for large work, or small work that\'s not completely dry',
@@ -36,17 +37,26 @@ export const initialPrograms = [{
     }
   ],
   created: '2021-05-06T21:13:25+1000',
-  createdBy: 'evanwills'
+  createdBy: 'evanwills',
+  disabled: false,
+  used: false
 }]
 
-const updateField = (id, key, value, force) => (program, i, all) => {
-  if (program.id === id && typeof program[key] === typeof val && program[key] !== value) {
-    if (key === 'description') {
-      return {
-        ...program,
-        description: value.trim()
-      }
-    } else if (force === true) {
+const updateField = (id, version, key, value, force) => (program, i, all) => {
+  if (program.id === id &&
+      program.version === version &&
+      typeof program[key] === typeof val &&
+      program[key] !== value
+  ) {
+    switch (key) {
+      case 'description':
+        return {
+          ...program,
+          description: value.trim()
+        }
+    }
+
+    if (force === true) {
       switch (key) {
         case 'name':
           if (uniquePogramName(all, value, program.kilnID)) {

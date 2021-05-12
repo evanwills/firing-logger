@@ -30,8 +30,8 @@ export const uniquePogramName = (allPrograms, newName, kilnID) => {
 
   const matching = allPrograms.filter(program => (
     program.kilnID === kilnID &&
-    getNormalisedName(program.name) === _newName)
-  )
+    getNormalisedName(program.name) === _newName
+  ))
 
   return (matching.length === 0)
 }

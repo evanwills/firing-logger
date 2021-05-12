@@ -7,6 +7,7 @@ import { getURLobject } from './js/utilities/url.mjs'
 if ('serviceWorker' in navigator) {
   // navigator.serviceWorker.register(url.path + 'firing-logger.sw.js')
 }
+
 if (window.Worker) {
   const stateWorker = new Worker('firing-logger.worker.js')
   const eHandler = fieldHandler(stateWorker.postMessage)

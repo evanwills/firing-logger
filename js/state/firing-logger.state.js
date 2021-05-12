@@ -1,7 +1,10 @@
-import { kilnReducer } from "./kilns/kilns.reducers.state"
+import { kilnReducer } from './kilns/kilns.reducers.state.mjs'
+import { createStore, combineReducers, compose, applyMiddleware } from '../redux/redux.mjs'
+import { crashReporter, logger } from '../redux/standard-middleware.mjs'
+import { programReducer } from '../features/firing-programs/programs.reducer.state.mjs'
 
 const initialState = {
-  studio = {
+  studio: {
     kilns: [],
     firingPrograms: [],
     firingLogs: [],
@@ -16,22 +19,18 @@ const initialState = {
   stateSlice: {}
 }
 
-
 export const store = createStore(
   combineReducers({
     studio: combineReducers({
-      kilns: kilnReducer
+      kilns: kilnReducer,
+      firingPrograms: programReducer
     })
   }),
   initialState,
   compose(
     applyMiddleware(
       crashReporter,
-      logger,
-      userSettings.middleware,
-      mainAppMW,
-      oneOff.middleware,
-      repeatable.middleware
+      logger
     )
 
   )

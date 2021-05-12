@@ -6,7 +6,6 @@ import {
 } from './validation.mjs'
 import { cleanGET } from './url.mjs'
 
-
 /**
  * Convert a string into an array (if possible) and clean up array
  * items

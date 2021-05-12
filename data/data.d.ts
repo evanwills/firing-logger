@@ -15,7 +15,7 @@ type kiln = {
   glaze: boolean,
   bisque: boolean,
   singleFire: boolean,
-  
+
   isWorking: boolean,
   isInUse: boolean,
   isHot: boolean

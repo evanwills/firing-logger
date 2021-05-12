@@ -10,4 +10,8 @@ The next feature will be making it possible to use the devices camera to capture
 
 In the future, the app will be able to manage all aspects of kiln usage including planning for firing, managing kiln maintenance.
 
+> NOTE: For standardisation purposes, all units are stored in metric then converted (as needed) when rendered
+
+> NOTE ALSO: Dates are stored in ISO 8601 format
+
 ## 

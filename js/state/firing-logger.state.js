@@ -1,3 +1,5 @@
+import { kilnReducer } from "./kilns/kilns.reducers.state"
+
 const initialState = {
   studio = {
     kilns: [],
@@ -17,6 +19,9 @@ const initialState = {
 
 export const store = createStore(
   combineReducers({
+    studio: combineReducers({
+      kilns: kilnReducer
+    })
   }),
   initialState,
   compose(

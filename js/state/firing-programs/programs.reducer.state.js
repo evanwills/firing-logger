@@ -1,5 +1,6 @@
 export const initialPrograms = [{
   id: 1,
+  kilnID: 'woodrow1',
   controllerProgramID: '1',
   type: 'bisque',
   name: 'Slow bisque',
@@ -30,6 +31,6 @@ export const initialPrograms = [{
       hold: 10
     }
   ],
-  created: '2021-05-06T21:13:25+1000'
+  created: '2021-05-06T21:13:25+1000',
   createdBy: 'evanwills'
 }]

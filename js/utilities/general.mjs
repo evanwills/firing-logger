@@ -1,5 +1,5 @@
-import { invalidStrNum, invalidBool } from './validation.js'
-import { getMetaFromID } from './sanitisation.js'
+import { invalidStrNum, invalidBool } from './validation.mjs'
+import { getMetaFromID } from './sanitisation.mjs'
 
 export const fieldHandler = (postToWorker) => function (e) {
   postToWorker({

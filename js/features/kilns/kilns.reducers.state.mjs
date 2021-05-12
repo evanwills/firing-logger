@@ -5,8 +5,8 @@ import {
   validEnergySource,
   validMaxTemp,
   validateDimension
-} from './kilnDataValiation.js'
-import { kilnActions } from './kilns.actions.state.js'
+} from './kilnDataValiation.mjs'
+import { kilnActions } from './kilns.actions.state.mjs'
 
 const dummyKiln = {
   id: 'woodrow1',

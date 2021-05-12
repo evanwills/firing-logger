@@ -1,7 +1,6 @@
-import { programActions } from './programs.actions.state.js'
-import { uniquePogramName } from './programDataValidation.mjs'
-import { invalidBool, invalidString } from '../../utilities/validation.js'
-import { validFiringType } from './programDataValidation.js'
+import { programActions } from './programs.actions.state.mjs'
+import { uniquePogramName, validFiringType } from './programDataValidation.mjs'
+import { invalidBool, invalidString } from '../../utilities/validation.mjs'
 
 export const initialPrograms = [{
   id: 1,

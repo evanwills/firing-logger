@@ -1,4 +1,4 @@
-import { isBoolTrue, isInt, isNumeric } from '../../utilities/validation.js'
+import { isBoolTrue, isInt, isNumeric } from '../../utilities/validation.mjs'
 
 export const validKilnTypes = [
   'general',

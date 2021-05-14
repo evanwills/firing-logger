@@ -1,8 +1,22 @@
+
+// ========================================================
+// START: REDUX types
+
+interface action {
+  type: string,
+  payload: object,
+  meta: {
+    date: Date,
+    user: string
+  }
+}
+
+//  END:  REDUX types
 // ========================================================
 // START: stored data types
 
 
-type kiln = {
+interface kiln {
   id: string,
   brand: string,
   model: string,
@@ -23,7 +37,7 @@ type kiln = {
   isHot: boolean
 }
 
-type  equipmentLogEntry = {
+interface  equipmentLogEntry {
   id: string,
   equipmentID: string,
   date: Date,
@@ -36,7 +50,7 @@ type  equipmentLogEntry = {
   verifiedBy: string | null
 }
 
-type firingProgram = {
+interface firingProgram {
   id: string,
   kilnID: string,
   controllerProgramID: number,
@@ -50,14 +64,14 @@ type firingProgram = {
   used: boolean
 }
 
-type firingStep = {
+interface firingStep {
   endTemp: number, // positive degrees
   rate: number,    // degrees per hour
   hold: number     // minutes to hold at end temperature
 }
 
 
-type firingLog = {
+interface firingLog {
   id: string,
   kilnID: string,
   programID: string,
@@ -71,7 +85,7 @@ type firingLog = {
   responsibleLog: [responsibleLogEntry]
 }
 
-type temperatureLogEntry = {
+interface temperatureLogEntry {
   time: Date,
   tempExpected: number,
   tempActual: number,
@@ -79,29 +93,28 @@ type temperatureLogEntry = {
   notes: string
 }
 
-type responsibleLogEntry = {
+interface responsibleLogEntry {
   time: Date,
   userID: string,
   isStart: boolean
 }
 
-type kilns = [kiln]
-type allFiringPrograms = [firingProgram]
+interface kilns {
+  all: [kiln],
+  tmp: kiln
+}
+
+interface allFiringPrograms {
+  all: [firingProgram]
+  tmp: firingProgram
+}
+
 type firingLogs = [firingLog]
 type equipmentLog = [equipmentLogEntry]
 type users = [user]
-type diary = [diaryEntry]
+type calendar = [diaryEntry]
 
-type studio = {
-  kilns: [kiln],
-  firingPrograms: allFiringPrograms,
-  firingLogs: firingLogs,
-  equipmentLogs: equipmentLog,
-  users: users,
-  diary: [diaryEntry]
-}
-
-type diaryEntry = {
+interface diaryEntry {
     id: string,
     date: Date,
     kilnID: string,
@@ -114,7 +127,7 @@ type diaryEntry = {
     started: boolean,
 }
 
-type user = {
+interface user {
     id: string,
     firstName: string
     lastName: string,
@@ -125,13 +138,22 @@ type user = {
     canLog: boolean
 }
 
+interface studio {
+  kilns: [kiln],
+  firingPrograms: allFiringPrograms,
+  firingLogs: firingLogs,
+  equipmentLogs: equipmentLog,
+  users: users,
+  diary: calendar
+}
+
 
 //  END:  stored data types
 // ========================================================
 // START: view only types
 
 
-type firingReport = {
+interface firingReport {
     kilnName: string,
     program: firingProgram,
     firingType: firingType,
@@ -145,7 +167,7 @@ type firingReport = {
     currentRate: number
 }
 
-type reportRow = {
+interface reportRow {
     time: Date,
     temp: number,
     expectedTemp: number,
@@ -153,7 +175,7 @@ type reportRow = {
     expectedRate: number
 }
 
-type app = {
+interface app {
     currentUser: user,
     reports: [firingReport],
     view: view,
@@ -166,7 +188,7 @@ type app = {
 // START: enums
 
 
-enum firingType {
+enum firinginterface {
     bisque,
     glaze,
     single,
@@ -203,7 +225,7 @@ enum energySource {
   oil,
 }
 
-enum kilnType {
+enum kilninterface {
   'general',
   'raku',
   'platter',
@@ -211,7 +233,7 @@ enum kilnType {
   'annagamma'
 }
 
-enum equipmentLogType {
+enum equipmentLoginterface {
   usage,
   maintenance,
   problem

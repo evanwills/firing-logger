@@ -1,6 +1,7 @@
 import { programActions } from './programs.actions.state.mjs'
 import { uniquePogramName, validFiringType } from './programDataValidation.mjs'
-import { invalidBool, invalidString } from '../../utilities/validation.mjs'
+import { invalidBool, invalidString, invalidNum, isBoolTrue } from '../../utilities/validation.mjs'
+import { getISODateStr } from '../../utilities/sanitisation.mjs'
 
 export const initialPrograms = [{
   id: 1,
@@ -38,8 +39,9 @@ export const initialPrograms = [{
   ],
   created: '2021-05-06T21:13:25+1000',
   createdBy: 'evanwills',
-  disabled: false,
-  used: false
+  superseded: false,
+  used: false,
+  useCount: 0
 }]
 
 const updateField = (id, version, key, value, force) => (program, i, all) => {
@@ -101,6 +103,7 @@ const updateField = (id, version, key, value, force) => (program, i, all) => {
 
 const updateProgramField = (allPrograms, payload) => {
   const id = (!invalidString('id', payload, true)) ? payload.id : false
+  const version = (!invalidNum('version', payload, true)) ? payload.version : false
   const field = (!invalidString('field', payload, true)) ? payload.field : false
   const val = payload.value
   const force = (invalidBool('force', payload, true) === false)
@@ -109,10 +112,84 @@ const updateProgramField = (allPrograms, payload) => {
     throw Error('updateProgramField() expects payload to have a "field" property. None given.')
   }
 
-  return allPrograms.map(updateField(id, field, val, force))
+  let isUsed = false
+  let clonedProgram = null
+  for (let a = 0; a < allPrograms.length; a += 1) {
+    if (allPrograms[a].kilnID === payload.kilnID && allPrograms[a].id === id && allPrograms[a].version === version && allPrograms[a].used === true) {
+      isUsed = true
+      clonedProgram = allPrograms[a]
+      break
+    }
+  }
+
+  if (isUsed === false) {
+    return allPrograms.map(updateField(id, field, val, force))
+  } else {
+    return [
+      ...allPrograms,
+      {
+        ...clonedProgram,
+        ...payload,
+        version: clonedProgram.version + 1,
+        used: false,
+        superseded: false
+      }
+    ]
+  }
 }
 
-export const programReducer = (state = [], action) => {
+/**
+ * Update a program's `used` status (and the used count)
+ *
+ * This can only be triggered by middleware
+ *
+ * @param {array}  allPrograms List of all available programs
+ * @param {string} kilnID      ID of the kiln the program applies to
+ * @param {string} id          ID of the program to be updated
+ * @param {number} version
+ *
+ * @returns {array}
+ */
+const updateUsed = (allPrograms, kilnID, id, version) => {
+  return allPrograms.map(program => {
+    if (program.kilnID === kilnID && program.id === id && program.version === version) {
+      return {
+        ...program,
+        used: true,
+        useCount: program.useCount + 1
+      }
+    } else {
+      return program
+    }
+  })
+}
+
+/**
+ * Update a program's `superseded` status
+ *
+ * This can only be triggered by middleware
+ *
+ * @param {array}  allPrograms List of all available programs
+ * @param {string} kilnID      ID of the kiln the program applies to
+ * @param {string} id          ID of the program to be updated
+ * @param {number} version     The version number for the program
+ *
+ * @returns {array}
+ */
+const updateSuperseded = (allPrograms, kilnID, id, version) => {
+  return allPrograms.map(program => {
+    if (program.kilnID === kilnID && program.id === id && program.version === version) {
+      return {
+        ...program,
+        superseded: true
+      }
+    } else {
+      return program
+    }
+  })
+}
+
+export const programReducer = (state = { all: [], tmp: {} }, action) => {
   switch (action.type) {
     case programActions.ADD:
       if (uniquePogramName(state, action.payload.name, action.payload.kilnID)) {
@@ -124,5 +201,11 @@ export const programReducer = (state = [], action) => {
 
     case programActions.UPDATE:
       return updateProgramField(state, action.payload)
+
+    case programActions.USED:
+      return updateUsed(state, action.payload)
+
+    case programActions.SUPERSEDE:
+      return updateSuperseded(state, action.payload)
   }
 }

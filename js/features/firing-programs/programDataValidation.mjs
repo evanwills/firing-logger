@@ -8,7 +8,7 @@ export const firingTypes = [
   'raku'
 ]
 
-const getNormalisedName = (name) => name.replace(/[^a-z0-9]+/ig, '').toLowerCase()
+export const getNormalisedName = (name) => name.replace(/[^a-z0-9]+/ig, '').toLowerCase()
 
 /**
  * Check whether a new program has a name that is unique for that

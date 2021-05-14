@@ -4,8 +4,8 @@ Because kiln programs have significant effect, changing them without conscious t
 
 A program object has two types of state
 
-* `used` - whether the program has been used or selected for use
-* `superseded` - whether or not a given version of the program has been superseded. 
+* `used` - whether or not, the given version of the program has ever been used or selected for use
+* `superseded` - whether or not a given version of the program has been superseded. (i.e. update after it's been used)
 
 ## Program `used`
 
@@ -20,4 +20,6 @@ If a program's `used` state is `TRUE`, that version can never be altered. Instea
 
 ## Program `superseded`
 
-If the program has been selected for use but the firing hadn't started, at start time, the user is notified that there has been a change and asked if the want to their version of the program updated to the latest version.
+A program's `superseeded` state is `FALSE` by default. It becomes `TRUE` when a new version of the program is created.
+
+If the program has been selected for use but the firing hasn't started, at start time, the user is notified that there has been a change and asked if they want to their version of the program to be updated to the latest version.

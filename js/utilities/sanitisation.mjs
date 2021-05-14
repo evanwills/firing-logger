@@ -5,6 +5,7 @@ import {
   isStr
 } from './validation.mjs'
 import { cleanGET } from './url.mjs'
+import { isDate } from './validation.mjs'
 
 /**
  * Convert a string into an array (if possible) and clean up array
@@ -233,4 +234,15 @@ export const getClassName = (props, BEMelement, BEMmodifier, prefix) => {
   _output += (_output !== '' && _modifier !== '') ? ' ' + _output + _modifier : ''
 
   return _output
+}
+
+export const getISODateStr = (input) => {
+  let tmp
+  if (isDate(tmp)) {
+    if (isStr(tmp)) {
+      tmp = new Date(tmp)
+    }
+    return tmp.toISOString()
+  }
+  return false
 }

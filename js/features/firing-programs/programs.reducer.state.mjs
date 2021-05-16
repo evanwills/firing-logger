@@ -207,5 +207,8 @@ export const programReducer = (state = { all: [], tmp: {} }, action) => {
 
     case programActions.SUPERSEDE:
       return updateSuperseded(state, action.payload)
+
+    default:
+      return state
   }
 }

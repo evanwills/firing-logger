@@ -22,7 +22,7 @@ export const validEnergySources = [
  *
  * @returns {string}
  */
-const validKilnType = (kilnType) => {
+export const validKilnType = (kilnType) => {
   const _kilnType = kilnType.toLowerCase()
   if (validKilnTypes.indexOf(_kilnType) === -1) {
     throw Error('Kiln object expects `type` property to match one of the following strings: "' + validKilnTypes.join('", "') + '"')
@@ -38,7 +38,7 @@ const validKilnType = (kilnType) => {
  *
  * @returns {string}
  */
-const validEnergySource = (source) => {
+export const validEnergySource = (source) => {
   const _source = source.toLowerCase()
   if (validEnergySources.indexOf(_source) === -1) {
     throw Error('Kiln object expects `energy` property to match one of the following strings: "' + validEnergySources.join('", "') + '"')
@@ -54,7 +54,7 @@ const validEnergySource = (source) => {
  *
  * @returns {number}
  */
-const validMaxTemp = (maxTemp) => {
+export const validMaxTemp = (maxTemp) => {
   if (isInt(maxTemp) && (maxTemp < 400 || maxTemp > 1400)) {
     throw Error('Kiln object expects `maxTemp` property to be a number between 400 and 1400 degrees')
   }
@@ -71,7 +71,7 @@ const validMaxTemp = (maxTemp) => {
  *
  * @returns {string} valid date string
  */
-const validInstallDate = (installDate, isNew) => {
+export const validInstallDate = (installDate, isNew) => {
   const msg = 'Kiln object expects `installDate` property to be an ISO 8601 date formatted string'
 
   if (installDate === false) {
@@ -101,7 +101,7 @@ const validInstallDate = (installDate, isNew) => {
  * @param {string} kilnType  Type of kiln the dimension applies to
  * @returns
  */
-const validateDimension = (dimension, prop, kilnType) => {
+export const validateDimension = (dimension, prop, kilnType) => {
   const _type = (typeof kilnType === 'string') ? kilnType : 'general'
   const maxLength = (prop === 'depth' && _type === 'anagama') ? 40000 : 2000
 

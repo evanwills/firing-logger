@@ -246,3 +246,9 @@ export const getISODateStr = (input) => {
   }
   return false
 }
+
+
+export const base64Time = (input) => {
+  const output = window.btoa(input)
+  return output.replace(/[^a-z0-9]$/i, '')
+}

@@ -1,11 +1,13 @@
 import {
-  invalidBool,
   validInstallDate,
   validKilnType,
   validEnergySource,
   validMaxTemp,
   validateDimension
 } from './kilnDataValiation.mjs'
+import {
+  invalidBool
+} from '../../utilities/validation.mjs'
 import { kilnActions } from './kilns.actions.state.mjs'
 
 const dummyKiln = {
@@ -103,11 +105,12 @@ const updateKiln = (kiln, data) => {
       }
     }
   }
+
   return kiln
 }
 
 export const kilnReducer = (state = [], action) => {
-  const ID = action.payload.id
+  const ID = (typeof action.payload !== 'undefined' && typeof action.payload.id === 'string') ? action.payload.id : ''
 
   switch (action.type) {
     case kilnActions.ADD:

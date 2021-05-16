@@ -4,8 +4,8 @@ import { getMetaFromID } from './sanitisation.mjs'
 export const fieldHandler = (postToWorker) => function (e) {
   postToWorker({
     metadata: getMetaFromID(this.id),
-    value: (invalidStrNum('val', this)) ? this.val : null,
-    isChecked: (invalidBool('checked', this, true)),
+    value: (invalidStrNum('val', this)) ? null : this.value,
+    isChecked: (invalidBool('checked', this, true) === false),
     now: Date.now()
   })
 }
@@ -29,18 +29,19 @@ export const f2c = (degrees) => ((degrees - 32) / 1.8)
 export const c2f = (degrees) => ((degrees * 1.8) + 32)
 
 /**
- * Get a unique ID for each regex pair
+ * Get a unique ID based on the current time
  *
- * ID is the last nine digits of JS timestamp prefixed with the
- * letter "R"
- *
- * NOTE: The number just short of 1 billion milliseconds
- *       or rougly equivalent to 11.5 days
+ * ID is a sanitised base64 encoded JS timestamp
  *
  * @returns {string}
  */
-export const getNewID = () => {
-  const tmpDate = new Date()
-  const iso = tmpDate.toISOString()
-  return 'L' + iso.replace(/[^0-9-T]+/g, '-')
+export const getUniqueID = () => {
+  // Base 64 encode timestamp
+  let now = window.btoa(Date.now())
+
+  // remove non-alphanumeric chars from end of string
+  now = now.replace(/[^a-z0-9]+$/i, '')
+
+  // Make sure output starts with an alphabetical character
+  return now.replace(/^([^a-z]+([a-z]))/i, '$2$1')
 }

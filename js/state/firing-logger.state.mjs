@@ -13,8 +13,10 @@ import {
   // readyStatePromise,
   // vanillaPromise,
 } from '../redux/standard-middleware.mjs'
-import { kilnReducer } from './kilns/kilns.reducers.state.mjs'
+import { kilnReducer } from '../features/kilns/kilns.reducers.state.mjs'
 import { programReducer } from '../features/firing-programs/programs.reducer.state.mjs'
+import { invalidStrNum, invalidBool } from '../utilities/validation.mjs'
+import { getMetaFromID } from '../utilities/sanitisation.mjs'
 
 const initialState = {
   studio: {
@@ -113,6 +115,25 @@ export const getWorkerDispatcher = (_store) => (e) => {
     now: now,
     user: _state.currentUser
   })
+}
+
+export const generalEventHandler = (_store) => {
+  return function (e) {
+    console.log('inside generalEventHandler()')
+    const _state = _store.getState()
+    const _meta = getMetaFromID(this.id)
+
+    _store.dispatch({
+      type: getActionType(_meta),
+      payload: {
+        id: _meta.id,
+        value: (invalidStrNum('val', this)) ? null : this.value,
+        isChecked: (invalidBool('checked', this, true) === false)
+      },
+      now: Date.now(),
+      user: _state.currentUser
+    })
+  }
 }
 
 /**

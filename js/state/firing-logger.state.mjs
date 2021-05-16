@@ -77,25 +77,39 @@ export const store = createStore(
 )
 
 /**
+ * Get Redux action type based on metadata from event
+ *
+ * @param {object} meta Metadata extracted from event emitter's ID
+ *                      attribute
+ *
+ * @returns {string} Action type that can be recognised by redux
+ *                   reducers and middleware
+ */
+const getActionType = (meta) => {
+  // This will need to be built upon as more features are added to
+  // the app
+
+  return meta.type
+}
+
+/**
  * Get a callback function that can be used as an event handler for
  * the web-worker's onmessage event
  *
  * @param {object} store
  * @returns {void}
  */
-export const getWorkerDispatcher = (store) => (e) => {
-  const _state = store.getState()
-  const { meta, value, isChecked, now, ..._data} = e.data[0]
+export const getWorkerDispatcher = (_store) => (e) => {
+  const _state = _store.getState()
+  const { meta, value, isChecked, now, ...data } = e.data[0]
 
-  store.dispatch({
-    type: meta.type,
+  _store.dispatch({
+    type: getActionType(meta),
     payload: {
       id: meta.id,
       value: value,
       isChecked: isChecked
     },
-    subType1: meta.extra,
-    subType2: meta.suffix,
     now: now,
     user: _state.currentUser
   })

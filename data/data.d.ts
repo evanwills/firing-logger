@@ -54,9 +54,12 @@ interface firingProgram {
   id: string,
   kilnID: string,
   controllerProgramID: number,
+  type: firingType,
   name: string,
   version: number,
   description: string,
+  maxTemp: number,
+  duration: number,
   steps: [firingStep],
   created: Date,
   createdBy: string,
@@ -188,7 +191,7 @@ interface app {
 // START: enums
 
 
-enum firinginterface {
+enum firingType {
     bisque,
     glaze,
     single,

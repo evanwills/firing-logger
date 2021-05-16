@@ -1,0 +1,47 @@
+.program-item {
+  display: grid;
+  grid-template-columns: auto 5rem 5rem;
+  grid-template-rows: auto auto auto;
+  grid-template-areas:
+    "header header header"
+    "type   temp   time";
+  padding: 0.3rem;
+}
+
+.program-item > * {
+  font-size: .9rem;
+  margin: 0;
+  padding: 0 .3rem 0 0;
+}
+
+.program-item--svg {
+  grid-template-columns: 4rem auto 5rem 5rem;
+  grid-template-rows: 4rem auto auto auto;
+  grid-template-areas:
+    'svg header header header'
+    'svg type   temp   time';
+}
+
+.program-item__name {
+  font-size: 1.1rem;
+  grid-area: 'header';
+  margin: 0;
+  padding: 0 0 .3rem 0;
+}
+
+.program-item__type {
+  grid-area: 'type';
+}
+
+.program-item__max {
+  grid-area: 'temp';
+}
+
+.program-item__time {
+  grid-area: 'time';
+  padding: 0;
+}
+
+.program-item__svg {
+  grid-area: 'svg';
+}

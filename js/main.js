@@ -1,8 +1,8 @@
 /* globals Worker */
 
-import { firingLoggerView } from './js/view/firing-logger.view.mjs'
-import { fieldHandler } from './js/utilities/general.mjs'
-import { getURLobject } from './js/utilities/url.mjs'
+import { fieldHandler } from './utilities/general.mjs'
+import { getURLobject } from './utilities/url.mjs'
+import { firingLoggerView } from './view/firing-logger.view.mjs'
 
 if ('serviceWorker' in navigator) {
   // navigator.serviceWorker.register(url.path + 'firing-logger.sw.js')

@@ -1,7 +1,7 @@
 /* globals localStorage, history */
 
 import { isBool, isBoolTrue, isNumeric, isStr, isNonEmptyStr } from './validation.mjs'
-import { parseStrArray } from './sanitise.mjs'
+import { parseStrArray } from './sanitisation.mjs'
 
 /**
  * polyfil for new URL() call (but with better GET and hash parsing)

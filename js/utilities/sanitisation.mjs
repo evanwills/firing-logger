@@ -1,11 +1,11 @@
 import {
   isBoolTrue,
+  isDate,
   isNonEmptyStr,
   isNumeric,
   isStr
 } from './validation.mjs'
 import { cleanGET } from './url.mjs'
-import { isDate } from './validation.mjs'
 
 /**
  * Convert a string into an array (if possible) and clean up array
@@ -237,7 +237,7 @@ export const getClassName = (props, BEMelement, BEMmodifier, prefix) => {
 }
 
 export const getISODateStr = (input) => {
-  let tmp
+  let tmp = input
   if (isDate(tmp)) {
     if (isStr(tmp)) {
       tmp = new Date(tmp)

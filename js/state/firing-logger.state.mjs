@@ -3,20 +3,22 @@ import {
   createStore,
   applyMiddleware,
   compose
-} from '../redux/redux.mjs'
+} from '../vendor/redux/redux.mjs'
 import {
   logger,
-  crashReporter
+  crashReporter,
+  monitorReducerEnhancer
+  // readyStatePromise,
   // readyStatePromise,
   // thunk
   // timeoutScheduler,
-  // readyStatePromise,
   // vanillaPromise,
-} from '../redux/standard-middleware.mjs'
+} from '../vendor/redux/standard-middleware.mjs'
 import { kilnReducer } from '../features/kilns/kilns.reducers.state.mjs'
 import { programReducer } from '../features/firing-programs/programs.reducer.state.mjs'
 import { invalidStrNum, invalidBool } from '../utilities/validation.mjs'
 import { getMetaFromID } from '../utilities/sanitisation.mjs'
+import { persistToLocal } from './persistant.mw.mjs'
 
 const initialState = {
   studio: {
@@ -71,11 +73,13 @@ export const store = createStore(
   compose(
     applyMiddleware(
       crashReporter,
-      logger
-    )
+      logger,
+      persistToLocal
+    ),
+    monitorReducerEnhancer
 
   )
-  //  && window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+  // && window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 )
 
 /**

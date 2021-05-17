@@ -30,6 +30,25 @@ export const crashReporter = store => next => action => {
   }
 }
 
+const round = number => Math.round(number * 100) / 100
+
+export const monitorReducerEnhancer = (createStore) => (reducer, initialState, enhancer) => {
+  const monitoredReducer = (state, action) => {
+    const start = window.performance.now()
+    const newState = reducer(state, action)
+    const end = window.performance.now()
+    const diff = round(end - start)
+
+    console.log('reducer process time:', diff)
+
+    return newState
+  }
+
+  return createStore(monitoredReducer, initialState, enhancer)
+}
+
+
+
 /**
  * Schedules actions with { meta: { delay: N } } to be delayed by N
  * milliseconds. Makes `dispatch` return a function to cancel the

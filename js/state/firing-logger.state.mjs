@@ -19,6 +19,7 @@ import { programReducer } from '../features/firing-programs/programs.reducer.sta
 import { invalidStrNum, invalidBool } from '../utilities/validation.mjs'
 import { getMetaFromID } from '../utilities/sanitisation.mjs'
 import { persistToLocal } from './persistant.mw.mjs'
+import { viewReducer } from '../features/mainApp/view.state.mjs'
 
 const initialState = {
   studio: {
@@ -38,7 +39,10 @@ const initialState = {
   },
   currentUser: 'evanWills',
   reports: [],
-  view: 'login',
+  view: {
+    url: 'login',
+    route: ['login']
+  },
   url: {
     hash: '',
     host: '',
@@ -67,7 +71,8 @@ export const store = createStore(
     studio: combineReducers({
       kilns: kilnReducer,
       firingPrograms: programReducer
-    })
+    }),
+    view: viewReducer
   }),
   initialState,
   compose(

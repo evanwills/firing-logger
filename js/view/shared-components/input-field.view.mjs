@@ -1,5 +1,5 @@
-import { html } from '../../lit-html/lit-html.mjs'
-import { ifDefined } from '../../lit-html/directives/if-defined.mjs'
+import { html } from '../../vendor/lit-html/lit-html.mjs'
+import { ifDefined } from '../../vendor/lit-html/directives/if-defined.mjs'
 import {
   isBool,
   isBoolTrue,

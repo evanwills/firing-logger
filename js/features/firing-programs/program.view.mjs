@@ -1,4 +1,4 @@
-import { html } from '../../lit-html/lit-html.mjs'
+import { html } from '../../vendor/lit-html/lit-html.mjs'
 import { isStr } from '../../utilities/validation.mjs'
 import { selectField } from '../../view/shared-components/input-field.view.mjs'
 

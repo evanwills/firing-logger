@@ -2,7 +2,7 @@
 // ========================================================
 // START: REDUX types
 
-interface action {
+interface Action {
   type: string,
   payload: object,
   meta: {
@@ -16,7 +16,7 @@ interface action {
 // START: stored data types
 
 
-interface kiln {
+interface Kiln {
   id: string,
   brand: string,
   model: string,
@@ -37,7 +37,7 @@ interface kiln {
   isHot: boolean
 }
 
-interface  equipmentLogEntry {
+interface  EquipmentLogEntry {
   id: string,
   equipmentID: string,
   date: Date,
@@ -50,7 +50,7 @@ interface  equipmentLogEntry {
   verifiedBy: string | null
 }
 
-interface firingProgram {
+interface FiringProgram {
   id: string,
   kilnID: string,
   controllerProgramID: number,
@@ -67,14 +67,14 @@ interface firingProgram {
   used: boolean
 }
 
-interface firingStep {
+interface FiringStep {
   endTemp: number, // positive degrees
   rate: number,    // degrees per hour
   hold: number     // minutes to hold at end temperature
 }
 
 
-interface firingLog {
+interface FiringLog {
   id: string,
   kilnID: string,
   programID: string,
@@ -88,7 +88,7 @@ interface firingLog {
   responsibleLog: [responsibleLogEntry]
 }
 
-interface temperatureLogEntry {
+interface TemperatureLogEntry {
   time: Date,
   tempExpected: number,
   tempActual: number,
@@ -96,28 +96,28 @@ interface temperatureLogEntry {
   notes: string
 }
 
-interface responsibleLogEntry {
+interface ResponsibleLogEntry {
   time: Date,
   userID: string,
   isStart: boolean
 }
 
-interface kilns {
+interface Kilns {
   all: [kiln],
   tmp: kiln
 }
 
-interface allFiringPrograms {
+interface AllFiringPrograms {
   all: [firingProgram]
   tmp: firingProgram
 }
 
-type firingLogs = [firingLog]
+type FiringLogs = [firingLog]
 type equipmentLog = [equipmentLogEntry]
 type users = [user]
 type calendar = [diaryEntry]
 
-interface diaryEntry {
+interface DiaryEntry {
     id: string,
     date: Date,
     kilnID: string,
@@ -130,7 +130,7 @@ interface diaryEntry {
     started: boolean,
 }
 
-interface user {
+interface User {
     id: string,
     firstName: string
     lastName: string,
@@ -141,7 +141,7 @@ interface user {
     canLog: boolean
 }
 
-interface studio {
+interface Studio {
   kilns: [kiln],
   firingPrograms: allFiringPrograms,
   firingLogs: firingLogs,
@@ -156,7 +156,7 @@ interface studio {
 // START: view only types
 
 
-interface firingReport {
+interface FiringReport {
     kilnName: string,
     program: firingProgram,
     firingType: firingType,
@@ -170,7 +170,7 @@ interface firingReport {
     currentRate: number
 }
 
-interface reportRow {
+interface ReportRow {
     time: Date,
     temp: number,
     expectedTemp: number,
@@ -178,12 +178,14 @@ interface reportRow {
     expectedRate: number
 }
 
-interface app {
+interface App {
     currentUser: user,
     reports: [firingReport],
     view: view,
     stateSlice: kilns | allFiringPrograms | firingLogs | maintenance | issues | users | diary
 }
+
+function view (state: object, eHandler: function, routes: array) : html
 
 
 //  END:  view only types

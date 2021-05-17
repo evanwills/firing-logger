@@ -262,6 +262,8 @@ export const invalidString = (prop, input, notEmpty) => {
   }
 }
 
+export const invalidStr = invalidString
+
 /**
  * Test whether an object contains a given property and the value
  * of that property is either a string or a number

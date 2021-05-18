@@ -13,7 +13,7 @@ if ('serviceWorker' in navigator) {
 const eHandler = generalEventHandler(store)
 
 const unsubscribe = store.subscribe(
-  firingLoggerView(document.body, store.getState(), eHandler)
+  firingLoggerView(document.body, eHandler)
 )
 
 store.dispatch({ type: 'GET_LOCAL_DATA' })

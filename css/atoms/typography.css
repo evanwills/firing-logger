@@ -1,0 +1,12 @@
+body {
+  box-sizing: border-box;
+}
+
+.firing-logger {
+  color: var(--txt-colour);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+input, textarea {
+  font-family: 'Courier New', Courier, monospace;
+}

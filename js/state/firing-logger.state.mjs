@@ -46,6 +46,17 @@ const initialState = {
       }],
       tmp: {},
       filters: {
+        controllerProgramID: -1,
+        kilnID: '',
+        minCreated: -1,
+        maxCreated: -1,
+        minDuration: -1,
+        maxDuration: -1,
+        maxTemp: -1,
+        minTemp: -1,
+        name: '',
+        superseded: 0,
+        used: -1
       }
     },
     firingPrograms: {
@@ -79,7 +90,9 @@ const initialState = {
         created: '2021-05-06T21:13:34+1000',
         createdBy: 'evanwills',
         superseded: false,
-        used: true
+        used: true,
+        useCount: 4,
+        deleted: false
       }],
       tmp: {},
       filters: {
@@ -94,7 +107,47 @@ const initialState = {
       filters: {}
     },
     users: {
-      all: [],
+      all: [{
+        id: 'evanwills',
+        firstName: 'Evan',
+        lastName: 'Wills',
+        contact: {
+          phone: '0414604641',
+          email: 'evan.wills@acu.edu.au'
+        },
+        created: 1621349154990,
+        createdBy: 'evanwills',
+        active: true,
+        isSuper: true,
+        permissions: {
+          kiln: {
+            create: true,
+            update: true,
+            delete: true
+          },
+          program: {
+            create: true,
+            update: true,
+            delete: true
+          },
+          firings: {
+            start: true,
+            book: true,
+            log: true
+          },
+          user: {
+            create: true,
+            read: true,
+            update: true,
+            delete: true
+          },
+          maintenance: {
+            createIssue: true,
+            verifyIssue: true,
+            fixIssue: true
+          }
+        }
+      }],
       filters: {}
     },
     diary: {
@@ -159,7 +212,7 @@ const getActionType = (meta) => {
  */
 export const getWorkerDispatcher = (_store) => (e) => {
   const _state = _store.getState()
-  const { meta, value, isChecked, now, ...data } = e.data[0]
+  const { meta, value, isChecked, now, ...data } = e.data[0] // eslint-disable-line
 
   _store.dispatch({
     type: getActionType(meta),
@@ -174,7 +227,9 @@ export const getWorkerDispatcher = (_store) => (e) => {
 }
 
 export const generalEventHandler = (_store) => {
+  console.log('generalEventHandler()')
   return function (e) {
+    e.preventDefault()
     console.log('inside generalEventHandler()')
     const _state = _store.getState()
     const _meta = getMetaFromID(this.id)

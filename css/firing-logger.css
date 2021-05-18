@@ -1,2 +1,6 @@
 @import '../js/features/firing-programs/program.css';
-@import './screen-reader.css'
+@import './molecules/lists.css';
+@import './atoms/screen-reader.css';
+@import './atoms/typography.css';
+@import './atoms/tables.css';
+@import './atoms/utils.css';

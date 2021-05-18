@@ -1,11 +1,17 @@
 .program-item {
   display: grid;
-  grid-template-columns: auto 5rem 5rem;
-  grid-template-rows: auto auto auto;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
   grid-template-areas:
-    "header header header"
-    "type   temp   time";
-  padding: 0.3rem;
+    "header header"
+    "type   temp";
+  padding: 0.3rem 0.6rem;
+  text-decoration: none;
+  transition: box-shadow ease-in-out 0.3s;
+}
+
+.program-item:hover, .program-item:focus {
+  box-shadow: 0.3rem 0.3rem 1rem rgba(0,0,0, 0.3);
 }
 
 .program-item > * {
@@ -15,7 +21,7 @@
 }
 
 .program-item--svg {
-  grid-template-columns: 4rem auto 5rem 5rem;
+  grid-template-columns: 4rem auto auto auto;
   grid-template-rows: 4rem auto auto auto;
   grid-template-areas:
     'svg header header header'
@@ -24,24 +30,123 @@
 
 .program-item__name {
   font-size: 1.1rem;
-  grid-area: 'header';
+  grid-area: header;
   margin: 0;
   padding: 0 0 .3rem 0;
 }
 
 .program-item__type {
-  grid-area: 'type';
+  grid-area: type;
 }
 
 .program-item__max {
-  grid-area: 'temp';
+  grid-area: temp;
+  text-align: right;
 }
 
 .program-item__time {
-  grid-area: 'time';
+  display: none;
+  grid-area: time;
   padding: 0;
+  text-align: right;
 }
 
 .program-item__svg {
-  grid-area: 'svg';
+  grid-area: svg;
 }
+
+
+.program-fields {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  border-bottom: 0.05rem solid #ccc;
+}
+
+.program-fields__key {
+  grid-column-start: 1;
+  grid-column-end: 2;
+  padding: 0.5rem 0.5rem 0.5rem 0;
+  margin: 0;
+  font-weight: bold;
+  border-top: 0.05rem solid #ccc;
+}
+
+.program-fields__val {
+  border-top: 0.05rem solid #ccc;
+  grid-column-start: 2;
+  grid-column-end: 3;
+  padding: 0.5rem 0 0.5rem 0.5rem;
+  margin: 0;
+}
+/*
+.program-fields__key:first-of-type,
+.program-fields__val:first-of-type  {
+  border-top:none;
+} */
+
+.program-steps {
+  margin-top: -0.3rem;
+}
+.program-steps td {
+  text-align: right;
+}
+.program-steps__rate { white-space: nowrap;}
+
+@media screen and (min-width: 20rem) {
+  .program-item {
+    grid-template-columns: auto auto auto;
+    grid-template-rows: auto auto auto;
+    grid-template-areas:
+      "header header header"
+      "type   temp   time";
+  }
+  .program-item--svg {
+    grid-template-columns: 4rem auto auto auto;
+    grid-template-rows: 4rem auto auto auto;
+    grid-template-areas:
+      'svg header header header'
+      'svg type   temp   time';
+  }
+
+  .program-item__max {
+    text-align: center;
+  }
+
+  .program-item__time {
+    display: block;
+  }
+}
+
+@media screen and (min-width: 20rem) {
+  .program-item {
+    grid-template-columns: 1fr auto auto;
+    grid-template-rows: 1fr auto auto;
+    grid-template-areas:
+      "header type temp"
+      "header time time";
+  }
+  .program-item--svg {
+    grid-template-columns: 4rem auto auto auto;
+    grid-template-rows: 4rem auto auto auto;
+    grid-template-areas:
+      'svg header header header'
+      'svg type   temp   time';
+  }
+
+  .program-item__max {
+    text-align: right;
+    padding: 0
+  }
+
+  .program-item__time {
+    padding-top: 0.3rem;
+  }
+
+  .program-item__name {
+    align-self: center;
+    font-size: 1.75rem;
+    line-height: 1;
+    padding: 0;
+  }
+}
+

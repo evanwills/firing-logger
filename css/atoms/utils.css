@@ -1,0 +1,9 @@
+.not-sm {
+  display: none;
+}
+
+@media screen and (min-width: 32rem) {
+  .not-sm {
+    display: inline;
+  }
+}

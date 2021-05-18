@@ -248,6 +248,24 @@ export const getISODateStr = (input) => {
   return false
 }
 
+export const auDateStr = (input, andTime = false) => {
+  const d = new Date(input)
+  const options = {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  }
+
+  if (isBoolTrue(andTime)) {
+    options.hour = 'numeric'
+    options.minute = 'numeric'
+    options.second = 'numeric'
+  }
+
+  return d.toLocaleDateString('en-AU', options)
+}
+
 export const base64Time = (input) => {
   const output = window.btoa(input)
   return output.replace(/[^a-z0-9]$/i, '')
@@ -311,16 +329,81 @@ const getTimeSubUnit = ({ str, sec, unit, force }) => {
  *
  * @returns {string} Human readable represenation of the duration
  */
-export const getHourMinSec = (seconds) => {
+export const getHourMinSec = (seconds, forceMin = true) => {
   let tmp = {
     str: '',
     sec: seconds
   }
+  const _forceMin = isBoolTrue(forceMin)
 
   tmp = getTimeSubUnit({ ...tmp, unit: 'day', force: false })
   tmp = getTimeSubUnit({ ...tmp, unit: 'hour', force: false })
-  tmp = getTimeSubUnit({ ...tmp, unit: 'minute', force: true })
+  tmp = getTimeSubUnit({ ...tmp, unit: 'minute', force: _forceMin })
   tmp = getTimeSubUnit({ ...tmp, unit: 'second', force: false })
 
+  // return tmp.str.replace(/,( [0-9]+ [a-z]+)\s*$/, ' &$1')
   return tmp.str
+}
+
+const getHHsub = ({ str, seconds, unit }) => {
+  let remain = seconds
+  let output = ''
+
+  if (seconds > unit) {
+    // get the number of units
+    const tmp = Math.floor(seconds / unit)
+
+    // get the left over seconds
+    remain = Math.round(seconds - (tmp * unit))
+
+    // Get the text representation for the unit
+    if (str.trim() !== '') {
+      output = (tmp < 10) ? '0' + tmp.toString() : tmp.toString()
+      output = ':' + output
+    } else {
+      output = tmp.toString()
+    }
+  } else if (str !== '') {
+    output = ':00'
+  }
+
+  return {
+    str: str + output, // merge supplied string with output
+    seconds: remain // send back the number of seconds remaining
+  }
+}
+
+/**
+ * Convert a duration value (in seconds) to ISO 8601 fomatted
+ * time string
+ *
+ * @param {number} seconds Number of seconds to be translated
+ *
+ * @returns {string} Human readable represenation of the duration
+ */
+export const getHHMMSS = (seconds, noSeconds) => {
+  const noSec = isBoolTrue(noSeconds)
+  let tmp = {
+    str: '',
+    seconds: seconds
+  }
+  tmp = getHHsub({ ...tmp, unit: 86400 })
+  tmp = getHHsub({ ...tmp, unit: 3600 })
+  tmp = getHHsub({ ...tmp, unit: 60 })
+  if (noSec === false) {
+    tmp = getHHsub({ ...tmp, unit: 1 })
+  }
+
+  return tmp.str
+}
+
+/**
+ * Convert boolean value to "Yes" or "No"
+ *
+ * @param {boolean} input value to be converted
+ *
+ * @returns {string} "Yes" or "No"
+ */
+export const boolYesNo = (input) => {
+  return (isBoolTrue(input)) ? 'Yes' : 'No'
 }

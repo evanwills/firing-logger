@@ -6,6 +6,7 @@ import { store } from '../../state/firing-logger.state.mjs'
 
 export const firingLoggerView = (domNode, eHandler) => () => {
   console.group('firingLoggerView()')
+  console.log('eHandler:', eHandler)
   const state = store.getState()
   const [route, ...subRoutes] = state.view.route
 
@@ -37,8 +38,12 @@ export const firingLoggerView = (domNode, eHandler) => () => {
 
   render(
     html`
+    <div class="firing-logger">
       <header>
         <h1>Firing logger</h1>
-      </header> ${subView}`, domNode
+      </header>
+      ${subView}
+    </div>`,
+    domNode
   )
 }

@@ -40,13 +40,13 @@ interface Kiln {
 interface  EquipmentLogEntry {
   id: string,
   equipmentID: string,
-  date: Date,
+  date: number,
   type: equipmentLogType,
   user: string,
   shortDesc: string,
   longDesc: string,
   parentID: string | null,
-  verifiedDate: Date | null,
+  verifiedDate: number | null,
   verifiedBy: string | null
 }
 
@@ -61,10 +61,12 @@ interface FiringProgram {
   maxTemp: number,
   duration: number,
   steps: [firingStep],
-  created: Date,
+  created: number,
   createdBy: string,
   superseded: boolean,
-  used: boolean
+  used: boolean,
+  useCount: number,
+  deleted: boolean
 }
 
 interface FiringStep {
@@ -80,8 +82,8 @@ interface FiringLog {
   programID: string,
   diaryID: string,
   firingType: firingType,
-  start: Date,
-  end: Date,
+  start: number,
+  end: number,
   responsibleUserID: string,
   notes: string,
   tempLog: [temperatureLogEntry]
@@ -89,7 +91,7 @@ interface FiringLog {
 }
 
 interface TemperatureLogEntry {
-  time: Date,
+  time: number,
   tempExpected: number,
   tempActual: number,
   state: temperatureState,

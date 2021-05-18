@@ -1,5 +1,11 @@
-import { isBoolTrue } from '../../utilities/validation.mjs'
+import { isBoolTrue, invalidNum } from '../../utilities/validation.mjs'
 import { getISODateStr } from '../../utilities/sanitisation.mjs'
+import {
+  getMinMaxFilter,
+  getBoolfilter,
+  getStringMatchFilter,
+  getFilterFunc
+} from '../../utilities/filterGetters.mjs'
 import { getNormalisedName } from './programDataValidation.mjs'
 
 export const getNewProgram = () => {
@@ -80,4 +86,26 @@ export const cloneUpdateProgram = (program, clone, date, username) => {
   }
 
   return newProgram
+}
+
+export const getFilteredPrograms = (filters) => {
+  let pureFilters = []
+
+  if (!invalidNum('controllerProgramID', filters) && (filters.controllerProgramID > -1)) {
+    pureFilters.push((item) => item.controllerProgramID === filters.controllerProgramID)
+  }
+
+  pureFilters = getStringMatchFilter(pureFilters, filters, 'name')
+  pureFilters = getStringMatchFilter(pureFilters, filters, 'createdBy', true)
+  pureFilters = getStringMatchFilter(pureFilters, filters, 'type', true)
+  pureFilters = getStringMatchFilter(pureFilters, filters, 'kilnID', true)
+
+  pureFilters = getBoolfilter(pureFilters, filters, 'superseded')
+  pureFilters = getBoolfilter(pureFilters, filters, 'used')
+
+  pureFilters = getMinMaxFilter(pureFilters, filters, 'temp', 'maxTemp')
+  pureFilters = getMinMaxFilter(pureFilters, filters, 'duration')
+  pureFilters = getMinMaxFilter(pureFilters, filters, 'created')
+
+  return getFilterFunc(pureFilters)
 }

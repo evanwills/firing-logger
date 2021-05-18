@@ -1,0 +1,28 @@
+
+table {
+  border-collapse: collapse;
+  display: block;
+  width: 100%;
+}
+table td, th {
+  padding: 0.3rem 0.75rem;
+  border-left: 0.05rem solid #ccc;
+}
+table tr *:first-child {
+  border-left: none;
+}
+
+table thead th {
+  /* border-bottom: 0.1rem solid #000; */
+  border-bottom: 0.1rem solid #ccc;
+  border-collapse: collapse;
+  text-align: center;
+  vertical-align: bottom;
+}
+table tfoot th {
+  text-align: right;
+}
+
+table tbody td, table tbody th, table tfoot th, table tfoot td {
+  border-top: 0.05rem solid #ccc;
+}

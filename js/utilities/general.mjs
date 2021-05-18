@@ -2,6 +2,8 @@ import { invalidStrNum, invalidBool } from './validation.mjs'
 import { getMetaFromID } from './sanitisation.mjs'
 
 export const fieldHandler = (postToWorker) => function (e) {
+  e.preventDefault()
+  console.log('inside fieldHandler()')
   postToWorker({
     metadata: getMetaFromID(this.id),
     value: (invalidStrNum('val', this)) ? null : this.value,

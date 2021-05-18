@@ -18,49 +18,96 @@ import { kilnReducer } from '../features/kilns/kilns.reducers.state.mjs'
 import { programReducer } from '../features/firing-programs/programs.reducer.state.mjs'
 import { invalidStrNum, invalidBool } from '../utilities/validation.mjs'
 import { getMetaFromID } from '../utilities/sanitisation.mjs'
-import { persistToLocal } from './persistant.mw.mjs'
+// import { persistToLocal } from './persistant.mw.mjs'
 import { viewReducer } from '../features/mainApp/view.state.mjs'
 
 const initialState = {
   studio: {
     kilns: {
-      all: [],
-      tmp: {}
+      all: [{
+        id: 'woodrow1',
+        brand: 'Woodrow',
+        model: '1',
+        name: 'New Woodrow',
+        installDate: '2021-04-29T11:24:35+1000',
+        energy: 'electric',
+        type: 'general',
+        maxTemp: 1280,
+        width: 500,
+        depth: 500,
+        height: 500,
+        glaze: true,
+        bisque: true,
+        singleFire: false,
+        retired: false,
+        isWorking: true,
+        isInUse: false,
+        isHot: false
+      }],
+      tmp: {},
+      filters: {
+      }
     },
     firingPrograms: {
-      all: [],
-      tmp: {}
+      all: [{
+        id: 'tF3Kq7NJnSVfGs',
+        kilnID: 'woodrow1',
+        controllerProgramID: 6,
+        type: 'bisque',
+        name: 'Slow bisque',
+        version: 0,
+        description: 'Good for firing not quite dry and/or large work',
+        maxTemp: 1000,
+        duration: 40920,
+        steps: [{
+          endTemp: 200,
+          rate: 50,
+          hold: 0
+        }, {
+          endTemp: 520,
+          rate: 100,
+          hold: 0
+        }, {
+          endTemp: 600,
+          rate: 60,
+          hold: 0
+        }, {
+          endTemp: 1000,
+          rate: 150,
+          hold: 10
+        }],
+        created: '2021-05-06T21:13:34+1000',
+        createdBy: 'evanwills',
+        superseded: false,
+        used: true
+      }],
+      tmp: {},
+      filters: {
+      }
     },
-    firingLogs: [],
-    maintenance: [],
-    issues: [],
-    users: [],
-    diary: []
+    firingLogs: {
+      all: [],
+      filters: {}
+    },
+    maintenance: {
+      all: [],
+      filters: {}
+    },
+    users: {
+      all: [],
+      filters: {}
+    },
+    diary: {
+      all: [],
+      filters: {}
+    }
   },
   currentUser: 'evanWills',
   reports: [],
   view: {
-    url: 'login',
-    route: ['login']
-  },
-  url: {
-    hash: '',
-    host: '',
-    hostname: '',
-    href: '',
-    actionHref: '',
-    origin: '',
-    password: '',
-    path: '',
-    pathname: '',
-    port: '',
-    protocol: '',
-    search: '',
-    searchParams: {},
-    searchParamsRaw: {},
-    username: ''
-  },
-  stateSlice: {}
+    url: '',
+    route: ['']
+  }
 }
 
 /**
@@ -78,8 +125,8 @@ export const store = createStore(
   compose(
     applyMiddleware(
       crashReporter,
-      logger,
-      persistToLocal
+      logger
+      // persistToLocal
     ),
     monitorReducerEnhancer
 

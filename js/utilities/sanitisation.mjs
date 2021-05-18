@@ -252,3 +252,52 @@ export const base64Time = (input) => {
   const output = window.btoa(input)
   return output.replace(/[^a-z0-9]$/i, '')
 }
+
+/**
+ *
+ * @param {object} param0
+ * @returns {object}
+ */
+const getTimeSubUnit = ({ str, sec, unit, label, force }) => {
+  let remain = sec
+  let output = (force === true) ? '0 ' + label + 's' : ''
+
+  if (sec > unit) {
+    const tmp = Math.round(sec / unit)
+    const s = (tmp > 1) ? 's' : ''
+
+    remain = sec - (tmp * unit)
+    output = tmp + ' ' + label + s
+  }
+
+  if (output !== '' && str.trim() !== '') {
+    output = ', ' + output
+  }
+
+  return {
+    str: str + output,
+    sec: remain
+  }
+}
+
+/**
+ * Convert a duration value (in seconds) to human readable
+ * representation in days, hours, minutes and seconds
+ *
+ * @param {number} seconds Number of seconds to be translated
+ *
+ * @returns {string} Human readable represenation of the duration
+ */
+export const getHourMinSec = (seconds) => {
+  let tmp = {
+    str: '',
+    sec: seconds
+  }
+
+  tmp = getTimeSubUnit({ ...tmp, unit: 86400, label: 'day', force: false })
+  tmp = getTimeSubUnit({ ...tmp, unit: 3600, label: 'hour', force: false })
+  tmp = getTimeSubUnit({ ...tmp, unit: 60, label: 'minute', force: true })
+  tmp = getTimeSubUnit({ ...tmp, unit: 1, label: 'second', force: true })
+
+  return tmp.str
+}

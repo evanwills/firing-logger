@@ -3,7 +3,7 @@ import {
   createStore,
   applyMiddleware,
   compose
-} from '../vendor/redux/redux.mjs'
+} from '../../vendor/redux/redux.mjs'
 import {
   logger,
   crashReporter,
@@ -13,13 +13,13 @@ import {
   // thunk
   // timeoutScheduler,
   // vanillaPromise,
-} from '../vendor/redux/standard-middleware.mjs'
-import { kilnReducer } from '../features/kilns/kilns.reducers.state.mjs'
-import { programReducer } from '../features/firing-programs/programs.reducer.state.mjs'
-import { invalidStrNum, invalidBool } from '../utilities/validation.mjs'
-import { getMetaFromID } from '../utilities/sanitisation.mjs'
+} from '../../vendor/redux/standard-middleware.mjs'
+import { kilnReducer } from '../kilns/kilns.reducers.state.mjs'
+import { programReducer } from '../firing-programs/programs.reducer.state.mjs'
+import { invalidStrNum, invalidBool } from '../../utilities/validation.mjs'
+import { getMetaFromID } from '../../utilities/sanitisation.mjs'
 // import { persistToLocal } from './persistant.mw.mjs'
-import { viewReducer } from '../features/mainApp/view.state.mjs'
+import { viewReducer } from './view.state.mjs'
 
 const initialState = {
   studio: {

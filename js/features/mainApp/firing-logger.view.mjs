@@ -2,7 +2,7 @@ import { programsView } from '../firing-programs/programs.view.mjs'
 import { kilnsView } from '../kilns/kilns.view.mjs'
 import { logsView } from '../logs/logs.view.mjs'
 import { render, html } from '../../vendor/lit-html/lit-html.mjs'
-import { store } from '../../state/firing-logger.state.mjs'
+import { store } from '../../features/mainApp/firing-logger.state.mjs'
 
 export const firingLoggerView = (domNode, eHandler) => () => {
   console.group('firingLoggerView()')

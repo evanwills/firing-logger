@@ -2,7 +2,7 @@
 
 // import { fieldHandler } from './utilities/general.mjs'
 import { getURLobject } from './utilities/url.mjs'
-import { store, generalEventHandler } from './state/firing-logger.state.mjs'
+import { store, generalEventHandler } from './features/mainApp/firing-logger.state.mjs'
 import { viewActions } from './features/mainApp/view.state.mjs'
 import { firingLoggerView } from './features/mainApp/firing-logger.view.mjs'
 

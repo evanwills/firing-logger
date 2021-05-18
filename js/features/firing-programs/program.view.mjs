@@ -1,30 +1,31 @@
 import { html } from '../../vendor/lit-html/lit-html.mjs'
 import { isStr } from '../../utilities/validation.mjs'
 import { selectField } from '../../view/shared-components/input-field.view.mjs'
+import { getHourMinSec, ucFirst } from '../../utilities/sanitisation.mjs'
 
 export const programListItem = (id, name, type, maxTemp, duration, SVG, isUsed, eHandler) => {
   return html`
-    <a href="?area=programs&mode=view&id=${id}", id="${id}-programs-view" class="program-item" click=${eHandler}>
+    <a href="/programs/${id}", id="${id}-programs-view" class="program-item" click=${eHandler}>
        <h2 class="program-item__name">
          ${name}
        </h2>
        <p class="program-item__type">
         <span class="sr-only">
           Firing type:
-        <span>
-        ${type}
+        </span>
+        ${ucFirst(type)}
        </p>
        <p class="program-item__max">
         <span class="sr-only">
           Maximum temperature:
-        <span>
-        ${maxTemp}
+        </span>
+        ${maxTemp}&deg;C
        </p>
        <p class="program-item__time">
         <span class="sr-only">
           Total firing time:
-        <span>
-        ${duration}
+        </span>
+        ${getHourMinSec(duration)}
        </p>
        <!-- SVG -->
      </a>

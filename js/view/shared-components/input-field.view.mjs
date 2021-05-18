@@ -16,8 +16,7 @@ import {
   idSafe,
   // makeHTMLsafe,
   ucFirst
-} from '../../utilities/sanitise.mjs'
-
+} from '../../utilities/sanitisation.mjs'
 /**
  * Get the attribute string for an HTML input/select/textarea field
  *

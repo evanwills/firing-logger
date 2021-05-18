@@ -13,7 +13,8 @@ export const logsView = (state, eHandler, routes) => {
   console.log('subRoutes:', subRoutes)
   console.log('state:', state)
 
-  const subView = ''
+  let subView = ''
+
   switch (route) {
     default:
       subView = listLogs(state.all, state.filters, eHandler)

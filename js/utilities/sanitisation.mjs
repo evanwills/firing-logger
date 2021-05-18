@@ -3,7 +3,8 @@ import {
   isDate,
   isNonEmptyStr,
   isNumeric,
-  isStr
+  isStr,
+  invalidNum
 } from './validation.mjs'
 import { cleanGET } from './url.mjs'
 
@@ -239,7 +240,7 @@ export const getClassName = (props, BEMelement, BEMmodifier, prefix) => {
 export const getISODateStr = (input) => {
   let tmp = input
   if (isDate(tmp)) {
-    if (isStr(tmp)) {
+    if (isNonEmptyStr(tmp)) {
       tmp = new Date(tmp)
     }
     return tmp.toISOString()
@@ -247,36 +248,58 @@ export const getISODateStr = (input) => {
   return false
 }
 
-
 export const base64Time = (input) => {
   const output = window.btoa(input)
   return output.replace(/[^a-z0-9]$/i, '')
 }
 
 /**
+ * Convert the number of seconds (sec) into the number for the
+ * unit provided
  *
  * @param {object} param0
  * @returns {object}
  */
-const getTimeSubUnit = ({ str, sec, unit, label, force }) => {
-  let remain = sec
-  let output = (force === true) ? '0 ' + label + 's' : ''
-
-  if (sec > unit) {
-    const tmp = Math.round(sec / unit)
-    const s = (tmp > 1) ? 's' : ''
-
-    remain = sec - (tmp * unit)
-    output = tmp + ' ' + label + s
+const getTimeSubUnit = ({ str, sec, unit, force }) => {
+  const units = {
+    day: 86400,
+    hour: 3600,
+    minute: 60,
+    second: 1
   }
+  const unitSeconds = (!invalidNum(unit, units)) ? units[unit] : 0
+  let remain = sec
+  let output = ''
 
-  if (output !== '' && str.trim() !== '') {
-    output = ', ' + output
+  if (unitSeconds > 0) {
+    if (force === true) {
+      // reset default so that zero units are returned (instead of
+      // empty string) when the number of seconds is less than the
+      // seconds for the specified unit
+      output = '0 ' + unit + 's'
+    }
+
+    if (sec > unitSeconds) {
+      // get the number of units
+      const tmp = Math.floor(sec / unitSeconds)
+      const s = (tmp > 1) ? 's' : ''
+
+      // get the left over seconds
+      remain = sec - (tmp * unitSeconds)
+
+      // Get the text representation for the unit
+      output = tmp + ' ' + unit + s
+    }
+
+    if (output !== '' && str.trim() !== '') {
+      // Get the right punctuation
+      output = ', ' + output
+    }
   }
 
   return {
-    str: str + output,
-    sec: remain
+    str: str + output, // merge supplied string with output
+    sec: remain // send back the number of seconds remaining
   }
 }
 
@@ -294,10 +317,10 @@ export const getHourMinSec = (seconds) => {
     sec: seconds
   }
 
-  tmp = getTimeSubUnit({ ...tmp, unit: 86400, label: 'day', force: false })
-  tmp = getTimeSubUnit({ ...tmp, unit: 3600, label: 'hour', force: false })
-  tmp = getTimeSubUnit({ ...tmp, unit: 60, label: 'minute', force: true })
-  tmp = getTimeSubUnit({ ...tmp, unit: 1, label: 'second', force: true })
+  tmp = getTimeSubUnit({ ...tmp, unit: 'day', force: false })
+  tmp = getTimeSubUnit({ ...tmp, unit: 'hour', force: false })
+  tmp = getTimeSubUnit({ ...tmp, unit: 'minute', force: true })
+  tmp = getTimeSubUnit({ ...tmp, unit: 'second', force: false })
 
   return tmp.str
 }

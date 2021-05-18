@@ -6,7 +6,7 @@ import { programActions } from './programs.actions.state.mjs'
 
 export const programListItem = (id, name, type, maxTemp, duration, SVG, isUsed, eHandler) => {
   return html`
-    <a href="/programs/${id}" id="${id}-programs-view" class="program-item" @click=${eHandler}>
+    <a href="/programs/${id}" id="${id}-programs-view" class="program-item" @click=${eHandler} title="View full details of &ldquo;${name}&rdquo; firing program">
        <h2 class="program-item__name">
          ${name}
        </h2>
@@ -187,6 +187,7 @@ export const singleProgram = (state, eHandler) => {
           <dd class="program-fields__val">${state.useCount}</dd>
       </dl>
       <footer>
+        ${(state.useCount > 0) ? html`<button click=${eHandler}>View past firings</button>` : ''}
         ${(state.superseded === false && state.deleted === false)
           ? html`
             <button .id="${state.id}-${programActions.UPDATE}" @click=${eHandler}>
@@ -194,15 +195,20 @@ export const singleProgram = (state, eHandler) => {
             </button>
             <button .id="${state.id}-${programActions.UPDATE}" @click=${eHandler}>
               Start a firing
+            </button>
+            <button .id="${state.id}-${programActions.UPDATE}" @click=${eHandler}>
+              Edit
+            </button>
+            <button .id="${state.id}-${programActions.CLONE}" @click=${eHandler}>
+              Copy
+            </button>
+            <button .id="${state.id}-${programActions.DELETE}" @click=${eHandler}>
+              Delete
             </button>`
           : ''
         }
-        ${(state.useCount > 0) ? html`<button click=${eHandler}>View past firings</button>` : ''}
-        <button .id="${state.id}-${programActions.UPDATE}" @click=${eHandler}>Edit</button>
-        <button .id="${state.id}-${programActions.CLONE}" @click=${eHandler}>Copy</button>
-        <button .id="${state.id}-${programActions.DELETE}" @click=${eHandler}>Delete</button>
-        <button @click=${eHandler}>Maintenance history</button>
-        <button @click=${eHandler}>Report an issue</button>
+        <button @click=${eHandler}>Kiln maintenance history</button>
+        <button @click=${eHandler}>Report an issue with this kiln</button>
       </footer>
     </article>
   `

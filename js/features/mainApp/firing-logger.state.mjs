@@ -16,7 +16,7 @@ import {
 } from '../../vendor/redux/standard-middleware.mjs'
 import { kilnReducer } from '../kilns/kilns.reducers.state.mjs'
 import { programReducer } from '../firing-programs/programs.reducer.state.mjs'
-import { invalidStrNum, invalidBool } from '../../utilities/validation.mjs'
+import { invalidStrNum, invalidBool, invalidString } from '../../utilities/validation.mjs'
 import { getMetaFromID } from '../../utilities/sanitisation.mjs'
 // import { persistToLocal } from './persistant.mw.mjs'
 import { viewReducer } from './view.state.mjs'
@@ -203,6 +203,12 @@ const getActionType = (meta) => {
   return meta.type
 }
 
+
+
+const getRout = (meta) => {
+
+}
+
 /**
  * Get a callback function that can be used as an event handler for
  * the web-worker's onmessage event
@@ -230,17 +236,23 @@ export const generalEventHandler = (_store) => {
   console.log('generalEventHandler()')
   return function (e) {
     e.preventDefault()
-    console.log('inside generalEventHandler()')
+    console.group('generalEventHandler()')
+    console.log('this:', this)
     const _state = _store.getState()
     const _meta = getMetaFromID(this.id)
+    console.log('_meta:', _meta)
+    console.groupEnd()
 
     _store.dispatch({
       type: getActionType(_meta),
       payload: {
         id: _meta.id,
-        value: (invalidStrNum('val', this)) ? null : this.value,
+        value: (!invalidStrNum('val', this)) ? this.value : null,
         isChecked: (invalidBool('checked', this, true) === false)
       },
+      href: (!invalidString('href', this, true))
+        ? this.href.replace(/^(?:(?:https?:)?\/\/[^/]+\/)?/, '')
+        : null,
       now: Date.now(),
       user: _state.currentUser
     })

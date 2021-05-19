@@ -2,12 +2,13 @@ import { invalidString } from '../../utilities/validation.mjs'
 
 export const viewActions = {
   SET_FROM_URL: 'VIEW_SET_FROM_URL',
-  SET_FROM_ACTION: 'VIEW_SET_FROM_ACTION'
+  SET: 'VIEW_SET_FROM_ACTION'
 }
 
 const initialState = {
   url: '',
-  route: []
+  route: [],
+  title: ''
 }
 
 const getViewFromURL = (view, data) => {
@@ -41,9 +42,14 @@ export const viewReducer = (state = initialState, action) => {
     case viewActions.SET_FROM_URL:
       return getViewFromURL(state, action.payload)
 
-    case viewActions.SET_FROM_ACTION:
-      if (!invalidString('value', action.payload)) {
-        return action.payload.value
+    default:
+      if (typeof action.href !== 'undefined' && action.href !== null && action.href !== state.url) {
+        const href = action.href.replace(/^\/|\/$/g, '')
+        return {
+          url: href,
+          route: href.split('/'),
+          title: ''
+        }
       }
   }
 

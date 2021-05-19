@@ -1,0 +1,9 @@
+.item-actions__wrap {
+  display: flex;
+  justify-content: space-between;
+}
+
+.item-actions__item {
+  text-align: center;
+  display: inline-block,
+}

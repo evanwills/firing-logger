@@ -1,12 +1,14 @@
 import { html } from '../../vendor/lit-html/lit-html.mjs'
 import { isStr } from '../../utilities/validation.mjs'
 import { selectField } from '../../view/shared-components/input-field.view.mjs'
-import { getHourMinSec, getHHMMSS, ucFirst, auDateStr, boolYesNo} from '../../utilities/sanitisation.mjs'
+import { getLink } from '../../view/shared-components/navigation.view.mjs'
+import { getHourMinSec, getHHMMSS, ucFirst, auDateStr, boolYesNo } from '../../utilities/sanitisation.mjs'
 import { programActions } from './programs.actions.state.mjs'
+import { viewActions } from '../mainApp/view.state.mjs'
 
 export const programListItem = (id, name, type, maxTemp, duration, SVG, isUsed, eHandler) => {
   return html`
-    <a href="/programs/${id}" id="${id}-programs-view" class="program-item" @click=${eHandler} title="View full details of &ldquo;${name}&rdquo; firing program">
+    <a href="/programs/${id}" id="${id}-${viewActions.SET}-program" class="program-item" @click=${eHandler} title="View full details of &ldquo;${name}&rdquo; firing program">
        <h2 class="program-item__name">
          ${name}
        </h2>
@@ -138,8 +140,64 @@ export const programSteps = (steps) => {
 }
 export const singleProgram = (state, eHandler) => {
   console.group('singleProgram')
+  const id = state.id
   console.log('state:', state)
   console.groupEnd()
+
+  let actionLinks = []
+  if (state.useCount > 0) {
+    actionLinks = [...actionLinks, {
+      label: 'View past firings',
+      path: '/logs/by-program',
+      id: id,
+      action: ''
+    }]
+  }
+
+  if (state.superseded === false && state.deleted === false) {
+    actionLinks = [...actionLinks, {
+      label: 'Book a firing',
+      path: '/diary/new',
+      id: id,
+      action: ''
+    }, {
+      label: 'Start a firing',
+      path: '/logs/new',
+      id: id,
+      action: ''
+    }, {
+      label: 'Edit',
+      path: '/programs/edit',
+      id: id,
+      action: programActions.UPDATE
+    }, {
+      label: 'Copy',
+      path: '/programs/copy',
+      id: id,
+      action: programActions.CLONE
+    }, {
+      label: 'Delete',
+      path: '/programs/delete',
+      id: id,
+      action: programActions.DELETE
+    }]
+  }
+
+  actionLinks = [
+    ...actionLinks,
+    {
+      label: 'Kiln maintenance history',
+      path: '/maintenance/by-kiln',
+      id: state.kilnID,
+      action: ''
+    }, {
+      label: 'Report an issue with this kiln',
+      path: '/maintenance/report',
+      id: state.kilnID,
+      action: ''
+    }
+  ]
+
   return html`
     <article class="program">
       <header>
@@ -186,29 +244,16 @@ export const singleProgram = (state, eHandler) => {
         <dt class="program-fields__key">Usage count</dt>
           <dd class="program-fields__val">${state.useCount}</dd>
       </dl>
-      <footer>
-        ${(state.useCount > 0) ? html`<button click=${eHandler}>View past firings</button>` : ''}
-        ${(state.superseded === false && state.deleted === false)
-          ? html`
-            <button .id="${state.id}-${programActions.UPDATE}" @click=${eHandler}>
-              Book a firing
-            </button>
-            <button .id="${state.id}-${programActions.UPDATE}" @click=${eHandler}>
-              Start a firing
-            </button>
-            <button .id="${state.id}-${programActions.UPDATE}" @click=${eHandler}>
-              Edit
-            </button>
-            <button .id="${state.id}-${programActions.CLONE}" @click=${eHandler}>
-              Copy
-            </button>
-            <button .id="${state.id}-${programActions.DELETE}" @click=${eHandler}>
-              Delete
-            </button>`
-          : ''
-        }
-        <button @click=${eHandler}>Kiln maintenance history</button>
-        <button @click=${eHandler}>Report an issue with this kiln</button>
+      <footer class="program__footer item-actions__wrap">
+         ${actionLinks.map(link => getLink(
+           link.label,
+           link.path,
+           link.id,
+           link.action,
+           eHandler,
+           false,
+           'item-actions__item'
+         ))}
       </footer>
     </article>
   `

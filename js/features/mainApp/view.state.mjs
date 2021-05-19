@@ -1,4 +1,5 @@
-import { invalidString } from '../../utilities/validation.mjs'
+import { invalidString, isNonEmptyStr } from '../../utilities/validation.mjs'
+import { ucFirst } from '../../utilities/sanitisation.mjs'
 
 export const viewActions = {
   SET_FROM_URL: 'VIEW_SET_FROM_URL',
@@ -9,6 +10,32 @@ const initialState = {
   url: '',
   route: [],
   title: ''
+}
+
+const getViewState = (path) => {
+  const _path = path.replace(/^\/|\/$/g, '')
+  const route = _path.split('/')
+
+  let title = isNonEmptyStr(route[0]) ? route[0] : ''
+  switch (title) {
+    case 'programs':
+      title = 'Firing programs'
+      break
+
+    case 'firingLogs':
+      title = 'Firing logs'
+      break
+
+    default:
+      title = ucFirst(title)
+  }
+
+  console.log('title:', title)
+  return {
+    url: _path,
+    route: route,
+    title: title
+  }
 }
 
 const getViewFromURL = (view, data) => {
@@ -23,15 +50,9 @@ const getViewFromURL = (view, data) => {
   }
 
   if (route !== '') {
-    // clean up the rout path by removing any
-    // leading and/or trailing slashes
-    route = route.replace(/^\/+|\/+$/g, '')
-
-    return {
-      url: route,
-      route: route.split('/')
-    }
+    return getViewState(route)
   }
+
   return view
 }
 
@@ -44,12 +65,8 @@ export const viewReducer = (state = initialState, action) => {
 
     default:
       if (typeof action.href !== 'undefined' && action.href !== null && action.href !== state.url) {
-        const href = action.href.replace(/^\/|\/$/g, '')
-        return {
-          url: href,
-          route: href.split('/'),
-          title: ''
-        }
+
+        return getViewState(action.href)
       }
   }
 

@@ -1,4 +1,14 @@
+.program {
+  position: relative;
+  padding: 0.5rem;
+}
+.program__footer {
+  position: sticky;
+  bottom: 0;
+  margin: 0 -0.5rem;
+}
 .program-item {
+  color: var(--txt-colour);
   display: grid;
   grid-template-columns: auto auto;
   grid-template-rows: auto auto;
@@ -7,11 +17,13 @@
     "type   temp";
   padding: 0.3rem 0.6rem;
   text-decoration: none;
-  transition: box-shadow ease-in-out 0.3s;
+  transition: box-shadow ease-in-out 0.3s, color ease-in-out 0.3s, background-color ease-in-out 0.3s;
 }
 
 .program-item:hover, .program-item:focus {
-  box-shadow: 0.3rem 0.3rem 1rem rgba(0,0,0, 0.3);
+  box-shadow: 0.3rem 0.3rem 1rem var(--over-colour);
+  color: var(--bg-colour);
+  background-color: var(--over-colour-rev);
 }
 
 .program-item > * {
@@ -86,6 +98,10 @@
 
 .program-steps {
   margin-top: -0.3rem;
+  display: table;
+  margin-left: auto;
+  margin-right: auto;
+  width: auto;
 }
 .program-steps td {
   text-align: right;

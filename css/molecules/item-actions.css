@@ -1,9 +1,12 @@
 .item-actions__wrap {
+  border: 0.02rem solid #ddd;
   display: flex;
   justify-content: space-between;
 }
 
 .item-actions__item {
+  border: 0.02rem solid #ddd;
+  display: inline-block;
+  flex-grow: 1;
   text-align: center;
-  display: inline-block,
 }

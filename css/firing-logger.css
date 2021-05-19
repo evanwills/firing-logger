@@ -1,7 +1,11 @@
 @import '../js/features/firing-programs/program.css';
+@import './protons/variables.css';
+@import './protons/colours.css';
+@import './organisms/header.css';
 @import './molecules/lists.css';
 @import './molecules/repeatable-nav.css';
 @import './molecules/item-actions.css';
+@import './atoms/base.css';
 @import './atoms/screen-reader.css';
 @import './atoms/typography.css';
 @import './atoms/tables.css';

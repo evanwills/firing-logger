@@ -12,9 +12,10 @@ if ('serviceWorker' in navigator) {
 }
 
 const eHandler = generalEventHandler(store)
+const titleTag = document.getElementById('pageTitle')
 
 const unsubscribe = {
-  view: store.subscribe(firingLoggerView(document.body, eHandler)),
+  view: store.subscribe(firingLoggerView(document.body, eHandler, titleTag)),
   history: store.subscribe(updateHistory)
 }
 

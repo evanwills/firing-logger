@@ -54,7 +54,6 @@ export const programsView = (state, eHandler, routes) => {
   console.groupEnd()
 
   return html`<section id="programs" class="programs">
-    <h2>Programs</h2>
     ${(error !== '') ? html`<p class="error">${error}</p>` : ''}
     ${subView}
   </section>`

@@ -1,7 +1,7 @@
 import { html } from '../../vendor/lit-html/lit-html.mjs'
 import { isStr } from '../../utilities/validation.mjs'
-import { selectField } from '../../view/shared-components/input-field.view.mjs'
-import { getLink } from '../../view/shared-components/navigation.view.mjs'
+import { selectField } from '../../shared-views/input-field.view.mjs'
+import { getLink } from '../../shared-views/navigation.view.mjs'
 import { getHourMinSec, getHHMMSS, ucFirst, auDateStr, boolYesNo } from '../../utilities/sanitisation.mjs'
 import { programActions } from './programs.actions.state.mjs'
 import { viewActions } from '../mainApp/view.state.mjs'
@@ -155,48 +155,51 @@ export const singleProgram = (state, eHandler) => {
   }
 
   if (state.superseded === false && state.deleted === false) {
-    actionLinks = [...actionLinks, {
-      label: 'Book a firing',
-      path: '/diary/new',
-      id: id,
-      action: ''
-    }, {
-      label: 'Start a firing',
-      path: '/logs/new',
-      id: id,
-      action: ''
-    }, {
-      label: 'Edit',
-      path: '/programs/edit',
-      id: id,
-      action: programActions.UPDATE
-    }, {
-      label: 'Copy',
-      path: '/programs/copy',
-      id: id,
-      action: programActions.CLONE
-    }, {
-      label: 'Delete',
-      path: '/programs/delete',
-      id: id,
-      action: programActions.DELETE
-    }]
+    actionLinks = [
+      ...actionLinks,
+      {
+      //   label: 'Book a firing',
+      //   path: '/diary/new',
+      //   id: id,
+      //   action: ''
+      // }, {
+        label: 'Start a firing',
+        path: '/logs/new',
+        id: id,
+        action: ''
+      }, {
+        label: 'Edit',
+        path: '/programs/edit',
+        id: id,
+        action: programActions.UPDATE
+      }, {
+        label: 'Copy',
+        path: '/programs/copy',
+        id: id,
+        action: programActions.CLONE
+      }, {
+        label: 'Delete',
+        path: '/programs/delete',
+        id: id,
+        action: programActions.DELETE
+      }
+    ]
   }
 
-  actionLinks = [
-    ...actionLinks,
-    {
-      label: 'Kiln maintenance history',
-      path: '/maintenance/by-kiln',
-      id: state.kilnID,
-      action: ''
-    }, {
-      label: 'Report an issue with this kiln',
-      path: '/maintenance/report',
-      id: state.kilnID,
-      action: ''
-    }
-  ]
+  // actionLinks = [
+  //   ...actionLinks,
+  //   {
+  //     label: 'Kiln maintenance history',
+  //     path: '/maintenance/by-kiln',
+  //     id: state.kilnID,
+  //     action: ''
+  //   }, {
+  //     label: 'Report an issue with this kiln',
+  //     path: '/maintenance/report',
+  //     id: state.kilnID,
+  //     action: ''
+  //   }
+  // ]
 
   return html`
     <article class="program">

@@ -1,5 +1,5 @@
-import { html } from '../../vendor/lit-html/lit-html.mjs'
-import { isBoolTrue, isNonEmptyStr } from '../../utilities/validation.mjs'
+import { html } from '../vendor/lit-html/lit-html.mjs'
+import { isBoolTrue, isNonEmptyStr } from '../utilities/validation.mjs'
 
 /**
  * Get a navigation link button

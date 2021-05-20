@@ -1,6 +1,6 @@
-import { html } from '../../vendor/lit-html/lit-html.mjs'
-import { getTabI } from '../../utilities/sanitise.mjs'
-import { isStr } from '../../utilities/validation.mjs'
+import { html } from '../vendor/lit-html/lit-html.mjs'
+import { getTabI } from '../utilities/sanitise.mjs'
+import { isStr } from '../utilities/validation.mjs'
 
 /**
  * Get an Open/Close button

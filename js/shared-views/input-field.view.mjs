@@ -1,5 +1,5 @@
-import { html } from '../../vendor/lit-html/lit-html.mjs'
-import { ifDefined } from '../../vendor/lit-html/directives/if-defined.mjs'
+import { html } from '../vendor/lit-html/lit-html.mjs'
+import { ifDefined } from '../vendor/lit-html/directives/if-defined.mjs'
 import {
   isBool,
   isBoolTrue,
@@ -10,13 +10,13 @@ import {
   // isNumeric,
   isStr,
   isStrNum
-} from '../../utilities/validation.mjs'
+} from '../utilities/validation.mjs'
 import {
   getClassName,
   idSafe,
   // makeHTMLsafe,
   ucFirst
-} from '../../utilities/sanitisation.mjs'
+} from '../utilities/sanitisation.mjs'
 /**
  * Get the attribute string for an HTML input/select/textarea field
  *

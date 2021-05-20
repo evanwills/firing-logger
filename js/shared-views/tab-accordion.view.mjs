@@ -1,6 +1,6 @@
-import { html } from '../../vendor/lit-html/lit-html.mjs'
-import { ucFirst } from '../../utilities/sanitise.mjs'
-import { isStr, isBoolTrue } from '../../utilities/validation.mjs'
+import { html } from '../vendor/lit-html/lit-html.mjs'
+import { ucFirst } from '../utilities/sanitise.mjs'
+import { isStr, isBoolTrue } from '../utilities/validation.mjs'
 /**
  *
  * @param {string}   groupID

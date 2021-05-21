@@ -1,5 +1,6 @@
 import {
   isBoolTrue,
+  isBoolFalse,
   isDate,
   isNonEmptyStr,
   isNumeric,
@@ -398,14 +399,18 @@ export const getHHMMSS = (seconds, noSeconds) => {
 }
 
 /**
- * Convert boolean value to "Yes" or "No"
+ * Convert boolean value to "Yes" or "No" (or "TRUE"/"FALSE")
  *
  * @param {boolean} input value to be converted
+ * @param {boolean} yes   Whether or not output should be "Yes"/"No"
+ *                        or "TRUE"/"FALSE"
  *
  * @returns {string} "Yes" or "No"
  */
-export const boolYesNo = (input) => {
-  return (isBoolTrue(input)) ? 'Yes' : 'No'
+export const boolYesNo = (input, yes) => {
+  return isBoolFalse(yes)
+    ? (isBoolTrue(input)) ? 'TRUE' : 'FALSE'
+    : (isBoolTrue(input)) ? 'Yes' : 'No'
 }
 
 /**

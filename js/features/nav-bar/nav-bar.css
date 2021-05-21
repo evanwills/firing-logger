@@ -1,0 +1,51 @@
+/**
+ * <nav class="nav-bar">
+ *   <ul class="nav-bar__list">
+ *     <li class="nav-bar__item">
+ *       <a href="foo/bar" id="baz" class="nav-bar__link">Label</a>
+ *     </li>
+ *   </ul>
+ * </nav>
+*/
+
+.nav-bar {
+
+}
+
+.nav-bar__list {
+  border: 0.025rem solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-bar__item {
+  flex-grow: 1;
+  text-align: center;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-bar__link {
+  color: var(--txt-colour);
+  background-color: var(--over-colour);
+  border: 0.025rem solid #ddd;
+  display: block;
+  padding: 0.5rem;
+  text-align: center;
+  width: 100%;
+  text-decoration: none;
+}
+
+.nav-bar__link:hover, .nav-bar__link:focus {
+  color: var(--bg-colour);
+  background-color: var(--over-colour-rev);
+}
+
+.nav-bar__link--active {
+  color: var(--bg-colour);
+  background-color: var(--txt-colour);
+  cursor: default;
+}

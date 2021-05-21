@@ -1,7 +1,7 @@
 import { html } from '../../vendor/lit-html/lit-html.mjs'
 // import { isStr } from '../../utilities/validation.mjs'
 // import { selectField } from '../../shared-views/input-field.view.mjs'
-import { getLink } from '../../shared-views/navigation.view.mjs'
+import { getNavBar } from '../nav-bar/nav-bar.view.mjs'
 import { getHourMinSec, getHHMMSS, ucFirst, auDateStr, boolYesNo } from '../../utilities/sanitisation.mjs'
 import { programActions } from './programs.state.actions.mjs'
 import { viewActions } from '../mainApp/view.state.mjs'
@@ -258,16 +258,9 @@ export const singleProgram = (state, kilnName, eHandler) => {
         <dt class="program-fields__key">Usage count</dt>
           <dd class="program-fields__val">${state.useCount}</dd>
       </dl>
-      <footer class="program__footer item-actions__wrap">
-         ${actionLinks.map(link => getLink(
-           link.label,
-           link.path,
-           link.id,
-           link.action,
-           eHandler,
-           false,
-           'item-actions__item'
-         ))}
+
+      <footer class="program__footer">
+        ${getNavBar(actionLinks, eHandler)}
       </footer>
     </article>
   `

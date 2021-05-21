@@ -1,6 +1,7 @@
 @import './protons/variables.css';
 /* @import './protons/colours.css'; */
 @import '../js/features/firing-programs/program.css';
+@import '../js/features/nav-bar/nav-bar.css';
 @import '../js/features/svg/svg.css';
 @import './organisms/header.css';
 @import './molecules/lists.css';

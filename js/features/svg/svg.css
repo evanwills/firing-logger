@@ -1,0 +1,57 @@
+.grid-line {
+  fill: none;
+  stroke-dasharray: 0.5, 2;
+  stroke-width: 0.5;
+  stroke: var(--txt-colour);
+}
+.unit-text {
+  fill: var(--txt-colour);
+  font-family: Verdana;
+  font-size: 44px;
+  font-weight: bold;
+  line-height: 1.25;
+  stroke: none;
+}
+.high-temp {
+  font-stretch: condensed;
+  line-height: 1.25;
+}
+.unit-value {
+  fill: var(--txt-colour);
+  stroke: none;
+  font-family: Arial;
+  font-size: 36px;
+  line-height: 1.25;
+  text-align: center;
+  text-anchor: middle;
+}
+.log-data {
+  fill: #005c00;
+}
+.program {
+  /* fill: var(--txt-colour); */
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+  stroke: var(--txt-colour);
+}
+.program-frame {
+  fill: none;
+  stroke-width: 0.5;
+  stroke: var(--txt-colour);
+}
+.program-solid {
+  fill: var(--txt-colour);
+}
+
+.image-frame {
+  fill: none;
+  stroke: none;
+}
+
+.firing-log {
+  display: block;
+  max-width: 30rem;
+  margin: 0 auto;
+}

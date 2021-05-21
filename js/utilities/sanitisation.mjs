@@ -407,3 +407,18 @@ export const getHHMMSS = (seconds, noSeconds) => {
 export const boolYesNo = (input) => {
   return (isBoolTrue(input)) ? 'Yes' : 'No'
 }
+
+/**
+ * Round a input number to a specified number of decimal places
+ *
+ * @param {number} input  Number to be rounded
+ * @param {number} places number of decimal places to round the input
+ *
+ * @returns {number}
+ */
+export const round = (input, places) => {
+  const p = isNumeric(places) ? Math.round(places) : 1
+  const x = Math.pow(10, p)
+
+  return Math.round(input * x) / x
+}

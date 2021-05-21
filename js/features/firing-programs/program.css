@@ -67,6 +67,22 @@
   grid-area: svg;
 }
 
+.firing-steps {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  margin: 1rem 0
+}
+
+.firing-steps > svg {
+  margin-bottom: 2rem;
+}
+@media screen and (min-width: 67rem) {
+  .firing-steps > svg {
+    margin-bottom: 0;
+  }
+}
 
 .program-fields {
   display: grid;

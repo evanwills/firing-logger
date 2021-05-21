@@ -5,6 +5,7 @@ import { getLink } from '../../shared-views/navigation.view.mjs'
 import { getHourMinSec, getHHMMSS, ucFirst, auDateStr, boolYesNo } from '../../utilities/sanitisation.mjs'
 import { programActions } from './programs.actions.state.mjs'
 import { viewActions } from '../mainApp/view.state.mjs'
+import { getFiringLogSVG } from '../svg/svg.mjs'
 
 export const programListItem = (id, name, type, maxTemp, duration, SVG, isUsed, eHandler) => {
   return html`
@@ -209,7 +210,10 @@ export const singleProgram = (state, eHandler) => {
       <p>${state.description}</p>
 
       <h3>Steps</h3>
-      ${programSteps(state.steps)}
+      <div class="firing-steps">
+        ${getFiringLogSVG(state.maxTemp, state.duration, state.steps)}
+        ${programSteps(state.steps)}
+      </div>
 
       <h3>Details</h3>
 

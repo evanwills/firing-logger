@@ -199,6 +199,18 @@ export const programReducer = (state = { all: [], tmp: {} }, action) => {
         break
       }
 
+    case programActions.TMP_SET:
+      return { ...state, tmp: action.payload.value }
+
+    case programActions.TMP_UPDATE_FIELD:
+      return { ...state, tmp: action.payload.value }
+
+    case programActions.TMP_COMMIT:
+      return { ...state, tmp: action.payload.value }
+
+    case programActions.TMP_CLEAR_CONFIRMED:
+      return { ...state, tmp: action.payload.value }
+
     case programActions.UPDATE:
       return updateProgramField(state, action.payload)
 

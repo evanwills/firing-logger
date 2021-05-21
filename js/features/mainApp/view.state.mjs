@@ -30,7 +30,7 @@ const getViewState = (path) => {
       title = ucFirst(title)
   }
 
-  console.log('title:', title)
+  // console.log('title:', title)
   return {
     url: _path,
     route: route,
@@ -57,7 +57,7 @@ const getViewFromURL = (view, data) => {
 }
 
 export const viewReducer = (state = initialState, action) => {
-  console.log('action:', action)
+  // console.log('action:', action)
 
   switch (action.type) {
     case viewActions.SET_FROM_URL:
@@ -65,7 +65,6 @@ export const viewReducer = (state = initialState, action) => {
 
     default:
       if (typeof action.href !== 'undefined' && action.href !== null && action.href !== state.url) {
-
         return getViewState(action.href)
       }
   }

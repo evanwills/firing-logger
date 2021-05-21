@@ -110,12 +110,12 @@ const getProgramPath = (steps, solid, showCooling) => {
     sep = ' '
   }
 
-  console.group('getProgramPath()')
-  console.log('solid:', solid)
-  console.log('showCooling:', showCooling)
-  console.log('isBoolTrue(solid):', isBoolTrue(solid))
-  console.log('isBoolFalse(showCooling):', isBoolFalse(showCooling))
-  console.groupEnd()
+  // console.group('getProgramPath()')
+  // console.log('solid:', solid)
+  // console.log('showCooling:', showCooling)
+  // console.log('isBoolTrue(solid):', isBoolTrue(solid))
+  // console.log('isBoolFalse(showCooling):', isBoolFalse(showCooling))
+  // console.groupEnd()
 
   output += (isBoolTrue(solid) && isBoolFalse(showCooling)) ? ' v' + b : ''
 

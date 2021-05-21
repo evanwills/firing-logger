@@ -7,12 +7,18 @@ import { programActions } from './programs.actions.state.mjs'
 import { viewActions } from '../mainApp/view.state.mjs'
 import { getFiringLogSVG } from '../svg/svg.mjs'
 
-export const programListItem = (id, name, type, maxTemp, duration, SVG, isUsed, eHandler) => {
+export const programListItem = (id, name, type, maxTemp, duration, SVG, isUsed, kilnName, eHandler) => {
   return html`
     <a href="/programs/${id}" id="${id}-${viewActions.SET}-program" class="program-item" @click=${eHandler} title="View full details of &ldquo;${name}&rdquo; firing program">
        <h2 class="program-item__name">
          ${name}
        </h2>
+       <p class="program-item__kiln">
+        <span class="sr-only">
+          Kiln:
+        </span>
+        ${ucFirst(kilnName)}
+       </p>
        <p class="program-item__type">
         <span class="sr-only">
           Firing type:
@@ -139,7 +145,7 @@ export const programSteps = (steps) => {
     </table>
   `
 }
-export const singleProgram = (state, eHandler) => {
+export const singleProgram = (state, kilnName, eHandler) => {
   // console.group('singleProgram')
   const id = state.id
   // console.log('state:', state)
@@ -204,8 +210,9 @@ export const singleProgram = (state, eHandler) => {
 
   return html`
     <article class="program">
-      <header>
+      <header class="program__header">
         <h2>${state.name}</h2>
+        <h3><span class="program__header__kiln">Kiln:</span> ${kilnName}</h3>
       </header>
       <p>${state.description}</p>
 
@@ -219,7 +226,7 @@ export const singleProgram = (state, eHandler) => {
 
       <dl class="program-fields">
         <dt class="program-fields__key">Kiln</dt>
-          <dd class="program-fields__val">${state.kilnID}</dd>
+          <dd class="program-fields__val">${kilnName}</dd>
 
         <dt class="program-fields__key">Program No.</dt>
           <dd class="program-fields__val">${state.controllerProgramID}</dd>

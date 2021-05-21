@@ -1,14 +1,15 @@
 import { html } from '../../vendor/lit-html/lit-html.mjs'
 import { programListItem, singleProgram } from './program.view.mjs'
 import { programActions } from './programs.actions.state.mjs'
-import { getFilteredPrograms } from './programUtils.mjs'
+import { getFilteredPrograms, getKilnName } from './programUtils.mjs'
 import { isNonEmptyStr } from '../../utilities/validation.mjs'
 
-export const listPrograms = (allPrograms, filters, eHandler) => {
+export const listPrograms = (allPrograms, allKilns, filters, eHandler) => {
   console.group('listPrograms()')
 
   console.log('allPrograms:', allPrograms)
   console.log('filters:', filters)
+  console.log('allKilns:', allKilns)
   console.groupEnd()
 
   return html`
@@ -17,14 +18,14 @@ export const listPrograms = (allPrograms, filters, eHandler) => {
       ${allPrograms.map((program) => {
         return html`
           <li class="item-list__item">
-            ${programListItem(program.id, program.name, program.type, program.maxTemp, program.duration, '', program.isUsed, eHandler)}
+            ${programListItem(program.id, program.name, program.type, program.maxTemp, program.duration, '', program.isUsed, getKilnName(program.kilnID, allKilns), eHandler)}
           </li>`
       })}
     </ul>
   `
 }
 
-export const programsView = (state, eHandler, routes) => {
+export const programsView = (state, kilns, eHandler, routes) => {
   const [route, ...subRoutes] = routes
   let error = ''
   console.group('programsView()')
@@ -43,13 +44,13 @@ export const programsView = (state, eHandler, routes) => {
   } else if (isNonEmptyStr(route)) {
     const prog = state.all.filter(program => program.id === route)
     if (prog.length === 1) {
-      subView = singleProgram(prog[0], eHandler)
+      subView = singleProgram(prog[0], getKilnName(prog[0].kilnID, kilns), eHandler)
     } else {
       error = html`Could not find firing program matching ID: <code>${route}</code>`
-      subView = listPrograms(allAvailable, state.filters, eHandler)
+      subView = listPrograms(allAvailable, kilns, state.filters, eHandler)
     }
   } else {
-    subView = listPrograms(allAvailable, state.filters, eHandler)
+    subView = listPrograms(allAvailable, kilns, state.filters, eHandler)
   }
   console.groupEnd()
 

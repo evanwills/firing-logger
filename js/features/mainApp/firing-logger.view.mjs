@@ -7,8 +7,8 @@ import { getLink } from '../../shared-views/navigation.view.mjs'
 import { invalidString } from '../../utilities/validation.mjs'
 
 export const firingLoggerView = (domNode, eHandler, titleTag) => () => {
-  console.group('firingLoggerView()')
-  console.log('eHandler:', eHandler)
+  // console.group('firingLoggerView()')
+  // console.log('eHandler:', eHandler)
   const state = store.getState()
   const [route, ...subRoutes] = state.view.route
   const uiMode = 'ui-darkmode'
@@ -41,7 +41,7 @@ export const firingLoggerView = (domNode, eHandler, titleTag) => () => {
 
   switch (route) {
     case 'programs':
-      subView = programsView(state.studio.firingPrograms, eHandler, subRoutes)
+      subView = programsView(state.studio.firingPrograms, state.studio.kilns.all, eHandler, subRoutes)
       break
 
     case 'kilns':
@@ -53,9 +53,9 @@ export const firingLoggerView = (domNode, eHandler, titleTag) => () => {
       break
   }
 
-  console.log('titleTag:', titleTag)
+  // console.log('titleTag:', titleTag)
   titleTag.innerText = 'Firing logger' + titleTxt
-  console.groupEnd()
+  // console.groupEnd()
 
   render(
     html`

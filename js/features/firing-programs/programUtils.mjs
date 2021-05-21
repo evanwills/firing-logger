@@ -44,9 +44,30 @@ export const getNewProgram = () => {
  * @returns {object,false} The matching program or FALSE if no
  *                         matching program could be found
  */
+export const getProgramByID = (allPrograms, id) => {
+  const tmp = allPrograms.filter(program => (program.id === id))
+
+  if (tmp.length === 1) {
+    return tmp[0]
+  } else {
+    return false
+  }
+}
+
+/**
+ * Get a specific firing program object.
+ *
+ * @param {array}  allPrograms List of all programs available
+ * @param {string} kilnID      ID of kiln program applies to
+ * @param {string} name        Name of program
+ * @param {number} version     Version of the program being updated
+ *
+ * @returns {object,false} The matching program or FALSE if no
+ *                         matching program could be found
+ */
 export const getProgram = (allPrograms, kilnID, name, version) => {
   const _name = getNormalisedName(name)
-  const tmp = allPrograms.map(program => (program.kilnID === kilnID && getNormalisedName(program.name) === _name && program.version === version))
+  const tmp = allPrograms.filter(program => (program.kilnID === kilnID && getNormalisedName(program.name) === _name && program.version === version))
 
   if (tmp.length === 1) {
     return tmp[0]
@@ -108,4 +129,18 @@ export const getFilteredPrograms = (filters) => {
   pureFilters = getMinMaxFilter(pureFilters, filters, 'created')
 
   return getFilterFunc(pureFilters)
+}
+
+/**
+ * Get the name of a kiln by ID
+ *
+ * @param {string} kilnID ID of the kiln to be named
+ * @param {array}  kilns  List of all kilns available
+ *
+ * @returns {string}
+ */
+export const getKilnName = (kilnID, kilns) => {
+  const rightKiln = kilns.filter(kiln => kiln.id === kilnID)
+
+  return (rightKiln.length > 0) ? rightKiln[0].name : ''
 }

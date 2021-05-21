@@ -203,11 +203,9 @@ const getActionType = (meta) => {
   return meta.type
 }
 
+// const getRout = (meta) => {
 
-
-const getRout = (meta) => {
-
-}
+// }
 
 /**
  * Get a callback function that can be used as an event handler for

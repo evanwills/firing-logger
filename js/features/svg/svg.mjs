@@ -1,5 +1,5 @@
 import { svg } from '../../vendor/lit-html/lit-html.mjs'
-import { isBoolTrue } from '../../utilities/validation.mjs'
+import { isBoolTrue, isBoolFalse, invalidNum } from '../../utilities/validation.mjs'
 import { round } from '../../utilities/sanitisation.mjs'
 
 const spacing = 100
@@ -50,34 +50,6 @@ const getTimeGuide = (time, len, yOffset) => {
 }
 
 /**
- * Get a visual representation of the program or firing log
- *
- * @param {number}  x        Horizontal starting coordinate
- * @param {number}  y        Vertical starting coordinate
- * @param {array}   steps    Steps that form the path of the output
- * @param {boolean} isLog    Whether or not the output path is for a
- *                           program diagram or firing log
- * @param {boolean} lineOnly Whether or not the output path should be
- *                           a line or a solid shape
- * @returns {svg}
- */
-const stepGraph = (x, y, steps, isLog, lineOnly) => {
-  const _isLog = isBoolTrue(isLog)
-  const solid = !isBoolTrue(lineOnly)
-  const extra = solid ? ' program-solid' : ''
-  const id = (_isLog) ? 'log' : 'program'
-  const gId = (_isLog) ? 'firing-log' : 'program'
-  const className = (_isLog) ? 'log-data' : 'program'
-  const path = (isLog) ? getLogPath : getProgramPath
-
-  return svg`
-  <g class="${gId}">
-    <path class="${className}${extra} ${id}" d="m${x} ${y} ${path(steps, solid)}" />
-  </g>
-  `
-}
-
-/**
  * Get all the x/y coordinates for the firing log
  *
  * @param {array} steps
@@ -114,7 +86,7 @@ const getLogPath = (steps) => {
  *
  * @returns {string}
  */
-const getProgramPath = (steps, solid) => {
+const getProgramPath = (steps, solid, showCooling) => {
   let output = ''
   let b = 0
   let sep = ''
@@ -122,22 +94,76 @@ const getProgramPath = (steps, solid) => {
   for (let a = 0; a < steps.length; a += 1) {
     let degrees = steps[a].endTemp - b
 
-    const hours = round((degrees / steps[a].rate), 4) * 100
+    let hours = round(((degrees / steps[a].rate) * 100), 4)
+    hours *= (hours < 0) ? -1 : 1
 
     let h = ''
     const hold = (steps[a].hold > 0) ? (steps[a].hold * (1 / 6) * 10) : 0
     if (hold > 0) {
       h = ' h' + round(hold, 4)
     }
-    degrees *= (degrees > 0) ? -1 : 1
 
-    output += sep + hours + degrees + h
+    degrees *= -1
+
+    output += sep + 'l ' + hours + ',' + degrees + h
     b = steps[a].endTemp
     sep = ' '
   }
-  output += isBoolTrue(solid) ? ' v' + b : ''
+
+  console.group('getProgramPath()')
+  console.log('solid:', solid)
+  console.log('showCooling:', showCooling)
+  console.log('isBoolTrue(solid):', isBoolTrue(solid))
+  console.log('isBoolFalse(showCooling):', isBoolFalse(showCooling))
+  console.groupEnd()
+
+  output += (isBoolTrue(solid) && isBoolFalse(showCooling)) ? ' v' + b : ''
 
   return output
+}
+
+/**
+ * Get a visual representation of the program or firing log
+ *
+ * @param {number}  x            Horizontal starting coordinate
+ * @param {number}  y            Vertical starting coordinate
+ * @param {array}   steps        Steps that form the path of the output
+ * @param {boolean} lineOnly     Whether or not the output path should be
+ *                               a line or a solid shape
+ * @param {boolean} showCooling  Whether or not to show the cooling
+ *                               part of the firing
+ * @returns {svg, string}
+ */
+const stepGraph = (x, y, steps, lineOnly, showCooling) => {
+  if (!Array.isArray(steps) || steps.length === 0) {
+    // There's nothing here to work with. Give up now
+    return ''
+  }
+  // Determin what we're graphing by a property in the first item
+  const isLog = (!invalidNum('actualTem', steps[0]))
+  const id = (isLog) ? 'log' : 'program'
+  const gId = (isLog) ? 'firing-log' : 'program'
+  const className = (isLog) ? 'log-data' : 'program'
+  const path = (isLog) ? getLogPath : getProgramPath
+
+  // Switch negative line only to positive `isSolid`
+  const isSolid = !isBoolTrue(lineOnly)
+  const extra = isSolid ? ' program-solid' : ''
+
+  // console.log('isLog:', isLog)
+  // console.log('lineOnly:', lineOnly)
+  // console.log('showCooling:', showCooling)
+  // console.log('isSolid:', isSolid)
+  // console.log('extra:', extra)
+  // console.log('isBoolTrue(lineOnly):', isBoolTrue(lineOnly))
+  // console.log('!isBoolTrue(lineOnly):', !isBoolTrue(lineOnly))
+  // console.log('isBoolFalse(lineOnly):', isBoolFalse(lineOnly))
+
+  return svg`
+  <g class="${gId}">
+    <path class="${className}${extra} ${id}" d="m${x} ${y} ${path(steps, isSolid, showCooling)}" />
+  </g>
+  `
 }
 
 /**
@@ -155,7 +181,8 @@ const getProgramPath = (steps, solid) => {
  */
 export const getFiringLogSVG = (maxDeg, duration, programSteps, firingLog, showCooling) => {
   const hours = Math.floor(duration / 3600)
-  const totlaHrs = isBoolTrue(showCooling) ? hours * 2 : hours
+  const cool = isBoolTrue(showCooling)
+  const totlaHrs = (cool === true) ? hours * 2 : hours
   const xOffset = ((totlaHrs * spacing) + spacing)
   const yOffset = (maxDeg + spacing)
   const x = (xOffset + (spacing * hBorder))
@@ -176,18 +203,45 @@ export const getFiringLogSVG = (maxDeg, duration, programSteps, firingLog, showC
     timeGuides.push(getTimeGuide(a, vGuide, vStart))
   }
 
+  const pSteps = [...programSteps]
+  if (showCooling === true) {
+    pSteps.push({
+      endTemp: 0,
+      rate: Math.round(maxDeg / (duration / 3600)),
+      hold: 0
+    })
+  }
+
+  const fLog = (Array.isArray(firingLog)) ? [...firingLog] : []
   // Show firing log if supplied
-  if (Array.isArray(firingLog) && firingLog.length > 1) {
+  if (fLog.length > 1) {
+    if (fLog === true) {
+      pSteps.push({
+        endTemp: 0,
+        rate: Math.round(maxDeg / (duration / 3600)),
+        hold: 0
+      })
+    }
+
     firingLogPath = svg`
       <g class="firing-log">
-        ${stepGraph(spacing * 1.2, yOffset, programSteps, false, true)}
-        ${stepGraph(spacing, yOffset, firingLog, true)}
+        ${stepGraph(spacing, yOffset, fLog, false, cool)}
+        ${stepGraph(spacing * hBorder, yOffset, pSteps, true, cool)}
       </g>
     `
   }
 
   return svg`
     <svg version="1.1" viewBox="0 0 ${(x + 1)} ${y}" xmlns="http://www.w3.org/2000/svg" class="firing-log">
+      <g class="base">
+        <rect width="${x}" height="${y}" class="frame image-frame" />
+        <rect x="${spacing * 1.2}" width="${xOffset}" height="${yOffset}" class="frame program-frame" />
+      </g>
+
+
+      ${stepGraph(spacing * hBorder, yOffset, pSteps, false, cool)}
+
+      ${firingLogPath}
 
       <g class="degrees">
         <text id="unit-label--deg" transform="rotate(-90)" x="-${((y / 2) + (spacing * 0.2))}" y="${spacing * 0.32}" class="unit-text">Degrees</text>
@@ -200,21 +254,15 @@ export const getFiringLogSVG = (maxDeg, duration, programSteps, firingLog, showC
 
         ${timeGuides}
       </g>
-
-      ${firingLogPath}
-
-      ${stepGraph(spacing * 1.2, yOffset, programSteps, false)}
-      <g class="base">
-        <rect width="${x}" height="${y}" class="frame image-frame" />
-        <rect x="${spacing * 1.2}" width="${xOffset}" height="${yOffset}" class="frame program-frame" />
-      </g>
     </svg>
   `
 }
 
-export const getFiringGraphSVG = (maxDeg, duration, steps) => {
-  const xOffset = ((Math.floor(duration) * 50) + 50)
-  const yOffset = ((Math.floor(maxDeg / 100) * 50) + 50)
+export const getFiringGraphSVG = (maxDeg, duration, steps, showCooling) => {
+  const hours = Math.floor(duration / 3600)
+  const totlaHrs = isBoolTrue(showCooling) ? hours * 2 : hours
+  const xOffset = ((Math.floor(totlaHrs) * spacing) + spacing)
+  const yOffset = Math.floor(maxDeg + spacing)
 
   return svg`
     <svg version="1.1" viewBox="0 0 ${xOffset} ${yOffset}" xmlns="http://www.w3.org/2000/svg" class="firing-graph">

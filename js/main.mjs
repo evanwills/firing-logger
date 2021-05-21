@@ -14,7 +14,7 @@ if ('serviceWorker' in navigator) {
 const eHandler = generalEventHandler(store)
 const titleTag = document.getElementById('pageTitle')
 
-const unsubscribe = {
+const unsubscribe = { // eslint-disable-line
   view: store.subscribe(firingLoggerView(document.body, eHandler, titleTag)),
   history: store.subscribe(updateHistory)
 }

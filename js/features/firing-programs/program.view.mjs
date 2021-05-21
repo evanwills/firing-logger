@@ -1,6 +1,6 @@
 import { html } from '../../vendor/lit-html/lit-html.mjs'
-import { isStr } from '../../utilities/validation.mjs'
-import { selectField } from '../../shared-views/input-field.view.mjs'
+// import { isStr } from '../../utilities/validation.mjs'
+// import { selectField } from '../../shared-views/input-field.view.mjs'
 import { getLink } from '../../shared-views/navigation.view.mjs'
 import { getHourMinSec, getHHMMSS, ucFirst, auDateStr, boolYesNo } from '../../utilities/sanitisation.mjs'
 import { programActions } from './programs.actions.state.mjs'
@@ -36,57 +36,57 @@ export const programListItem = (id, name, type, maxTemp, duration, SVG, isUsed, 
   `
 }
 
-const getUnique = (alls, prop) => {
-  const uniques = []
+// const getUnique = (alls, prop) => {
+//   const uniques = []
 
-  for (let a = 0; a < alls.length; a += 1) {
-    if (typeof alls[prop] !== 'undefined' && uniques.indexOf(alls[prop]) === -1) {
-      uniques.push(alls[prop])
-    }
-  }
-  return uniques
-}
+//   for (let a = 0; a < alls.length; a += 1) {
+//     if (typeof alls[prop] !== 'undefined' && uniques.indexOf(alls[prop]) === -1) {
+//       uniques.push(alls[prop])
+//     }
+//   }
+//   return uniques
+// }
 
-const getKilnsFilter = (kilnIDs, allKilns, selectedKiln, eHandler) => {
-  const _id = isStr(selectedKiln) ? selectedKiln : ''
-  const _kilns = allKilns.filter(kiln => (kilnIDs.indexOf(kiln.id) > 1)).map(kiln => {
-    return {
-      id: kiln.id,
-      name: kiln.name,
-      selected: (kiln.id === _id)
-    }
-  })
+// const getKilnsFilter = (kilnIDs, allKilns, selectedKiln, eHandler) => {
+//   const _id = isStr(selectedKiln) ? selectedKiln : ''
+//   const _kilns = allKilns.filter(kiln => (kilnIDs.indexOf(kiln.id) > 1)).map(kiln => {
+//     return {
+//       id: kiln.id,
+//       name: kiln.name,
+//       selected: (kiln.id === _id)
+//     }
+//   })
 
-  if (_kilns.length > 1) {
-    return selectField({
-      id: 'kiln-programs-filter',
-      options: [{ id: '', name: '-- kiln --' }, ..._kilns],
-      eventHandler: eHandler,
-      label: 'Kilns'
-    })
-  } else {
-    return ''
-  }
-}
+//   if (_kilns.length > 1) {
+//     return selectField({
+//       id: 'kiln-programs-filter',
+//       options: [{ id: '', name: '-- kiln --' }, ..._kilns],
+//       eventHandler: eHandler,
+//       label: 'Kilns'
+//     })
+//   } else {
+//     return ''
+//   }
+// }
 
-export const programListFilters = (currentFilters, allFirings, allKilns, eHandler) => {
-  if (allFirings.length > 10) {
-    const firingType = getUnique(allFirings, 'type')
-    const maxTemp = getUnique(allFirings, 'maxTemp')
-    const duration = getUnique(allFirings, 'duration')
+// export const programListFilters = (currentFilters, allFirings, allKilns, eHandler) => {
+//   if (allFirings.length > 10) {
+//     const firingType = getUnique(allFirings, 'type')
+//     const maxTemp = getUnique(allFirings, 'maxTemp')
+//     const duration = getUnique(allFirings, 'duration')
 
-    return html`
-      <div>
-        ${getKilnsFilter(
-          getUnique(allFirings, 'kilnID'),
-          allKilns,
-          currentFilters.kilns,
-          eHandler
-        )}
-      </div>
-    `
-  }
-}
+//     return html`
+//       <div>
+//         ${getKilnsFilter(
+//           getUnique(allFirings, 'kilnID'),
+//           allKilns,
+//           currentFilters.kilns,
+//           eHandler
+//         )}
+//       </div>
+//     `
+//   }
+// }
 
 export const programSteps = (steps) => {
   let lastTmp = 0
@@ -116,8 +116,8 @@ export const programSteps = (steps) => {
           const duration = getHHMMSS(time, true)
 
           totalDuration += time
-          console.log('time:', time)
-          console.log('totalDuration:', totalDuration)
+          // console.log('time:', time)
+          // console.log('totalDuration:', totalDuration)
 
           return html`
           <tr>
@@ -140,10 +140,10 @@ export const programSteps = (steps) => {
   `
 }
 export const singleProgram = (state, eHandler) => {
-  console.group('singleProgram')
+  // console.group('singleProgram')
   const id = state.id
-  console.log('state:', state)
-  console.groupEnd()
+  // console.log('state:', state)
+  // console.groupEnd()
 
   let actionLinks = []
   if (state.useCount > 0) {
@@ -211,7 +211,7 @@ export const singleProgram = (state, eHandler) => {
 
       <h3>Steps</h3>
       <div class="firing-steps">
-        ${getFiringLogSVG(state.maxTemp, state.duration, state.steps)}
+        ${getFiringLogSVG(state.maxTemp, state.duration, state.steps, [], false)}
         ${programSteps(state.steps)}
       </div>
 

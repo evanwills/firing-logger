@@ -417,8 +417,16 @@ export const boolYesNo = (input) => {
  * @returns {number}
  */
 export const round = (input, places) => {
-  const p = isNumeric(places) ? Math.round(places) : 1
+  const p = isNumeric(places) ? Math.round(places) : 0
   const x = Math.pow(10, p)
+
+  // console.group('round()')
+  // console.log('input:', input)
+  // console.log('places:', places)
+  // console.log('p:', p)
+  // console.log('x:', x)
+  // console.log('Math.round(' + input + ' * ' + x + ') / ' + x + ':', Math.round(input * x) / x)
+  // console.groupEnd()
 
   return Math.round(input * x) / x
 }

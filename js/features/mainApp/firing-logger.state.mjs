@@ -14,9 +14,9 @@ import {
   // timeoutScheduler,
   // vanillaPromise,
 } from '../../vendor/redux/standard-middleware.mjs'
-import { kilnReducer } from '../kilns/kilns.reducers.state.mjs'
+import { kilnReducer } from '../kilns/kilns.state.reducers.mjs'
 import { programReducer } from '../firing-programs/programs.reducer.state.mjs'
-import { programsMW } from '../firing-programs/programs.middleware.state.mjs'
+import { programsMW } from '../firing-programs/programs.state.middleware.mjs'
 import { invalidStrNum, invalidBool, invalidString } from '../../utilities/validation.mjs'
 import { getMetaFromID } from '../../utilities/sanitisation.mjs'
 // import { persistToLocal } from './persistant.mw.mjs'

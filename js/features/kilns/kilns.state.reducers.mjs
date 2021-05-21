@@ -8,7 +8,7 @@ import {
 import {
   invalidBool
 } from '../../utilities/validation.mjs'
-import { kilnActions } from './kilns.actions.state.mjs'
+import { kilnActions } from './kilns.state.actions.mjs'
 
 const dummyKiln = {
   id: 'woodrow1',

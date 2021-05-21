@@ -3,7 +3,7 @@ import { html } from '../../vendor/lit-html/lit-html.mjs'
 // import { selectField } from '../../shared-views/input-field.view.mjs'
 import { getLink } from '../../shared-views/navigation.view.mjs'
 import { getHourMinSec, getHHMMSS, ucFirst, auDateStr, boolYesNo } from '../../utilities/sanitisation.mjs'
-import { programActions } from './programs.actions.state.mjs'
+import { programActions } from './programs.state.actions.mjs'
 import { viewActions } from '../mainApp/view.state.mjs'
 import { getFiringLogSVG } from '../svg/svg.mjs'
 

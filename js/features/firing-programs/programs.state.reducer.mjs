@@ -1,4 +1,4 @@
-import { programActions } from './programs.actions.state.mjs'
+import { programActions } from './programs.state.actions.mjs'
 import { uniquePogramName, validFiringType } from './programDataValidation.mjs'
 import { invalidBool, invalidString, invalidNum, isBoolTrue } from '../../utilities/validation.mjs'
 import { getISODateStr } from '../../utilities/sanitisation.mjs'

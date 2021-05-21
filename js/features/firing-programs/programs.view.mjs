@@ -1,6 +1,6 @@
 import { html } from '../../vendor/lit-html/lit-html.mjs'
 import { programListItem, singleProgram } from './program.view.mjs'
-import { programActions } from './programs.actions.state.mjs'
+import { programActions } from './programs.state.actions.mjs'
 import { getFilteredPrograms, getKilnName } from './programUtils.mjs'
 import { isNonEmptyStr } from '../../utilities/validation.mjs'
 

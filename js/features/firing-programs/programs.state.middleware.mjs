@@ -1,4 +1,4 @@
-import { programActions } from './programs.actions.state.mjs'
+import { programActions } from './programs.state.actions.mjs'
 import { getProgramByID, getNewProgram } from './programUtils.mjs'
 
 export const programsMW = store => next => action => {

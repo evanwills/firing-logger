@@ -60,13 +60,15 @@ interface FiringProgram {
   description: string,
   maxTemp: number,
   duration: number,
+  averageRate: number,
   steps: [firingStep],
   created: number,
   createdBy: string,
   superseded: boolean,
   used: boolean,
   useCount: number,
-  deleted: boolean
+  deleted: boolean,
+  locked: boolean
 }
 
 interface FiringStep {

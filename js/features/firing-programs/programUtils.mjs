@@ -17,6 +17,9 @@ export const getNewProgram = () => {
     type: '',
     name: '',
     description: '',
+    maxTemp: 0,
+    duration: 0,
+    averageRate: 0,
     steps: [
       {
         id: 1,
@@ -29,7 +32,9 @@ export const getNewProgram = () => {
     createdBy: '',
     superseded: false,
     used: false,
-    useCount: 0
+    useCount: 0,
+    deleted: false,
+    locked: false
   }
 }
 

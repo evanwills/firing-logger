@@ -15,7 +15,7 @@ import {
   // vanillaPromise,
 } from '../../vendor/redux/standard-middleware.mjs'
 import { kilnReducer } from '../kilns/kilns.state.reducers.mjs'
-import { programReducer } from '../firing-programs/programs.reducer.state.mjs'
+import { programReducer } from '../firing-programs/programs.state.reducer.mjs'
 import { programsMW } from '../firing-programs/programs.state.middleware.mjs'
 import { invalidStrNum, invalidBool, invalidString } from '../../utilities/validation.mjs'
 import { getMetaFromID } from '../../utilities/sanitisation.mjs'
@@ -65,12 +65,13 @@ const initialState = {
         id: 'tF3Kq7NJnSVfGs',
         kilnID: 'woodrow1',
         controllerProgramID: 6,
+        version: 0,
         type: 'bisque',
         name: 'Slow bisque',
-        version: 0,
         description: 'Good for firing not quite dry and/or large work',
         maxTemp: 1000,
         duration: 40920,
+        averageRate: 0,
         steps: [{
           endTemp: 200,
           rate: 50,
@@ -93,7 +94,8 @@ const initialState = {
         superseded: false,
         used: true,
         useCount: 4,
-        deleted: false
+        deleted: false,
+        locked: false
       }],
       tmp: {},
       filters: {

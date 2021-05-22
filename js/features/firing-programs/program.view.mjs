@@ -6,6 +6,8 @@ import { getHourMinSec, getHHMMSS, ucFirst, auDateStr, boolYesNo } from '../../u
 import { programActions } from './programs.state.actions.mjs'
 import { viewActions } from '../mainApp/view.state.mjs'
 import { getFiringLogSVG } from '../svg/svg.mjs'
+import { getMainContent } from '../main-content/main-content.view.mjs'
+// import { }
 
 export const programListItem = (id, name, type, maxTemp, duration, SVG, isUsed, kilnName, eHandler) => {
   return html`
@@ -193,6 +195,7 @@ export const singleProgram = (state, kilnName, eHandler) => {
     ]
   }
 
+
   // actionLinks = [
   //   ...actionLinks,
   //   {
@@ -208,60 +211,58 @@ export const singleProgram = (state, kilnName, eHandler) => {
   //   }
   // ]
 
-  return html`
-    <article class="program">
-      <header class="program__header">
-        <h2>${state.name}</h2>
-        <h3><span class="program__header__kiln">Kiln:</span> ${kilnName}</h3>
-      </header>
-      <p>${state.description}</p>
+  return getMainContent(
+    html`
+      <h2>${state.name}</h2>
+      <h3><span class="program__head__kiln">Kiln:</span> ${kilnName}</h3>
+    `,
+    html`
+    <p>${state.description}</p>
 
-      <h3>Steps</h3>
-      <div class="firing-steps">
-        ${getFiringLogSVG(state.maxTemp, state.duration, state.steps, [], false)}
-        ${programSteps(state.steps)}
-      </div>
+    <h3>Steps</h3>
+    <div class="firing-steps">
+      ${getFiringLogSVG(state.maxTemp, state.duration, state.steps, [], false)}
+      ${programSteps(state.steps)}
+    </div>
 
-      <h3>Details</h3>
+    <h3>Details</h3>
 
-      <dl class="program-fields">
-        <dt class="program-fields__key">Kiln</dt>
-          <dd class="program-fields__val">${kilnName}</dd>
+    <dl class="program-fields content--bleed">
+      <dt class="program-fields__key">Kiln</dt>
+        <dd class="program-fields__val">${kilnName}</dd>
 
-        <dt class="program-fields__key">Program No.</dt>
-          <dd class="program-fields__val">${state.controllerProgramID}</dd>
+      <dt class="program-fields__key">Program No.</dt>
+        <dd class="program-fields__val">${state.controllerProgramID}</dd>
 
-        <dt class="program-fields__key">Firing type</dt>
-          <dd class="program-fields__val">${state.type}</dd>
+      <dt class="program-fields__key">Firing type</dt>
+        <dd class="program-fields__val">${state.type}</dd>
 
-        <dt class="program-fields__key">Version</dt>
-          <dd class="program-fields__val">${state.version}</dd>
+      <dt class="program-fields__key">Version</dt>
+        <dd class="program-fields__val">${state.version}</dd>
 
-        <dt class="program-fields__key">Max temp</dt>
-          <dd class="program-fields__val">${state.maxTemp}&deg;C</dd>
+      <dt class="program-fields__key">Max temp</dt>
+        <dd class="program-fields__val">${state.maxTemp}&deg;C</dd>
 
-        <dt class="program-fields__key">Total firing time</dt>
-          <dd class="program-fields__val">${getHourMinSec(state.duration)}</dd>
+      <dt class="program-fields__key">Total firing time</dt>
+        <dd class="program-fields__val">${getHourMinSec(state.duration)}</dd>
 
-        <dt class="program-fields__key">Created</dt>
-          <dd class="program-fields__val">
-            ${auDateStr(state.created, true)} <br />
-            by: ${state.createdBy}
-          </dd>
+      <dt class="program-fields__key">Created</dt>
+        <dd class="program-fields__val">
+          ${auDateStr(state.created, true)} <br />
+          by: ${state.createdBy}
+        </dd>
 
-        <dt class="program-fields__key">Superseded</dt>
-          <dd class="program-fields__val">${boolYesNo(state.superseded)}</dd>
+      <dt class="program-fields__key">Superseded</dt>
+        <dd class="program-fields__val">${boolYesNo(state.superseded)}</dd>
 
-        <dt class="program-fields__key">Used</dt>
-          <dd class="program-fields__val">${boolYesNo(state.used)}</dd>
+      <dt class="program-fields__key">Used</dt>
+        <dd class="program-fields__val">${boolYesNo(state.used)}</dd>
 
-        <dt class="program-fields__key">Usage count</dt>
-          <dd class="program-fields__val">${state.useCount}</dd>
-      </dl>
-
-      <footer class="program__footer">
-        ${getNavBar(actionLinks, eHandler)}
-      </footer>
-    </article>
-  `
+      <dt class="program-fields__key">Usage count</dt>
+        <dd class="program-fields__val">${state.useCount}</dd>
+    </dl>
+    `,
+    html`${getNavBar(actionLinks, eHandler)}`,
+    'program'
+  )
 }

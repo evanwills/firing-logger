@@ -7,20 +7,32 @@ export const getNavItem = (label, href, id, actionType, eHandler, active, extraC
   const extraLi = (extra !== '') ? extra + 'item' : ''
   const extraA = (extra !== '') ? extra + 'link' : ''
 
-  return html`<li class="nav-bar__item${extraLi}"><a href="${href}${isNonEmptyStr(id) ? '/' + id : ''}" id="${id}-${actionType}" class="nav-bar__link${_active}${_active}${extraA}" @click=${eHandler}>${label}</a></li>`
+  console.group('getNavItem()')
+  console.log('extraLi:', extraLi)
+  console.log('href:', href)
+  console.log('id:', id)
+  console.log('actionType:', actionType)
+  console.log('_active:', _active)
+  console.log('extraA:', extraA)
+  console.log('eHandler:', eHandler)
+  console.log('label:', label)
+  console.groupEnd()
+
+  return html`<li class="nav-bar__item${extraLi}"><a href="${href}${isNonEmptyStr(id) ? '/' + id : ''}" id="${id}-${actionType}" class="nav-bar__link${_active}${extraA}" @click=${eHandler}>${label}</a></li>`
 }
 
-export const getNavBar = (linkList, eHandler, extraClass) => {
+export const getNavBar = (linkList, eHandler, extraClass, wrapClass) => {
   const extra = isNonEmptyStr(extraClass) ? extraClass : ''
   const extraNav = (extra !== '') ? ' ' + extra : ''
   const extraUl = (extra !== '') ? ' ' + extra + '__' + 'list' : ''
+  const wrap = isNonEmptyStr(wrapClass) ? ' ' + wrapClass : ''
 
   return html`
-    <nav class="nav-bar${extraNav}">
+    <nav class="nav-bar${wrap}${extraNav}">
       <ul class="nav-bar__list${extraUl}">
         ${linkList.map(link => getNavItem(
           link.label,
-          link.href,
+          link.path,
           link.id,
           link.action,
           eHandler,

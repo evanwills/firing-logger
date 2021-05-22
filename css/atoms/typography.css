@@ -7,6 +7,10 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--h-font);
+}
+
 input, textarea {
-  font-family: 'Courier New', Courier, monospace;
+  font-family: var(--c-font);
 }

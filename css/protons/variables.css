@@ -29,6 +29,11 @@
   --hazard: rgb(231, 227, 10);
   --success: rgb(77, 201, 128);
   --warning: rgb(143, 150, 219);
+
+  --bleed: 1rem;
+
+  --h-font: Verdana, Geneva, Tahoma, sans-serif;
+  --c-font: 'Courier New', Courier, monospace;
 }
 
 .ui-darkmode {

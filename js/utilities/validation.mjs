@@ -235,7 +235,9 @@ export const isIterable = (input) => {
  *                   `FALSE` otherwise
  */
 export const isLit = (input) => {
-  return (isFunction(input))
+  console.group('islit()')
+  console.groupEnd()
+  return (typeof input !== 'undefined' && typeof input.type === 'string' && (input.type === 'html' || input.type === 'svg'))
 }
 
 // ========================================================

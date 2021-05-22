@@ -4,6 +4,10 @@
   margin: 0;
 }
 
+.content__head {
+  padding: 0 1rem;
+}
+
 .content__foot {
   position: sticky;
   bottom: 0;
@@ -15,6 +19,6 @@
 }
 
 .content--bleed {
-  margin-left: -1rem;
-  margin-right: -1rem;
+  margin-left: -1rem !important;
+  margin-right: -1rem !important;
 }

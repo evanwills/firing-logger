@@ -226,6 +226,18 @@ export const isIterable = (input) => {
   return (typeof input[Symbol.iterator] === 'function' || typeof input.propertyIsEnumerable === 'function')
 }
 
+/**
+ * Test whether input is a lit-html or lit-svg output function
+ *
+ * @param {any} value to be tested
+ *
+ * @return {boolean} `TRUE` if input is a lit-html or lit-svg output function
+ *                   `FALSE` otherwise
+ */
+export const isLit = (input) => {
+  return (isFunction(input))
+}
+
 // ========================================================
 
 /**

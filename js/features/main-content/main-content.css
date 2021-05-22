@@ -1,0 +1,20 @@
+.content {
+  position: relative;
+  padding: 0;
+  margin: 0;
+}
+
+.content__foot {
+  position: sticky;
+  bottom: 0;
+}
+
+.content__main {
+  margin: 0;
+  padding: 1rem;
+}
+
+.content--bleed {
+  margin-left: -1rem;
+  margin-right: -1rem;
+}

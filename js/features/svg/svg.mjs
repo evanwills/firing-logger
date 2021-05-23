@@ -184,7 +184,7 @@ export const getFiringLogSVG = (maxDeg, duration, programSteps, firingLog, showC
   const cool = isBoolTrue(showCooling)
   const totlaHrs = (cool === true) ? hours * 2 : hours
   const xOffset = ((totlaHrs * spacing) + spacing)
-  const yOffset = (maxDeg + spacing)
+  const yOffset = ((maxDeg * 1) + spacing)
   const x = (xOffset + (spacing * hBorder))
   const y = (yOffset + (spacing * vBorder))
   const hGuide = xOffset + (spacing * 0.1)
@@ -193,6 +193,16 @@ export const getFiringLogSVG = (maxDeg, duration, programSteps, firingLog, showC
   const tempGuides = []
   const timeGuides = []
   let firingLogPath = ''
+
+  console.group('getFiringLogSVG()')
+  console.log('maxDeg:', maxDeg)
+  console.log('duration:', duration)
+  console.log('programSteps:', programSteps)
+  console.log('hours:', hours)
+  console.log('totlaHrs:', totlaHrs)
+  console.log('totlaHrs:', totlaHrs)
+  console.log('xOffset:', xOffset)
+  console.log('yOffset:', yOffset)
 
   // Build list of temperature guides
   for (let a = 100; a <= maxDeg; a += 100) {
@@ -230,6 +240,8 @@ export const getFiringLogSVG = (maxDeg, duration, programSteps, firingLog, showC
       </g>
     `
   }
+
+  console.groupEnd()
 
   return svg`
     <svg version="1.1" viewBox="0 0 ${(x + 1)} ${y}" xmlns="http://www.w3.org/2000/svg" class="firing-log">

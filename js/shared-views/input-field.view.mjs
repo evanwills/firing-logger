@@ -53,7 +53,14 @@ export const getAttr = (attr, props, prefix) => {
  * @returns {boolean} HTML attribute with value or empty string
  */
 export const getBoolAttr = (attr, props, reverse) => {
+  // console.group('getBoolAttr()')
+  // console.log('attr:', attr)
+  // console.log('props:', props)
+  // console.log('reverse:', reverse)
   const output = isBoolTrue(props[attr])
+  // console.log('output:', output)
+  // console.log('(isBoolTrue(reverse)) ? !output : output:', (isBoolTrue(reverse)) ? !output : output)
+  // console.groupEnd()
   return (isBoolTrue(reverse)) ? !output : output
 }
 
@@ -318,9 +325,9 @@ const selectOption = (props) => {
 export const selectField = (props) => {
   const _descBy = getDescbyAttr(props)
 
-  console.group('selectField()')
-  console.log('props:', props)
-  console.groupEnd()
+  // console.group('selectField()')
+  // console.log('props:', props)
+  // console.groupEnd()
   return html`
     ${getLabel(props)}
     <select id=${props.id} class="${getClassName(props, 'select')}" ?required=${getBoolAttr('required', props)} ?readonly=${getBoolAttr('readonly', props)} ?disabled=${getBoolAttr('disabled', props)} @change=${props.eventHandler} aria-describedby="${ifDefined(_descBy)}" />

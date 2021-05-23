@@ -20,3 +20,10 @@
   .input-fields__item--18 > label { width: 18rem; }
   .input-fields__item--21 > label { width: 21rem; }
 }
+
+input {
+  font-size: 1rem;
+}
+input[type='number'] {
+  text-align: right;
+}

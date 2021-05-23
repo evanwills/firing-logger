@@ -17,7 +17,7 @@ import {
 import { kilnReducer } from '../kilns/kilns.state.reducers.mjs'
 import { programReducer } from '../firing-programs/programs.state.reducer.mjs'
 import { programsMW } from '../firing-programs/programs.state.middleware.mjs'
-import { invalidStrNum, invalidBool, invalidString } from '../../utilities/validation.mjs'
+import { invalidStrNum, isNumeric, invalidBool, invalidString } from '../../utilities/validation.mjs'
 import { getMetaFromID } from '../../utilities/sanitisation.mjs'
 // import { persistToLocal } from './persistant.mw.mjs'
 import { viewReducer } from './view.state.mjs'
@@ -240,19 +240,23 @@ export const generalEventHandler = (_store) => {
   console.log('generalEventHandler()')
   return function (e) {
     e.preventDefault()
-    console.group('generalEventHandler()')
-    console.log('this:', this)
+    // console.group('generalEventHandler()')
+    // console.log('this:', this)
     const _state = _store.getState()
     const _meta = getMetaFromID(this.id)
-    console.log('_meta:', _meta)
-    console.groupEnd()
+    const _val = (!invalidStrNum('value', this)) ? this.value : null
+    // console.log('_meta:', _meta)
+    // console.groupEnd()
 
     _store.dispatch({
       type: getActionType(_meta),
       payload: {
         id: _meta.id,
-        value: (!invalidStrNum('value', this)) ? this.value : null,
-        isChecked: (invalidBool('checked', this, true) === false)
+        // Convert numeric values into numbers
+        value: isNumeric(_val) ? _val * 1 : _val,
+        isChecked: (invalidBool('checked', this, true) === false),
+        extra: _meta.extra,
+        suffix: _meta.suffix
       },
       href: (!invalidString('href', this, true))
         ? this.href.replace(/^(?:(?:https?:)?\/\/[^/]+\/)?/, '')

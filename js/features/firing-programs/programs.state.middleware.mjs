@@ -4,10 +4,10 @@ import { getProgramByID, getNewProgram } from './programUtils.mjs'
 export const programsMW = store => next => action => {
   const _state = store.getState()
   let program
-  console.group('programsMW()')
-  console.log('action:', action)
-  console.log('_state:', _state)
-  console.groupEnd()
+  // console.group('programsMW()')
+  // console.log('action:', action)
+  // console.log('_state:', _state)
+  // console.groupEnd()
 
   switch (action.type) {
     case programActions.UPDATE:
@@ -59,6 +59,17 @@ export const programsMW = store => next => action => {
             mode: programActions.ADD
           }
         }
+      })
+      // break
+
+    case programActions.TMP_UPDATE_STEP:
+      store.dispatch({
+        ...action,
+        type: programActions.TMP_UPDATE_STEP_INNER
+      })
+      return next({
+        ...action,
+        type: programActions.TMP_UPDATE_STEP_INFERRED
       })
   }
 

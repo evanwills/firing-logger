@@ -195,33 +195,126 @@ const updateSuperseded = (allPrograms, kilnID, id, version) => {
 }
 
 const updateTmpField = (program, action) => {
-  console.group('updateTmpField()')
-  console.log('action:', action)
-  console.log('action.payload:', action)
-  console.log('action.payload.id:', action.payload.id)
-  console.log('action.payload.value:', action.payload.value)
-  console.log('program:', program)
-  console.log('typeof program[action.payload.id]:', typeof program[action.payload.id])
-  console.log('typeof action.payload.value:', typeof action.payload.value)
-  console.log('program:', program)
+  // console.group('updateTmpField()')
+  // console.log('action:', action)
+  // console.log('action.payload:', action)
+  // console.log('action.payload.id:', action.payload.id)
+  // console.log('action.payload.value:', action.payload.value)
+  // console.log('program:', program)
+  // console.log('typeof program[action.payload.id]:', typeof program[action.payload.id])
+  // console.log('typeof action.payload.value:', typeof action.payload.value)
+  // console.log('program:', program)
   const newProgram = { ...program }
 
   if (typeof program[action.payload.id] === typeof action.payload.value) {
     newProgram[action.payload.id] = action.payload.value
-    console.log('newProgram:', newProgram)
-    console.groupEnd()
+    // console.log('newProgram:', newProgram)
+    // console.groupEnd()
     return newProgram
   }
 
-  console.groupEnd()
+  // console.groupEnd()
 
   return program
 }
 
+const updateTmpStep = (program, action) => {
+  const a = action.payload.extra * 1
+
+  // console.group('updateTmpStep()')
+  // console.log('action:', action)
+  // console.log('action.payload:', action)
+  // console.log('action.payload.id:', action.payload.id)
+  // console.log('action.payload.value:', action.payload.value)
+  // console.log('program:', program)
+  // console.log('action.payload.extra:', action.payload.extra)
+  // console.log('program.steps:', program.steps)
+
+  if (typeof program.steps[a] !== 'undefined') {
+    const newSteps = [...program.steps]
+    newSteps[a][action.payload.id] = action.payload.value
+    // console.log('typeof program.steps[' + a + ']:', typeof program.steps[a])
+    // console.log('typeof program.steps[' + a + '][' + action.payload.id + ']:', typeof program.steps[a][action.payload.id])
+    // console.log('newSteps:', newSteps)
+    // console.log('newSteps[' + action.payload.extra + ']:', newSteps[action.payload.extra])
+    // console.log('newSteps[' + action.payload.extra + '][' + action.payload.id + ']:', newSteps[action.payload.extra][action.payload.id])
+    return {
+      ...program,
+      steps: newSteps
+    }
+  } else if (program.steps.length === a) {
+    const tmpStep = {
+      endTemp: 0,
+      rate: 0,
+      hold: 0
+    }
+    tmpStep[action.payload.id] = action.payload.value
+    return {
+      ...program,
+      steps: [...program.steps, tmpStep]
+    }
+  }
+
+  // console.groupEnd()
+  return program
+}
+
+/**
+ * Update inferred values for program
+ *
+ * @param {object} program
+ *
+ * @returns {object}
+ */
+const updateTmpInferred = (program) => {
+  let maxTemp = 0
+  let duration = 0
+  let lastTemp = 0
+  let changedM = false
+  let changedD = false
+  let newP = false
+  // console.group('updateTmpInferred()')
+  // console.log('program:', program)
+
+  for (let a = 0; a < program.steps.length; a += 1) {
+    if (program.steps[a].endTemp > 0) {
+      if (program.steps[a].endTemp > maxTemp) {
+        maxTemp = program.steps[a].endTemp
+        changedM = true
+      }
+
+      if (program.steps[a].rate > 0) {
+        const temp = (program.steps[a].endTemp > lastTemp)
+          ? (program.steps[a].endTemp - lastTemp)
+          : (lastTemp - program.steps[a].endTemp)
+
+        duration += ((temp / program.steps[a].rate) * 3600)
+        lastTemp = program.steps[a].endTemp
+        changedD = true
+      }
+    }
+  }
+  const newProgram = { ...program }
+  if (changedM) {
+    newProgram.maxTemp = maxTemp
+    newP = true
+  }
+  if (changedD) {
+    newProgram.duration = duration
+    newP = true
+  }
+  // console.log('changedM:', changedM)
+  // console.log('changedD:', changedD)
+  // console.log('newP:', newP)
+  // console.log('newProgram:', program)
+  // console.groupEnd()
+  return (newP) ? newProgram : program
+}
+
 export const programReducer = (state = { all: [], tmp: {} }, action) => {
-  console.group()
-  console.log('action:', action)
-  console.groupEnd()
+  // console.group('programReducer()')
+  // console.log('action:', action)
+  // console.groupEnd()
   switch (action.type) {
     case programActions.ADD:
       if (uniquePogramName(state, action.payload.name, action.payload.kilnID)) {
@@ -239,6 +332,12 @@ export const programReducer = (state = { all: [], tmp: {} }, action) => {
 
     case programActions.TMP_COMMIT:
       return state
+
+    case programActions.TMP_UPDATE_STEP_INNER:
+      return { ...state, tmp: updateTmpStep(state.tmp, action) }
+
+    case programActions.TMP_UPDATE_STEP_INFERRED:
+      return { ...state, tmp: updateTmpInferred(state.tmp) }
 
     case programActions.TMP_CLEAR_CONFIRMED:
       return state

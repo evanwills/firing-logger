@@ -1,12 +1,11 @@
 import { isBoolTrue, invalidNum } from '../../utilities/validation.mjs'
-import { getISODateStr } from '../../utilities/sanitisation.mjs'
+import { getISODateStr, normalisedID } from '../../utilities/sanitisation.mjs'
 import {
   getMinMaxFilter,
   getBoolfilter,
   getStringMatchFilter,
   getFilterFunc
 } from '../../utilities/filterGetters.mjs'
-import { getNormalisedName } from './programDataValidation.mjs'
 
 export const getNewProgram = () => {
   return {
@@ -59,27 +58,27 @@ export const getProgramByID = (allPrograms, id) => {
   }
 }
 
-/**
- * Get a specific firing program object.
- *
- * @param {array}  allPrograms List of all programs available
- * @param {string} kilnID      ID of kiln program applies to
- * @param {string} name        Name of program
- * @param {number} version     Version of the program being updated
- *
- * @returns {object,false} The matching program or FALSE if no
- *                         matching program could be found
- */
-export const getProgram = (allPrograms, kilnID, name, version) => {
-  const _name = getNormalisedName(name)
-  const tmp = allPrograms.filter(program => (program.kilnID === kilnID && getNormalisedName(program.name) === _name && program.version === version))
+// /**
+//  * Get a specific firing program object.
+//  *
+//  * @param {array}  allPrograms List of all programs available
+//  * @param {string} kilnID      ID of kiln program applies to
+//  * @param {string} name        Name of program
+//  * @param {number} version     Version of the program being updated
+//  *
+//  * @returns {object,false} The matching program or FALSE if no
+//  *                         matching program could be found
+//  */
+// export const getProgram = (allPrograms, kilnID, name, version) => {
+//   const _name = getNormalisedName(name)
+//   const tmp = allPrograms.filter(program => (program.kilnID === kilnID && getNormalisedName(program.name) === _name && program.version === version))
 
-  if (tmp.length === 1) {
-    return tmp[0]
-  } else {
-    return false
-  }
-}
+//   if (tmp.length === 1) {
+//     return tmp[0]
+//   } else {
+//     return false
+//   }
+// }
 
 /**
  *
@@ -148,4 +147,49 @@ export const getKilnName = (kilnID, kilns) => {
   const rightKiln = kilns.filter(kiln => kiln.id === kilnID)
 
   return (rightKiln.length > 0) ? rightKiln[0].name : ''
+}
+
+const validateName = (pName, kilnID, allPrograms) => {
+  if (kilnID !== '') {
+    const programName = kilnID + normalisedID(pName) // eslint-disable-line
+    for (let a = 0; a < allPrograms.length; a += 1) {
+      if (allPrograms[a].superseded || allPrograms[a].deleted) {
+        // We're only interested in active programs don't bother
+        // with old or deleted programs
+        continue
+      }
+      if (allPrograms[a].kilnID + normalisedID(allPrograms[a].name) === programName) {
+        return 'Program name is not unique for specified kiln'
+      }
+    }
+    if (pName.length > 64) {
+      return 'Program name is too long. Must not exceed 64 characters'
+    }
+    if (pName.match(/[^a-z0-9 \-[\](),.'":&+]/i) !== null) {
+      return 'Program name contains invalid characters. Allowed characters: A-Z, a-z, 0-9, " ", "[", "]", "(", ")", ",", ".", "\'", \'"\', ":", "&", "+"'
+    }
+  }
+  return false
+}
+
+/**
+ * Test whether a given value is valid for a given program property
+ *
+ * @param {object} action      Redux action object
+ * @param {object} tmpProgram  Current program being edited
+ * @param {array}  allPrograms List of all available programs
+ * @param {array}  allKilns    List of all available kilns
+ *
+ * @returns {false,string} If field to be updated is valied then
+ *                         FALSE is return otherwise a string error
+ *                         message is returned
+ */
+export const isInvalidProgramField = (action, tmpProgram, allPrograms, allKilns) => {
+  // let tmp = ''
+
+  switch (action.payload.id) {
+    case 'name':
+      return validateName(action.payload.value, tmpProgram.kilnID, allPrograms)
+  }
+  return false
 }

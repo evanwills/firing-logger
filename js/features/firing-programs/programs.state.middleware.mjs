@@ -1,5 +1,5 @@
 import { programActions } from './programs.state.actions.mjs'
-import { getProgramByID, getNewProgram } from './programUtils.mjs'
+import { getProgramByID, getNewProgram, isInvalidProgramField } from './programUtils.mjs'
 
 export const programsMW = store => next => action => {
   const _state = store.getState()
@@ -71,6 +71,28 @@ export const programsMW = store => next => action => {
         ...action,
         type: programActions.TMP_UPDATE_STEP_INFERRED
       })
+      // break
+
+    case programActions.TMP_UPDATE_STEP_INNER:
+      const tmp = isInvalidProgramField( // eslint-disable-line
+        action,
+        _state.studio.firingPrograms.tmp,
+        _state.studio.firingPrograms.all,
+        _state.studio.kilns.all
+      )
+
+      if (tmp === false) {
+        return next(action)
+      } else {
+        return next({
+          ...action,
+          type: programActions.PROGRAM_TMP_UPDATE_FIELD_ERROR,
+          payload: {
+            ...action.payload,
+            value: tmp
+          }
+        })
+      }
   }
 
   return next(action)

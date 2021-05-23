@@ -57,6 +57,18 @@ export const idSafe = (input) => {
   return input.replace(/[^a-z0-9_-]/ig, '')
 }
 
+/**
+ * Make a string safe to be used as an ID and make it lower case
+ *
+ * @param {string} input Value to be used as an ID
+ *
+ * @returns {string} value that is safe to be used as an ID
+ */
+export const normalisedID = (input) => {
+  const tmp = idSafe(input)
+  return tmp.toLowerCase()
+}
+
 const propSafeInner = (whole, alpha, num) => {
   const _num = isNumeric(num) ? num : ''
   return alpha.toUpperCase() + _num

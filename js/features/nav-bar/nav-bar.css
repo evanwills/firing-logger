@@ -1,4 +1,12 @@
 /**
+ * Nav bar
+ *
+ * Horizontal list of navigation buttons
+ *
+ * Sample file path: .\nav-bar.view.js
+ *
+ *
+ * Markup:
  * <nav class="nav-bar">
  *   <ul class="nav-bar__list">
  *     <li class="nav-bar__item">
@@ -6,8 +14,9 @@
  *     </li>
  *   </ul>
  * </nav>
-*/
-
+ *
+ * StyleGuide: Molecules.Nav bar
+ */
 .nav-bar {
 
 }

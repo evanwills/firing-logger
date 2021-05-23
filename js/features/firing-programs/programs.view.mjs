@@ -1,11 +1,10 @@
 import { html } from '../../vendor/lit-html/lit-html.mjs'
 import { programListItem, singleProgram } from './program.view.mjs'
-import { programActions } from './programs.state.actions.mjs'
+// import { programActions } from './programs.state.actions.mjs'
 import { getFilteredPrograms, getKilnName } from './programUtils.mjs'
 import { isNonEmptyStr } from '../../utilities/validation.mjs'
 import { getMainContent } from '../main-content/main-content.view.mjs'
 import { getItemList } from '../item-list/item-list.view.mjs'
-
 
 export const programsView = (state, kilns, eHandler, routes) => {
   const [route, ...subRoutes] = routes

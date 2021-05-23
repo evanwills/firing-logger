@@ -1,5 +1,8 @@
+/**
+ *
+ */
 @import './protons/variables.css';
-/* @import './protons/colours.css'; */
+@import './protons/colours.css';
 @import '../js/features/firing-programs/program.css';
 @import '../js/features/main-content/main-content.css';
 @import '../js/features/item-list/item-list.css';

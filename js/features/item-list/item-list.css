@@ -1,3 +1,23 @@
+/**
+ * Item list
+ *
+ * Comment description goes here (may be multiple lines)
+ *
+ * Sample file path: .\item-list.view.mjs
+ *
+ *
+ * Markup:
+ *  <ul class="item-list {{modifier_class}}">
+ *        <li class="item-list__item">
+ *            <!-- Sub component (e.g. link tag) goes here -->
+ *        </li>
+ *  </ul>
+ *
+ * .content--bleed - Make component bleed to the edge of the screen
+ *                   (or parent component)
+ *
+ * StyleGuide: Molecule.Item list
+ */
 .item-list {
   list-style-type: none;
   margin: 0;

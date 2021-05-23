@@ -1,0 +1,22 @@
+.input-fields__item {
+  align-items: flex-start;
+  display: flex;
+  flex: column;
+  padding: 0.5rem var(--bleed);
+  width: 100%;
+}
+
+@media screen and (min-width: 20rem) {
+  .input-fields__item {
+    display: flex;
+    flex-direction: row;
+  }
+  .input-fields__item > label {
+    width: 12rem;
+    font-weight: bold;
+  }
+  .input-fields__item--09 > label { width: 9rem; }
+  .input-fields__item--15 > label { width: 15rem; }
+  .input-fields__item--18 > label { width: 18rem; }
+  .input-fields__item--21 > label { width: 21rem; }
+}

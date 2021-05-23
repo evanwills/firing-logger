@@ -41,30 +41,6 @@ export const getAttr = (attr, props, prefix) => {
 }
 
 /**
- * Get multiple attribute strings for an HTML input/select/textarea
- * field
- *
- * @param {string} attr  Array of keys in props object
- *                       (and HTML attribute names)
- * @param {object} props Object to get attribute values from
- *
- * @returns {string} String of HTML attributes with value or empty
- *                   string if no attributes had values
- * @param {string} prefix Prefix for object property name to allow
- *                        for the component to have multiple elements
- *                        with different values for the same
- *                        attribute name
- */
-export const getAttrs = (attrArr, props, prefix) => {
-  let output = ''
-
-  for (let a = 0; a < attrArr.length; a += 1) {
-    output += getAttr(attrArr[a], props, prefix)
-  }
-  return output
-}
-
-/**
  * Get the bolean attribute string for an HTML input/select/textarea
  * field
  *
@@ -342,7 +318,9 @@ const selectOption = (props) => {
 export const selectField = (props) => {
   const _descBy = getDescbyAttr(props)
 
-  // console.log('props:', props)
+  console.group('selectField()')
+  console.log('props:', props)
+  console.groupEnd()
   return html`
     ${getLabel(props)}
     <select id=${props.id} class="${getClassName(props, 'select')}" ?required=${getBoolAttr('required', props)} ?readonly=${getBoolAttr('readonly', props)} ?disabled=${getBoolAttr('disabled', props)} @change=${props.eventHandler} aria-describedby="${ifDefined(_descBy)}" />

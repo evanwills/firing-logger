@@ -2,7 +2,7 @@
  *
  */
 @import './protons/variables.css';
-@import './protons/colours.css';
+/* @import './protons/colours.css'; */
 @import '../js/features/firing-programs/program.css';
 @import '../js/features/main-content/main-content.css';
 @import '../js/features/item-list/item-list.css';
@@ -11,6 +11,7 @@
 @import './organisms/header.css';
 @import './molecules/repeatable-nav.css';
 @import './molecules/item-actions.css';
+@import './molecules/input-field.css';
 @import './atoms/base.css';
 @import './atoms/screen-reader.css';
 @import './atoms/typography.css';

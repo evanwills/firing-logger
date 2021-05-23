@@ -195,7 +195,6 @@ export const singleProgram = (state, kilnName, eHandler) => {
     ]
   }
 
-
   // actionLinks = [
   //   ...actionLinks,
   //   {

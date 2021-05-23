@@ -18,3 +18,11 @@ h1, h2, h3, h4, h5, h6 {
 input, textarea {
   font-family: var(--c-font);
 }
+
+input:read-only, textarea:read-only {
+  background-color: var(--bg-colour);
+  border: 0.05rem solid var(--bg-colour);
+  color: var(--txt-colour);
+  font-family: var(--b-font);
+  font-size: 1rem;
+}

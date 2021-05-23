@@ -40,6 +40,8 @@ const initialState = {
         glaze: true,
         bisque: true,
         singleFire: false,
+        luster: true,
+        onglaze: true,
         retired: false,
         isWorking: true,
         isInUse: false,
@@ -249,7 +251,7 @@ export const generalEventHandler = (_store) => {
       type: getActionType(_meta),
       payload: {
         id: _meta.id,
-        value: (!invalidStrNum('val', this)) ? this.value : null,
+        value: (!invalidStrNum('value', this)) ? this.value : null,
         isChecked: (invalidBool('checked', this, true) === false)
       },
       href: (!invalidString('href', this, true))

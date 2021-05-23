@@ -28,10 +28,10 @@ export const getMainContent = (header, content, footer, extraClass, wrapClass) =
   </footer>`
   }
 
-  console.group('getMainContent()')
-  console.log('footer:', footer)
-  console.log('foot:', foot)
-  console.groupEnd()
+  // console.group('getMainContent()')
+  // console.log('footer:', footer)
+  // console.log('foot:', foot)
+  // console.groupEnd()
 
   return html`
     <main class="content${extra}${wrap}">

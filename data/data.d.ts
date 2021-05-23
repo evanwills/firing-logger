@@ -30,6 +30,8 @@ interface Kiln {
   height: number,
   glaze: boolean,
   bisque: boolean,
+  luster: boolean,
+  onglaze: boolean,
   singleFire: boolean,
   retired: false,
   isWorking: boolean,

@@ -90,11 +90,11 @@
   margin: 1rem 0
 }
 
-.firing-steps > svg {
+ .firing-steps > svg.firing-log {
   margin-bottom: 2rem;
 }
 @media screen and (min-width: 67rem) {
-  .firing-steps > svg {
+  .firing-steps > svg.firing-log {
     margin-bottom: 0;
   }
 }

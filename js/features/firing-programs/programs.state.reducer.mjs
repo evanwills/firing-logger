@@ -1,7 +1,12 @@
 import { programActions } from './programs.state.actions.mjs'
 import { uniquePogramName, validFiringType } from './programDataValidation.mjs'
-import { invalidBool, invalidString, invalidNum, isBoolTrue } from '../../utilities/validation.mjs'
-import { getISODateStr } from '../../utilities/sanitisation.mjs'
+import {
+  // isBoolTrue,
+  invalidBool,
+  invalidString,
+  invalidNum
+} from '../../utilities/validation.mjs'
+// import { getISODateStr } from '../../utilities/sanitisation.mjs'
 
 export const initialPrograms = [{
   id: 1,
@@ -189,7 +194,34 @@ const updateSuperseded = (allPrograms, kilnID, id, version) => {
   })
 }
 
+const updateTmpField = (program, action) => {
+  console.group('updateTmpField()')
+  console.log('action:', action)
+  console.log('action.payload:', action)
+  console.log('action.payload.id:', action.payload.id)
+  console.log('action.payload.value:', action.payload.value)
+  console.log('program:', program)
+  console.log('typeof program[action.payload.id]:', typeof program[action.payload.id])
+  console.log('typeof action.payload.value:', typeof action.payload.value)
+  console.log('program:', program)
+  const newProgram = { ...program }
+
+  if (typeof program[action.payload.id] === typeof action.payload.value) {
+    newProgram[action.payload.id] = action.payload.value
+    console.log('newProgram:', newProgram)
+    console.groupEnd()
+    return newProgram
+  }
+
+  console.groupEnd()
+
+  return program
+}
+
 export const programReducer = (state = { all: [], tmp: {} }, action) => {
+  console.group()
+  console.log('action:', action)
+  console.groupEnd()
   switch (action.type) {
     case programActions.ADD:
       if (uniquePogramName(state, action.payload.name, action.payload.kilnID)) {
@@ -203,13 +235,13 @@ export const programReducer = (state = { all: [], tmp: {} }, action) => {
       return { ...state, tmp: action.payload.value }
 
     case programActions.TMP_UPDATE_FIELD:
-      return { ...state, tmp: action.payload.value }
+      return { ...state, tmp: updateTmpField(state.tmp, action) }
 
     case programActions.TMP_COMMIT:
-      return { ...state, tmp: action.payload.value }
+      return state
 
     case programActions.TMP_CLEAR_CONFIRMED:
-      return { ...state, tmp: action.payload.value }
+      return state
 
     case programActions.UPDATE:
       return updateProgramField(state, action.payload)

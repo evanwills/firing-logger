@@ -397,10 +397,10 @@ export const invalidArray = (prop, input, notEmpty) => {
  */
 export const invalidBool = (prop, input, trueFalse) => {
   if (typeof prop !== 'string') {
-    throw new Error('invalidArray() expects first parameter "prop" to be a string matching the name of a property in the object. ' + typeof prop + ' given.')
+    throw new Error('invalidBool() expects first parameter "prop" to be a string matching the name of a property in the object. ' + typeof prop + ' given.')
   }
   if (typeof input !== 'object') {
-    throw new Error('invalidArray() expects second parameter "input" to be a an object containing "' + prop + '" property. ' + typeof input + ' given.')
+    throw new Error('invalidBool() expects second parameter "input" to be a an object containing "' + prop + '" property. ' + typeof input + ' given.')
   }
   const _trueFalse = (isBool(trueFalse)) ? trueFalse : null
 

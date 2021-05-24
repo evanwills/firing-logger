@@ -47,11 +47,11 @@ const getFiringTypes = (kiln, programType) => {
     label: 'Onglaze'
   }]
 
-  // console.group('editProgram()')
-  // console.log('kiln:', kiln)
-  // console.log('programType:', programType)
-  // console.log('types:', types)
-  // console.groupEnd()
+  console.group('getFiringTypes()')
+  console.log('kiln:', kiln)
+  console.log('programType:', programType)
+  console.log('types:', types)
+  console.groupEnd()
 
   return types.filter(fType => !invalidBool(fType.value, kiln, true)).map(fType => {
     return {
@@ -147,9 +147,9 @@ export const editProgram = (program, kilns, user, eHandler) => {
   const name = (program.name === '') ? 'New (unamed) program' : program.name
   let nav = ''
 
-  // console.group('editProgram()')
-  // console.log('program:', program)
-  // console.log('kilns:', kilns)
+  console.group('editProgram()')
+  console.log('program:', program)
+  console.log('kilns:', kilns)
 
   const fields = [
     textInputField({
@@ -189,6 +189,7 @@ export const editProgram = (program, kilns, user, eHandler) => {
   // console.log('program.kilnID:', program.kilnID)
 
   if (program.kilnID !== '') {
+    console.log('program.kilnID:', program.kilnID)
     fields.push(selectField({
       id: 'type-' + programActions.TMP_UPDATE_FIELD,
       required: true,
@@ -247,7 +248,7 @@ export const editProgram = (program, kilns, user, eHandler) => {
     ? [...program.steps, { endTemp: 0, rate: 0, hold: 0 }]
     : program.steps
 
-  // console.groupEnd()
+  console.groupEnd()
 
   return getMainContent(
     html`<h2>${name}</h2>`,

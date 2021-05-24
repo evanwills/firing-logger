@@ -45,6 +45,8 @@ export const initialPrograms = [{
   created: '2021-05-06T21:13:25+1000',
   createdBy: 'evanwills',
   superseded: false,
+  deleted: false,
+  locked: false,
   used: false,
   useCount: 0
 }]

@@ -13,9 +13,11 @@ export const programsView = (state, kilns, eHandler, routes) => {
   const [route, ...subRoutes] = routes // eslint-disable-line
   let error = ''
 
-  // console.group('programsView()')
-  // console.log('route:', route)
-  // console.log(['add', 'edit', 'copy'].indexOf(route))
+  console.group('programsView()')
+  console.log('route:', route)
+  console.log('state:', state)
+  console.log('kilns:', kilns)
+  console.log(['add', 'edit', 'copy'].indexOf(route))
 
   // console.log('filters:', getFilteredPrograms(state.filters))
 
@@ -28,8 +30,8 @@ export const programsView = (state, kilns, eHandler, routes) => {
     if (prog.length === 1) {
       subView = singleProgram(prog[0], getKilnName(prog[0].kilnID, kilns), eHandler)
     } else if (['add', 'edit', 'copy'].indexOf(route) > -1) {
-      // console.log('state:', state)
-      // console.log('kilns:', kilns)
+      console.log('state:', state)
+      console.log('kilns:', kilns)
       subView = editProgram(state.tmp, kilns, '', eHandler)
     } else {
       error = html`<p class="error"></p>Could not find firing program matching ID: <code>${route}</code></p>`
@@ -58,7 +60,7 @@ export const programsView = (state, kilns, eHandler, routes) => {
       html`${getNavBar(actionLinks, eHandler)}`
     )
   }
-  // console.groupEnd()
+  console.groupEnd()
 
   return subView
 }

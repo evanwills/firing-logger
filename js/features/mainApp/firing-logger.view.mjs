@@ -7,9 +7,16 @@ import { getLink } from '../../shared-views/navigation.view.mjs'
 import { invalidString } from '../../utilities/validation.mjs'
 
 export const firingLoggerView = (domNode, eHandler, titleTag) => () => {
-  // console.group('firingLoggerView()')
+  console.group('firingLoggerView()')
   // console.log('eHandler:', eHandler)
   const state = store.getState()
+  console.log('state:', state)
+  if (state.render === false) {
+    // We're not ready to show anything yet
+    console.log('not ready to show anything yet')
+    return ''
+  }
+
   const [route, ...subRoutes] = state.view.route
   const uiMode = 'ui-darkmode'
   const hasTitle = (!invalidString('title', state.view, true))
@@ -41,6 +48,9 @@ export const firingLoggerView = (domNode, eHandler, titleTag) => () => {
 
   switch (route) {
     case 'programs':
+      console.log('state.studio.firingPrograms:', state.studio.firingPrograms)
+      console.log('state.studio.kilns.all:', state.studio.kilns.all)
+
       subView = programsView(state.studio.firingPrograms, state.studio.kilns.all, eHandler, subRoutes)
       break
 
@@ -55,7 +65,7 @@ export const firingLoggerView = (domNode, eHandler, titleTag) => () => {
 
   // console.log('titleTag:', titleTag)
   titleTag.innerText = 'Firing logger' + titleTxt
-  // console.groupEnd()
+  console.groupEnd()
 
   render(
     html`

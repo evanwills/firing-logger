@@ -243,31 +243,36 @@ export const getFiringLogSVG = (maxDeg, duration, programSteps, firingLog, showC
 
   console.groupEnd()
 
-  return svg`
-    <svg version="1.1" viewBox="0 0 ${(x + 1)} ${y}" xmlns="http://www.w3.org/2000/svg" class="firing-log">
-      <g class="base">
-        <rect width="${x}" height="${y}" class="frame image-frame" />
-        <rect x="${spacing * 1.2}" width="${xOffset}" height="${yOffset}" class="frame program-frame" />
-      </g>
+  if (pSteps.length > 0 && pSteps[0].endTemp > 0 && pSteps[0].rate > 0) {
+    // Only render SVG when there's some usable data worth rendering
+    return svg`
+      <svg version="1.1" viewBox="0 0 ${(x + 1)} ${y}" xmlns="http://www.w3.org/2000/svg" class="firing-log">
+        <g class="base">
+          <rect width="${x}" height="${y}" class="frame image-frame" />
+          <rect x="${spacing * 1.2}" width="${xOffset}" height="${yOffset}" class="frame program-frame" />
+        </g>
 
 
-      ${stepGraph(spacing * hBorder, yOffset, pSteps, false, cool)}
+        ${stepGraph(spacing * hBorder, yOffset, pSteps, false, cool)}
 
-      ${firingLogPath}
+        ${firingLogPath}
 
-      <g class="degrees">
-        <text id="unit-label--deg" transform="rotate(-90)" x="-${((y / 2) + (spacing * 0.2))}" y="${spacing * 0.32}" class="unit-text">Degrees</text>
+        <g class="degrees">
+          <text id="unit-label--deg" transform="rotate(-90)" x="-${((y / 2) + (spacing * 0.2))}" y="${spacing * 0.32}" class="unit-text">Degrees</text>
 
-        ${tempGuides}
-      </g>
+          ${tempGuides}
+        </g>
 
-      <g class="hours">
-        <text id="unit-label--hrs" x="${((x / 2) - (spacing * 0.3))}" y="${(yOffset + (spacing * 0.95))}" class="unit-text">Hours</text>
+        <g class="hours">
+          <text id="unit-label--hrs" x="${((x / 2) - (spacing * 0.3))}" y="${(yOffset + (spacing * 0.95))}" class="unit-text">Hours</text>
 
-        ${timeGuides}
-      </g>
-    </svg>
-  `
+          ${timeGuides}
+        </g>
+      </svg>
+    `
+  } else {
+    return ''
+  }
 }
 
 export const getFiringGraphSVG = (maxDeg, duration, steps, showCooling) => {
@@ -275,10 +280,17 @@ export const getFiringGraphSVG = (maxDeg, duration, steps, showCooling) => {
   const totlaHrs = isBoolTrue(showCooling) ? hours * 2 : hours
   const xOffset = ((Math.floor(totlaHrs) * spacing) + spacing)
   const yOffset = Math.floor(maxDeg + spacing)
+  console.group('getFiringGraphSVG()')
+  console.log('steps:', steps)
+  console.groupEnd()
 
-  return svg`
-    <svg version="1.1" viewBox="0 0 ${xOffset} ${yOffset}" xmlns="http://www.w3.org/2000/svg" class="firing-graph">
-      ${stepGraph(0, yOffset, steps, true)}
-    </svg>
-  `
+  if (steps.length > 0 && steps[0].endTemp > 0 && steps[0].rate > 0) {
+    return svg`
+      <svg version="1.1" viewBox="0 0 ${xOffset} ${yOffset}" xmlns="http://www.w3.org/2000/svg" class="firing-graph">
+        ${stepGraph(0, yOffset, steps, true)}
+      </svg>
+    `
+  } else {
+    return ''
+  }
 }

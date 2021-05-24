@@ -19,7 +19,7 @@ const unsubscribe = { // eslint-disable-line
   history: store.subscribe(updateHistory)
 }
 
-store.dispatch({ type: 'GET_LOCAL_DATA' })
+// store.dispatch({ type: 'GET_LOCAL_DATA' })
 
 // stateWorker.postMessage({
 store.dispatch({
@@ -41,4 +41,8 @@ window.addEventListener('hashchange', function (e) {
   console.group('hashchange event triggered')
   console.log(getURLobject(window.location))
   console.groupEnd()
+})
+store.dispatch({
+  type: viewActions.OK,
+  payload: {}
 })

@@ -20,7 +20,8 @@ import { programsMW } from '../firing-programs/programs.state.middleware.mjs'
 import { invalidStrNum, isNumeric, invalidBool, invalidString } from '../../utilities/validation.mjs'
 import { getMetaFromID } from '../../utilities/sanitisation.mjs'
 // import { persistToLocal } from './persistant.mw.mjs'
-import { viewReducer } from './view.state.mjs'
+import { viewReducer, renderReducer } from './view.state.mjs'
+import { firingLoggerMW } from './firing-logger.mw.state.mjs'
 
 const initialState = {
   studio: {
@@ -163,9 +164,11 @@ const initialState = {
   currentUser: 'evanWills',
   reports: [],
   view: {
-    url: '',
-    route: ['']
-  }
+    route: ['programs', 'add'],
+    title: 'Firing programs',
+    url: 'programs/add'
+  },
+  render: false
 }
 
 /**
@@ -177,13 +180,15 @@ export const store = createStore(
       kilns: kilnReducer,
       firingPrograms: programReducer
     }),
-    view: viewReducer
+    view: viewReducer,
+    render: renderReducer
   }),
   initialState,
   compose(
     applyMiddleware(
       crashReporter,
       logger,
+      firingLoggerMW,
       programsMW
       // persistToLocal
     ),
@@ -240,15 +245,13 @@ export const generalEventHandler = (_store) => {
   console.log('generalEventHandler()')
   return function (e) {
     e.preventDefault()
-    // console.group('generalEventHandler()')
-    // console.log('this:', this)
+
+    console.group('generalEventHandler()')
+    console.log('this:', this)
     const _state = _store.getState()
     const _meta = getMetaFromID(this.id)
     const _val = (!invalidStrNum('value', this)) ? this.value : null
-    // console.log('_meta:', _meta)
-    // console.groupEnd()
-
-    _store.dispatch({
+    const output = {
       type: getActionType(_meta),
       payload: {
         id: _meta.id,
@@ -263,7 +266,12 @@ export const generalEventHandler = (_store) => {
         : null,
       now: Date.now(),
       user: _state.currentUser
-    })
+    }
+    console.log('_meta:', _meta)
+    console.log('output:', output)
+    console.groupEnd()
+
+    _store.dispatch(output)
   }
 }
 

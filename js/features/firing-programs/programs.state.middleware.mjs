@@ -73,7 +73,7 @@ export const programsMW = store => next => action => {
       })
       // break
 
-    case programActions.TMP_UPDATE_STEP_INNER:
+    case programActions.TMP_UPDATE_FIELD:
       const tmp = isInvalidProgramField( // eslint-disable-line
         action,
         _state.studio.firingPrograms.tmp,
@@ -84,9 +84,14 @@ export const programsMW = store => next => action => {
       if (tmp === false) {
         return next(action)
       } else {
+        console.error(
+          programActions.TMP_UPDATE_FIELD_ERROR,
+          tmp,
+          action
+        )
         return next({
           ...action,
-          type: programActions.PROGRAM_TMP_UPDATE_FIELD_ERROR,
+          type: programActions.TMP_UPDATE_FIELD_ERROR,
           payload: {
             ...action.payload,
             value: tmp

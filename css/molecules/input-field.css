@@ -1,29 +1,46 @@
 .input-fields__item {
   align-items: flex-start;
   display: flex;
-  flex: column;
+  flex-direction: column;
   padding: 0.5rem var(--bleed);
+  width: calc(100% - 2rem);
+}
+.input-fields__item > input,
+.input-fields__item > textarea,
+.input-fields__item > select {
+  display: block;
   width: 100%;
-}
-
-@media screen and (min-width: 20rem) {
-  .input-fields__item {
-    display: flex;
-    flex-direction: row;
-  }
-  .input-fields__item > label {
-    width: 12rem;
-    font-weight: bold;
-  }
-  .input-fields__item--09 > label { width: 9rem; }
-  .input-fields__item--15 > label { width: 15rem; }
-  .input-fields__item--18 > label { width: 18rem; }
-  .input-fields__item--21 > label { width: 21rem; }
-}
-
-input {
   font-size: 1rem;
 }
+.input-fields__item > label {
+  padding-bottom: 0.5rem;
+}
+.input-fields__item > div {
+  padding-top: 0.3rem;
+}
+
+@media screen and (min-width: 30rem) {
+  .input-fields__item {
+    display: grid;
+    grid-template-columns: 12rem auto;
+    grid-template-areas: 'label field' 'label error';
+  }
+  .input-fields__item > div {
+    grid-area: error;
+  }
+  .input-fields__item > input {
+    grid-area: field;
+  }
+  .input-fields__item > label {
+    grid-area: label;
+    font-weight: bold;
+  }
+  .input-fields__item--09 { grid-template-columns: 9rem auto; }
+  .input-fields__item--15 { grid-template-columns: 15rem auto; }
+  .input-fields__item--18 { grid-template-columns: 18rem auto; }
+  .input-fields__item--21 { grid-template-columns: 21rem auto; }
+}
+
 input[type='number'] {
   text-align: right;
 }

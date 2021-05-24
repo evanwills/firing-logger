@@ -210,6 +210,16 @@ const updateTmpField = (program, action) => {
 
   if (typeof program[action.payload.id] === typeof action.payload.value) {
     newProgram[action.payload.id] = action.payload.value
+    const errors = {}
+    if (typeof newProgram.errors[action.payload.id] !== 'undefined') {
+      for (const prop in newProgram.errors) {
+        if (prop !== action.payload.id) {
+          errors[prop] = newProgram.errors[prop]
+        }
+      }
+    }
+    newProgram.errors = (errors.length > 0) ? errors : newProgram.errors
+
     // console.log('newProgram:', newProgram)
     // console.groupEnd()
     return newProgram
@@ -218,6 +228,30 @@ const updateTmpField = (program, action) => {
   // console.groupEnd()
 
   return program
+}
+
+const updateErrors = (state, payload) => {
+  const tmpErrors = {}
+  // console.group('updateErrors()')
+  // // <this is {a|test}>\
+  // console.log('program:', state)
+  // console.log('payload:', payload)
+
+  tmpErrors[payload.id] = payload.value
+
+  // console.log('tmpErrors:', tmpErrors)
+  // console.log('output:', output)
+  // console.groupEnd()
+  return {
+    ...state,
+    tmp: {
+      ...state.tmp,
+      errors: {
+        ...state.tmp.errors,
+        ...tmpErrors
+      }
+    }
+  }
 }
 
 const updateTmpStep = (program, action) => {
@@ -352,6 +386,9 @@ export const programReducer = (state = { all: [], tmp: {} }, action) => {
 
     case programActions.SUPERSEDE:
       return updateSuperseded(state, action.payload)
+
+    case programActions.TMP_UPDATE_FIELD_ERROR:
+      return updateErrors(state, action.payload)
 
     default:
       return state

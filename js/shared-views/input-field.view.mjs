@@ -9,7 +9,8 @@ import {
   isNumber,
   // isNumeric,
   isStr,
-  isStrNum
+  isStrNum,
+  invalidBool
 } from '../utilities/validation.mjs'
 import {
   getClassName,
@@ -17,6 +18,7 @@ import {
   // makeHTMLsafe,
   ucFirst
 } from '../utilities/sanitisation.mjs'
+
 /**
  * Get the attribute string for an HTML input/select/textarea field
  *
@@ -152,6 +154,7 @@ export const getDescbyAttr = (props) => {
     ? props.id + '-describe'
     : undefined
 }
+
 /**
  * Get a description block for a input field.
  *
@@ -161,7 +164,7 @@ export const getDescbyAttr = (props) => {
  */
 export const describedBy = (props) => {
   return (isNonEmptyStr(props.desc))
-    ? html`<div id="${props.id}-describe" class=${getClassName(props, 'desc')}>${props.desc}</div>`
+    ? html`<div id="${props.id}-describe" class="${getClassName(props, 'desc')}">${props.desc}</div>`
     : ''
 }
 
@@ -259,11 +262,12 @@ export const numberInputField = (props) => {
 
 export const colourInput = (props) => {
   const _descBy = getDescbyAttr(props)
+  const _error = !invalidBool('error', props, true) ? ' has-error' : '' // ${_error}
 
   return html`
     <li class="input-pair">
-      <label for="set-customMode-${props.id}" class="input-pair__label">Custom mode ${props.label} colour:</label>
-      <input type="color" id="set-customMode-${props.id}" class="input-pair__input" value="${props.value}" tabindex="${props.tabIndex}" @change=${props.eventHandler} ?required=${getBoolAttr('required', props)} ?readonly=${getBoolAttr('readonly', props)} ?disabled=${getBoolAttr('disabled', props)} aria-describedby="${ifDefined(_descBy)}" /><!--
+      <label for="set-customMode-${props.id}" class="input-pair__label${_error}">Custom mode ${props.label} colour:</label>
+      <input type="color" id="set-customMode-${props.id}" class="input-pair__input${_error}" value="${props.value}" tabindex="${props.tabIndex}" @change=${props.eventHandler} ?required=${getBoolAttr('required', props)} ?readonly=${getBoolAttr('readonly', props)} ?disabled=${getBoolAttr('disabled', props)} aria-describedby="${ifDefined(_descBy)}" /><!--
       --><span class="input-pair__suffix" style="background-color: ${props.value};">&nbsp;</span>
       ${(_descBy !== '') ? describedBy(props) : ''}
     </li>
@@ -325,12 +329,14 @@ const selectOption = (props) => {
 export const selectField = (props) => {
   const _descBy = getDescbyAttr(props)
 
+  const _error = !invalidBool('error', props, true) ? ' has-error' : '' //
+
   // console.group('selectField()')
   // console.log('props:', props)
   // console.groupEnd()
   return html`
     ${getLabel(props)}
-    <select id=${props.id} class="${getClassName(props, 'select')}" ?required=${getBoolAttr('required', props)} ?readonly=${getBoolAttr('readonly', props)} ?disabled=${getBoolAttr('disabled', props)} @change=${props.eventHandler} aria-describedby="${ifDefined(_descBy)}" />
+    <select id=${props.id} class="${getClassName(props, 'select')}${_error}" ?required=${getBoolAttr('required', props)} ?readonly=${getBoolAttr('readonly', props)} ?disabled=${getBoolAttr('disabled', props)} @change=${props.eventHandler} aria-describedby="${ifDefined(_descBy)}" />
       ${props.options.map(selectOption)}
     </select>
     ${(_descBy !== '') ? describedBy(props) : ''}

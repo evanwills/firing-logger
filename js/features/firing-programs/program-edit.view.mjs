@@ -16,7 +16,7 @@ import {
 } from '../../utilities/sanitisation.mjs'
 import { getFiringLogSVG } from '../svg/svg.mjs'
 import {
-  // invalidString,
+  invalidString,
   invalidBool
 } from '../../utilities/validation.mjs'
 import { getNavBar } from '../nav-bar/nav-bar.view.mjs'
@@ -29,6 +29,32 @@ const kilnsToOptions = (id) => (kiln) => {
   }
 }
 
+const getErrorMsg = (errors) => {
+  const keys = Object.keys(errors)
+  const s = (keys.length > 1) ? 's' : ''
+  const are = (keys.length > 1) ? 'are' : 'is'
+  if (keys.length > 0) {
+    return html`
+      <div class="input-error">
+        <p>There ${are} error${s} in your program's configuration. Check the following field${s} to see the error message below it.</p>
+        <p>The following field${s} have error${s}:</p>
+        <ul>${keys.map(key => html`<li>${key}</li>`)}</ul>
+        <p>You cannot save your program until all errors are fixed.</p>
+      </div>`
+  } else {
+    return ''
+  }
+}
+
+/**
+ * Get a select box of firing types available for the selected kiln
+ *
+ * @param {object} kiln        All the details for the selected kiln
+ * @param {string} programType Selected firing type
+ *
+ * @returns {array} List of option objects to be passed to a select
+ *                  field template
+ */
 const getFiringTypes = (kiln, programType) => {
   const types = [{
     value: 'bisque',
@@ -61,6 +87,15 @@ const getFiringTypes = (kiln, programType) => {
   })
 }
 
+/**
+ * Get a list of program step input fields
+ *
+ * @param {array}    steps    List of program steps
+ * @param {number}   kilnMax  Maximum temperature of the kiln
+ * @param {function} eHandler Event handler (redux store auto dispatcher)
+ *
+ * @returns {html}
+ */
 const programSteps = (steps, kilnMax, eHandler) => {
   let lastTmp = 0
   let totalDuration = 0
@@ -157,7 +192,10 @@ export const editProgram = (program, kilns, user, eHandler) => {
       required: true,
       label: 'Program name',
       change: eHandler,
-      value: program.name
+      value: program.name,
+      desc: (!invalidString('name', program.errors, true))
+        ? program.errors.name
+        : ''
     }),
     textInputField({
       id: 'description-' + programActions.TMP_UPDATE_FIELD,
@@ -220,7 +258,10 @@ export const editProgram = (program, kilns, user, eHandler) => {
         value: getHourMinSec(program.duration)
       })
     )
-    if (program.maxTemp > 400) {
+
+    nav = getErrorMsg(program.errors)
+
+    if (nav === '' && program.maxTemp > 400) {
       nav = getNavBar([
         {
           label: 'Save',
@@ -235,6 +276,8 @@ export const editProgram = (program, kilns, user, eHandler) => {
         }
       ])
     }
+  } else {
+    nav = getErrorMsg(program.errors)
   }
 
   const lastStep = program.steps.length - 1
@@ -248,6 +291,11 @@ export const editProgram = (program, kilns, user, eHandler) => {
     ? [...program.steps, { endTemp: 0, rate: 0, hold: 0 }]
     : program.steps
 
+  console.log('nav:', nav)
+  console.log('program.errors:', program.errors)
+  console.log('Object.keys(program.errors):', Object.keys(program.errors))
+  console.log('Object.keys(program.errors).length:', Object.keys(program.errors).length)
+  console.log('Object.keys(program.errors).length > 0:', Object.keys(program.errors).length > 0)
   console.groupEnd()
 
   return getMainContent(

@@ -33,7 +33,8 @@ export const getNewProgram = () => {
     used: false,
     useCount: 0,
     deleted: false,
-    locked: false
+    locked: false,
+    errors: {}
   }
 }
 
@@ -100,7 +101,8 @@ export const cloneUpdateProgram = (program, clone, date, username) => {
     superseded: false,
     useCount: 0,
     created: dateStr,
-    createdBy: username
+    createdBy: username,
+    errors: {}
   }
 
   if (_clone === true) {
@@ -150,8 +152,16 @@ export const getKilnName = (kilnID, kilns) => {
 }
 
 const validateName = (pName, kilnID, allPrograms) => {
-  if (kilnID !== '') {
-    const programName = kilnID + normalisedID(pName) // eslint-disable-line
+  console.group('validateName()')
+
+  if (pName.length > 64) {
+    console.groupEnd()
+    return 'Program name is too long. Must not exceed 64 characters'
+  } else if (pName.match(/[^a-z0-9 \-[\](),.'":&+]/i) !== null) {
+    console.groupEnd()
+    return 'Program name contains invalid characters. Allowed characters: A-Z, a-z, 0-9, " ", "[", "]", "(", ")", ",", ".", "\'", \'"\', ":", "&", "+"'
+  } else if (kilnID !== '') {
+    const programName = kilnID + normalisedID(pName)
     for (let a = 0; a < allPrograms.length; a += 1) {
       if (allPrograms[a].superseded || allPrograms[a].deleted) {
         // We're only interested in active programs don't bother
@@ -159,16 +169,12 @@ const validateName = (pName, kilnID, allPrograms) => {
         continue
       }
       if (allPrograms[a].kilnID + normalisedID(allPrograms[a].name) === programName) {
+        console.groupEnd()
         return 'Program name is not unique for specified kiln'
       }
     }
-    if (pName.length > 64) {
-      return 'Program name is too long. Must not exceed 64 characters'
-    }
-    if (pName.match(/[^a-z0-9 \-[\](),.'":&+]/i) !== null) {
-      return 'Program name contains invalid characters. Allowed characters: A-Z, a-z, 0-9, " ", "[", "]", "(", ")", ",", ".", "\'", \'"\', ":", "&", "+"'
-    }
   }
+  console.groupEnd()
   return false
 }
 

@@ -5,7 +5,8 @@ import {
   isNonEmptyStr,
   isNumeric,
   isStr,
-  invalidNum
+  invalidNum,
+  invalidBool
 } from './validation.mjs'
 import { cleanGET } from './url.mjs'
 
@@ -246,7 +247,7 @@ export const getClassName = (props, BEMelement, BEMmodifier, prefix) => {
 
   _output += (_output !== '') ? _suffix : ''
   _output += (_output !== '' && _modifier !== '') ? ' ' + _output + _modifier : ''
-
+  _output += (!invalidBool('error', props, true)) ? ' has-error' : ''
   return _output
 }
 

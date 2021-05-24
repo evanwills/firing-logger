@@ -1,5 +1,5 @@
 import {
-  // numberInputField,
+  numberInputField,
   selectField,
   textInputField
 } from '../../shared-views/input-field.view.mjs'
@@ -181,29 +181,13 @@ const programSteps = (steps, kilnMax, eHandler) => {
 export const editProgram = (program, kilns, user, eHandler) => {
   const name = (program.name === '') ? 'New (unamed) program' : program.name
   let nav = ''
+  let stepBlock = ''
 
   console.group('editProgram()')
   console.log('program:', program)
   console.log('kilns:', kilns)
 
   const fields = [
-    textInputField({
-      id: 'name-' + programActions.TMP_UPDATE_FIELD,
-      required: true,
-      label: 'Program name',
-      change: eHandler,
-      value: program.name,
-      desc: (!invalidString('name', program.errors, true))
-        ? program.errors.name
-        : ''
-    }),
-    textInputField({
-      id: 'description-' + programActions.TMP_UPDATE_FIELD,
-      required: true,
-      label: 'Description',
-      change: eHandler,
-      value: program.description
-    }, true)
   ]
 
   const kilns_ = (program.mode === programActions.ADD)
@@ -228,68 +212,133 @@ export const editProgram = (program, kilns, user, eHandler) => {
 
   if (program.kilnID !== '') {
     console.log('program.kilnID:', program.kilnID)
-    fields.push(selectField({
-      id: 'type-' + programActions.TMP_UPDATE_FIELD,
+
+    fields.push(textInputField({
+      id: 'name-' + programActions.TMP_UPDATE_FIELD,
       required: true,
-      label: 'Firing type',
-      eventHandler: eHandler,
-      options: [
-        {
-          value: '',
-          label: ' -- Select a firing type --',
-          selected: false
-        },
-        ...getFiringTypes(kilns_[0], program.type)
-      ]
+      label: 'Program name',
+      change: eHandler,
+      value: program.name,
+      desc: (!invalidString('name', program.errors, true))
+        ? program.errors.name
+        : '',
+      error: !invalidString('name', program.errors)
     }))
-    fields.push(
-      textInputField({
-        id: 'maxTemp',
-        readonly: true,
-        label: 'Maximum temperature',
-        value: program.maxTemp + '&deg;C'
-      })
-    )
-    fields.push(
-      textInputField({
-        id: 'duration',
-        readonly: true,
-        label: 'Firing duration',
-        value: getHourMinSec(program.duration)
-      })
-    )
+    if (program.name !== '' && invalidString('name', program.errors)) {
+      // Must have a valid name before we can progress
+      fields.push(textInputField({
+        id: 'description-' + programActions.TMP_UPDATE_FIELD,
+        required: true,
+        label: 'Description',
+        change: eHandler,
+        value: program.description,
+        desc: !invalidString('description', program.errors)
+          ? program.errors.description
+          : '',
+        error: !invalidString('description', program.errors)
+      }, true))
 
-    nav = getErrorMsg(program.errors)
+      fields.push(selectField({
+        id: 'type-' + programActions.TMP_UPDATE_FIELD,
+        required: true,
+        label: 'Firing type',
+        eventHandler: eHandler,
+        options: [
+          {
+            value: '',
+            label: ' -- Select a firing type --',
+            selected: false
+          },
+          ...getFiringTypes(kilns_[0], program.type)
+        ],
+        desc: !invalidString('type', program.errors)
+          ? program.errors.type
+          : '',
+        error: !invalidString('type', program.errors)
+      }))
 
-    if (nav === '' && program.maxTemp > 400) {
-      nav = getNavBar([
-        {
-          label: 'Save',
-          path: '/programs/save',
-          id: '-' + programActions.TMP_COMMIT,
-          action: programActions.TMP_COMMIT
-        }, {
-          label: 'Reset',
-          path: '/programs/clear',
-          id: '-' + programActions.TMP_CLEAR,
-          action: programActions.TMP_CLEAR
-        }
-      ])
+      fields.push(
+        numberInputField({
+          id: 'controllerProgramID-' + programActions.TMP_UPDATE_FIELD,
+          label: 'Controller program ID',
+          value: program.controllerProgramID,
+          min: 0,
+          max: kilns[0].maxProgramID,
+          step: 1,
+          desc: !invalidString('controllerProgramID', program.errors)
+            ? program.errors.controllerProgramID
+            : '',
+          error: !invalidString('controllerProgramID', program.errors)
+        })
+      )
+
+      fields.push(
+        textInputField({
+          id: 'maxTemp-' + programActions.TMP_UPDATE_FIELD,
+          readonly: true,
+          label: 'Maximum temperature',
+          value: program.maxTemp + '&deg;C'
+        })
+      )
+
+      fields.push(
+        textInputField({
+          id: 'duration-' + programActions.TMP_UPDATE_FIELD,
+          readonly: true,
+          label: 'Firing duration',
+          value: getHourMinSec(program.duration)
+        })
+      )
+
+      fields.push(
+        textInputField({
+          id: 'maxTemp-' + programActions.TMP_UPDATE_FIELD,
+          readonly: true,
+          label: 'Average rate of climb',
+          value: program.averageRate + '&deg;C / hour'
+        })
+      )
+
+      nav = getErrorMsg(program.errors)
+
+      if (nav === '' && program.maxTemp > 400) {
+        nav = getNavBar([
+          {
+            label: 'Save',
+            path: '/programs/save',
+            id: '-' + programActions.TMP_COMMIT,
+            action: programActions.TMP_COMMIT
+          }, {
+            label: 'Reset',
+            path: '/programs/clear',
+            id: '-' + programActions.TMP_CLEAR,
+            action: programActions.TMP_CLEAR
+          }
+        ])
+      }
+
+      const lastStep = program.steps.length - 1
+
+      // console.log('lastStep:', lastStep)
+      // console.log('program.steps[' + lastStep + ']:', program.steps[lastStep])
+      // console.log('program.steps[' + lastStep + '].endTemp:', program.steps[lastStep].endTemp)
+      // console.log('program.steps[' + lastStep + '].rate:', program.steps[lastStep].rate)
+      // console.log('program.steps[' + lastStep + '].hold:', program.steps[lastStep].hold)
+      const steps = (program.steps[lastStep].endTemp > 0 && program.steps[lastStep].rate > 1)
+        ? [...program.steps, { endTemp: 0, rate: 0, hold: 0 }]
+        : program.steps
+
+      stepBlock = html`
+        <h3>Steps</h3>
+        <div class="firing-steps">
+          ${getFiringLogSVG(program.maxTemp, program.duration, program.steps, [], false)}
+          ${programSteps(steps, kilns[0].maxTemp, eHandler)}
+        </div>
+      `
     }
   } else {
     nav = getErrorMsg(program.errors)
   }
-
-  const lastStep = program.steps.length - 1
-
-  // console.log('lastStep:', lastStep)
-  // console.log('program.steps[' + lastStep + ']:', program.steps[lastStep])
-  // console.log('program.steps[' + lastStep + '].endTemp:', program.steps[lastStep].endTemp)
-  // console.log('program.steps[' + lastStep + '].rate:', program.steps[lastStep].rate)
-  // console.log('program.steps[' + lastStep + '].hold:', program.steps[lastStep].hold)
-  const steps = (program.steps[lastStep].endTemp > 0 && program.steps[lastStep].rate > 1)
-    ? [...program.steps, { endTemp: 0, rate: 0, hold: 0 }]
-    : program.steps
 
   console.log('nav:', nav)
   console.log('program.errors:', program.errors)
@@ -301,14 +350,7 @@ export const editProgram = (program, kilns, user, eHandler) => {
   return getMainContent(
     html`<h2>${name}</h2>`,
     html`${getItemList(fields, '', 'input-fields', 'content--bleed')}
-    ${(program.kilnID !== '')
-      ? html`<h3>Steps</h3>
-        <div class="firing-steps">
-          ${getFiringLogSVG(program.maxTemp, program.duration, program.steps, [], false)}
-          ${programSteps(steps, kilns[0].maxTemp, eHandler)}
-        </div>`
-      : ''
-    }`,
+    ${stepBlock}`,
     nav
   )
 }

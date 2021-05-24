@@ -6,6 +6,8 @@ import {
   invalidString,
   invalidNum
 } from '../../utilities/validation.mjs'
+import { getID } from '../../utilities/general.mjs'
+import { getISODateStr, round } from '../../utilities/sanitisation.mjs'
 // import { getISODateStr } from '../../utilities/sanitisation.mjs'
 
 export const initialPrograms = [{
@@ -296,6 +298,63 @@ const updateTmpStep = (program, action) => {
 }
 
 /**
+ * Commit a new or changed program to the list of all programs
+ *
+ * @param {array}  allPrograms List of all programs in the system
+ * @param {object} newProgram  New (or updated) program to be stored
+ * @param {object} action      Action object containing useful metadata
+ *
+ * @returns {array} Updated list of programs
+ */
+const commitProgram = (allPrograms, newProgram, action) => {
+  const { errors, mode, confirmed, newP } = newProgram
+  const keys = Object.keys(errors)
+  let all = [...allPrograms]
+
+  if (keys.length > 0) {
+    throw Error('Cannot commit program with errors in configuration')
+  }
+
+  if (mode === programActions.ADD ||
+    mode === programActions.CLONE ||
+    (mode === programActions.UPDATE && newP.used === true)
+  ) {
+    newP.id = getID(action.now, action.user)
+    newP.created = getISODateStr(action.now)
+    newP.createdBy = action.user
+  }
+
+  if (mode === programActions.UPDATE) {
+    if (newP.used === true) {
+      // Mark the original version of the program as superseded
+      all = all.map(program => {
+        if (program.id === newP.id) {
+          return {
+            ...program,
+            superseded: true,
+            locked: false
+          }
+        } else {
+          return program
+        }
+      })
+      // bump the version mumber for this program up by 1
+      newP.version += 1
+      // Add the new version to the list
+      all.push(newP)
+    } else {
+      // Replace the old (unused) version of the program
+      // with the new one
+      all = all.map(program => (program.id === newP.id) ? newP : program)
+    }
+  } else {
+    // Add the new program
+    all.push(newP)
+  }
+  return all
+}
+
+/**
  * Update inferred values for program
  *
  * @param {object} program
@@ -339,6 +398,9 @@ const updateTmpInferred = (program) => {
     newProgram.duration = duration
     newP = true
   }
+  if (newP) {
+    newProgram.averageRate = round((maxTemp / (duration / 3600)), 1)
+  }
   // console.log('changedM:', changedM)
   // console.log('changedD:', changedD)
   // console.log('newP:', newP)
@@ -367,7 +429,11 @@ export const programReducer = (state = { all: [], tmp: {} }, action) => {
       return { ...state, tmp: updateTmpField(state.tmp, action) }
 
     case programActions.TMP_COMMIT:
-      return state
+      return {
+        ...state,
+        all: commitProgram(state.all, state.tmp, action),
+        tmp: {}
+      }
 
     case programActions.TMP_UPDATE_STEP_INNER:
       return { ...state, tmp: updateTmpStep(state.tmp, action) }
@@ -376,6 +442,15 @@ export const programReducer = (state = { all: [], tmp: {} }, action) => {
       return { ...state, tmp: updateTmpInferred(state.tmp) }
 
     case programActions.TMP_CLEAR_CONFIRMED:
+      return state
+
+    case programActions.TMP_CLEAR_CONFIRMED_CONFIRM:
+      return state
+
+    case programActions.TMP_CLEAR_CONFIRMED_CONFIRM_TRUE:
+      return state
+
+    case programActions.TMP_CLEAR_CONFIRMED_CONFIRM_FALSE:
       return state
 
     case programActions.UPDATE:

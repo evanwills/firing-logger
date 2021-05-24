@@ -25,6 +25,7 @@ interface Kiln {
   energy: energySource,
   type: kilnType,
   maxTemp: number,
+  maxProgramID: number,
   width: number,
   depth: number,
   height: number,

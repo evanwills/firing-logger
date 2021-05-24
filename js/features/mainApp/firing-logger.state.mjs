@@ -38,6 +38,7 @@ const initialState = {
         width: 500,
         depth: 500,
         height: 500,
+        maxProgramID: 36,
         glaze: true,
         bisque: true,
         singleFire: false,

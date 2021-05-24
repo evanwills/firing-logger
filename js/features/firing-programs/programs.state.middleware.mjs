@@ -4,6 +4,7 @@ import { getProgramByID, getNewProgram, isInvalidProgramField } from './programU
 export const programsMW = store => next => action => {
   const _state = store.getState()
   let program
+  let tmp
   // console.group('programsMW()')
   // console.log('action:', action)
   // console.log('_state:', _state)
@@ -20,7 +21,9 @@ export const programsMW = store => next => action => {
             ...action.payload,
             value: {
               ...program,
-              mode: programActions.UPDATE
+              mode: programActions.UPDATE,
+              errors: {},
+              confirmed: false
             }
           }
         })
@@ -39,7 +42,9 @@ export const programsMW = store => next => action => {
             ...action.payload,
             value: {
               ...program,
-              mode: programActions.CLONE
+              mode: programActions.CLONE,
+              errors: {},
+              confirmed: false
             }
           }
         })
@@ -56,7 +61,8 @@ export const programsMW = store => next => action => {
           ...action.payload,
           value: {
             ...getNewProgram(),
-            mode: programActions.ADD
+            mode: programActions.ADD,
+            confirmed: false
           }
         }
       })
@@ -74,7 +80,7 @@ export const programsMW = store => next => action => {
       // break
 
     case programActions.TMP_UPDATE_FIELD:
-      const tmp = isInvalidProgramField( // eslint-disable-line
+      tmp = isInvalidProgramField(
         action,
         _state.studio.firingPrograms.tmp,
         _state.studio.firingPrograms.all,
@@ -98,6 +104,9 @@ export const programsMW = store => next => action => {
           }
         })
       }
+
+    // case programActions.TMP_COMMIT:
+    //   tmp =
   }
 
   return next(action)

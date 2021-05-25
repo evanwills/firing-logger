@@ -198,29 +198,29 @@ const updateSuperseded = (allPrograms, kilnID, id, version) => {
   })
 }
 
-const updateTmpField = (program, action) => {
+const updateTmpField = (program, payload) => {
   // console.group('updateTmpField()')
-  // console.log('action:', action)
-  // console.log('action.payload:', action)
-  // console.log('action.payload.id:', action.payload.id)
-  // console.log('action.payload.value:', action.payload.value)
+  // console.log('payload:', payload)
+  // console.log('payload.id:', payload.id)
+  // console.log('payload.value:', payload.value)
   // console.log('program:', program)
-  // console.log('typeof program[action.payload.id]:', typeof program[action.payload.id])
-  // console.log('typeof action.payload.value:', typeof action.payload.value)
+  // console.log('typeof program[' + payload.id + ']:', typeof program[payload.id])
+  // console.log('typeof payload.value:', typeof payload.value)
   // console.log('program:', program)
   const newProgram = { ...program }
 
-  if (typeof program[action.payload.id] === typeof action.payload.value) {
-    newProgram[action.payload.id] = action.payload.value
+  if (typeof program[payload.id] === typeof payload.value) {
+    newProgram[payload.id] = payload.value
     const errors = {}
-    if (typeof newProgram.errors[action.payload.id] !== 'undefined') {
+    if (typeof newProgram.errors[payload.id] !== 'undefined') {
       for (const prop in newProgram.errors) {
-        if (prop !== action.payload.id) {
+        if (prop !== payload.id) {
           errors[prop] = newProgram.errors[prop]
         }
       }
     }
     newProgram.errors = (errors.length > 0) ? errors : newProgram.errors
+    newProgram.lastField = payload.id
 
     // console.log('newProgram:', newProgram)
     // console.groupEnd()
@@ -307,7 +307,7 @@ const updateTmpStep = (program, action) => {
  * @returns {array} Updated list of programs
  */
 const commitProgram = (allPrograms, newProgram, action) => {
-  const { errors, mode, confirmed, newP } = newProgram
+  const { errors, mode, confirmed, ...newP } = newProgram
   const keys = Object.keys(errors)
   let all = [...allPrograms]
 
@@ -395,7 +395,7 @@ const updateTmpInferred = (program) => {
     newP = true
   }
   if (changedD) {
-    newProgram.duration = duration
+    newProgram.duration = round(duration)
     newP = true
   }
   if (newP) {
@@ -426,9 +426,9 @@ export const programReducer = (state = { all: [], tmp: {} }, action) => {
       return { ...state, tmp: action.payload.value }
 
     case programActions.TMP_UPDATE_FIELD:
-      return { ...state, tmp: updateTmpField(state.tmp, action) }
+      return { ...state, tmp: updateTmpField(state.tmp, action.payload) }
 
-    case programActions.TMP_COMMIT:
+    case programActions.TMP_COMMIT_INNER:
       return {
         ...state,
         all: commitProgram(state.all, state.tmp, action),

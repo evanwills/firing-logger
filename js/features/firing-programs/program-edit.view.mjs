@@ -20,6 +20,7 @@ import {
   invalidBool
 } from '../../utilities/validation.mjs'
 import { getNavBar } from '../nav-bar/nav-bar.view.mjs'
+import { getFocusID } from './programUtils.mjs'
 
 const kilnsToOptions = (id) => (kiln) => {
   return {
@@ -180,8 +181,10 @@ const programSteps = (steps, kilnMax, eHandler) => {
 
 export const editProgram = (program, kilns, user, eHandler) => {
   const name = (program.name === '') ? 'New (unamed) program' : program.name
+  const focusID = getFocusID(program.errors, program.lastField)
   let nav = ''
   let stepBlock = ''
+  let tmp
 
   console.group('editProgram()')
   console.log('program:', program)
@@ -213,51 +216,65 @@ export const editProgram = (program, kilns, user, eHandler) => {
   if (program.kilnID !== '') {
     console.log('program.kilnID:', program.kilnID)
 
-    fields.push(textInputField({
-      id: 'name-' + programActions.TMP_UPDATE_FIELD,
-      required: true,
-      label: 'Program name',
-      change: eHandler,
-      value: program.name,
-      desc: (!invalidString('name', program.errors, true))
-        ? program.errors.name
-        : '',
-      error: !invalidString('name', program.errors)
-    }))
+    tmp = (!invalidString('name', program.errors, true))
+      ? program.errors.name
+      : ''
+    fields.push( // name
+      textInputField({
+        id: 'name-' + programActions.TMP_UPDATE_FIELD,
+        required: true,
+        label: 'Program name',
+        change: eHandler,
+        value: program.name,
+        desc: tmp,
+        error: (tmp !== ''),
+        focus: (focusID === 'name')
+      })
+    )
     if (program.name !== '' && invalidString('name', program.errors)) {
       // Must have a valid name before we can progress
-      fields.push(textInputField({
-        id: 'description-' + programActions.TMP_UPDATE_FIELD,
-        required: true,
-        label: 'Description',
-        change: eHandler,
-        value: program.description,
-        desc: !invalidString('description', program.errors)
-          ? program.errors.description
-          : '',
-        error: !invalidString('description', program.errors)
-      }, true))
+      tmp = !invalidString('description', program.errors)
+        ? program.errors.description
+        : ''
+      fields.push( // description
+        textInputField({
+          id: 'description-' + programActions.TMP_UPDATE_FIELD,
+          label: 'Description',
+          change: eHandler,
+          value: program.description,
+          desc: tmp,
+          error: (tmp !== ''),
+          focus: (focusID === 'description')
+        }, true)
+      )
 
-      fields.push(selectField({
-        id: 'type-' + programActions.TMP_UPDATE_FIELD,
-        required: true,
-        label: 'Firing type',
-        eventHandler: eHandler,
-        options: [
-          {
-            value: '',
-            label: ' -- Select a firing type --',
-            selected: false
-          },
-          ...getFiringTypes(kilns_[0], program.type)
-        ],
-        desc: !invalidString('type', program.errors)
-          ? program.errors.type
-          : '',
-        error: !invalidString('type', program.errors)
-      }))
-
+      tmp = !invalidString('type', program.errors)
+        ? program.errors.type
+        : ''
       fields.push(
+        selectField({
+          id: 'type-' + programActions.TMP_UPDATE_FIELD,
+          required: true,
+          label: 'Firing type',
+          eventHandler: eHandler,
+          options: [
+            {
+              value: '',
+              label: ' -- Select a firing type --',
+              selected: false
+            },
+            ...getFiringTypes(kilns_[0], program.type)
+          ],
+          desc: tmp,
+          error: (tmp !== ''),
+          focus: (focusID === 'type')
+        })
+      )
+
+      tmp = !invalidString('controllerProgramID', program.errors)
+        ? program.errors.controllerProgramID
+        : ''
+      fields.push( // controllerProgramID
         numberInputField({
           id: 'controllerProgramID-' + programActions.TMP_UPDATE_FIELD,
           label: 'Controller program ID',
@@ -265,14 +282,13 @@ export const editProgram = (program, kilns, user, eHandler) => {
           min: 0,
           max: kilns[0].maxProgramID,
           step: 1,
-          desc: !invalidString('controllerProgramID', program.errors)
-            ? program.errors.controllerProgramID
-            : '',
-          error: !invalidString('controllerProgramID', program.errors)
+          desc: tmp,
+          error: (tmp !== ''),
+          focus: (focusID === 'controllerProgramID')
         })
       )
 
-      fields.push(
+      fields.push( // maxTemp
         textInputField({
           id: 'maxTemp-' + programActions.TMP_UPDATE_FIELD,
           readonly: true,
@@ -281,7 +297,7 @@ export const editProgram = (program, kilns, user, eHandler) => {
         })
       )
 
-      fields.push(
+      fields.push( // duration
         textInputField({
           id: 'duration-' + programActions.TMP_UPDATE_FIELD,
           readonly: true,
@@ -290,9 +306,9 @@ export const editProgram = (program, kilns, user, eHandler) => {
         })
       )
 
-      fields.push(
+      fields.push( // averageRate
         textInputField({
-          id: 'maxTemp-' + programActions.TMP_UPDATE_FIELD,
+          id: 'averageRate-' + programActions.TMP_UPDATE_FIELD,
           readonly: true,
           label: 'Average rate of climb',
           value: program.averageRate + '&deg;C / hour'
@@ -314,7 +330,7 @@ export const editProgram = (program, kilns, user, eHandler) => {
             id: '-' + programActions.TMP_CLEAR,
             action: programActions.TMP_CLEAR
           }
-        ])
+        ], eHandler)
       }
 
       const lastStep = program.steps.length - 1

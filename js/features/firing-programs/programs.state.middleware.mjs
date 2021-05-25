@@ -1,8 +1,15 @@
+import { getDummyAction } from '../mainApp/firing-logger.state.mjs'
 import { programActions } from './programs.state.actions.mjs'
-import { getProgramByID, getNewProgram, isInvalidProgramField } from './programUtils.mjs'
+import {
+  getProgramByID,
+  getNewProgram,
+  isInvalidProgramField,
+  getLastProgram,
+  getTmpProgram
+} from './programUtils.mjs'
 
 export const programsMW = store => next => action => {
-  const _state = store.getState()
+  let _state = store.getState()
   let program
   let tmp
   // console.group('programsMW()')
@@ -19,12 +26,7 @@ export const programsMW = store => next => action => {
           type: programActions.TMP_SET,
           payload: {
             ...action.payload,
-            value: {
-              ...program,
-              mode: programActions.UPDATE,
-              errors: {},
-              confirmed: false
-            }
+            value: getTmpProgram(program, programActions.UPDATE)
           }
         })
       } else {
@@ -40,12 +42,7 @@ export const programsMW = store => next => action => {
           type: programActions.TMP_SET,
           payload: {
             ...action.payload,
-            value: {
-              ...program,
-              mode: programActions.CLONE,
-              errors: {},
-              confirmed: false
-            }
+            value: getTmpProgram(program, programActions.CLONE)
           }
         })
       } else {
@@ -59,11 +56,7 @@ export const programsMW = store => next => action => {
         type: programActions.TMP_SET,
         payload: {
           ...action.payload,
-          value: {
-            ...getNewProgram(),
-            mode: programActions.ADD,
-            confirmed: false
-          }
+          value: getTmpProgram(getNewProgram(), programActions.ADD)
         }
       })
       // break
@@ -105,8 +98,20 @@ export const programsMW = store => next => action => {
         })
       }
 
-    // case programActions.TMP_COMMIT:
-    //   tmp =
+    case programActions.TMP_COMMIT:
+      tmp = _state.studio.firingPrograms.tmp
+      store.dispatch({
+        ...action,
+        type: programActions.TMP_COMMIT_INNER
+      })
+
+      if (tmp.id === '') {
+        _state = store.getState()
+        // if ()
+        tmp = getLastProgram(_state.studio.firingPrograms.all, tmp.kilnID, tmp.name)
+      }
+
+      return next(getDummyAction(action, '', '/programs/' + tmp.id))
   }
 
   return next(action)

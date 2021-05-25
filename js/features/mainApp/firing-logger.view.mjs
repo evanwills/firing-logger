@@ -3,14 +3,15 @@ import { kilnsView } from '../kilns/kilns.view.mjs'
 import { logsView } from '../logs/logs.view.mjs'
 import { render, html } from '../../vendor/lit-html/lit-html.mjs'
 import { store } from '../../features/mainApp/firing-logger.state.mjs'
-import { getLink } from '../../shared-views/navigation.view.mjs'
+// import { getLink } from '../../shared-views/navigation.view.mjs'
 import { invalidString } from '../../utilities/validation.mjs'
+import { getNavBar } from '../nav-bar/nav-bar.view.mjs'
 
 export const firingLoggerView = (domNode, eHandler, titleTag) => () => {
-  console.group('firingLoggerView()')
+  // console.group('firingLoggerView()')
   // console.log('eHandler:', eHandler)
   const state = store.getState()
-  console.log('state:', state)
+  // console.log('state:', state)
   if (state.render === false) {
     // We're not ready to show anything yet
     console.log('not ready to show anything yet')
@@ -28,13 +29,13 @@ export const firingLoggerView = (domNode, eHandler, titleTag) => () => {
   let subView = ''
   const navLinks = [{
     label: 'Kilns',
-    path: 'kilns'
+    path: '/kilns'
   }, {
     label: 'Firing Programs',
-    path: 'programs'
+    path: '/programs'
   }, {
     label: 'Firing logs',
-    path: 'firingLogs'
+    path: '/firingLogs'
   // }, {
   //   label: 'Calendar',
   //   path: 'calendar'
@@ -65,18 +66,16 @@ export const firingLoggerView = (domNode, eHandler, titleTag) => () => {
 
   // console.log('titleTag:', titleTag)
   titleTag.innerText = 'Firing logger' + titleTxt
-  console.groupEnd()
+  // console.groupEnd()
 
   render(
     html`
     <div class="firing-logger ${uiMode}">
       <header class="page-header">
         <h1>Firing logger${title}</h1>
+        ${getNavBar(navLinks, eHandler, '')}
       </header>
       <div class="main-content">
-        <nav class="main-nav item-list item-actions__wrap">
-          ${navLinks.map(link => getLink(link.label, '/' + link.path, '', '', eHandler, (route === link.path), 'item-actions__item'))}
-        </nav>
         ${subView}
       </div>
     </div>`,

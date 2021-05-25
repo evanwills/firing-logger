@@ -102,7 +102,8 @@ export const cloneUpdateProgram = (program, clone, date, username) => {
     useCount: 0,
     created: dateStr,
     createdBy: username,
-    errors: {}
+    errors: {},
+    lastField: 'kilnID'
   }
 
   if (_clone === true) {
@@ -113,6 +114,16 @@ export const cloneUpdateProgram = (program, clone, date, username) => {
   }
 
   return newProgram
+}
+
+export const getTmpProgram = (program, mode) => {
+  return {
+    ...program,
+    confirmed: false,
+    errors: {},
+    lastField: 'kilnID',
+    mode: mode
+  }
 }
 
 export const getFilteredPrograms = (filters) => {
@@ -198,4 +209,64 @@ export const isInvalidProgramField = (action, tmpProgram, allPrograms, allKilns)
       return validateName(action.payload.value, tmpProgram.kilnID, allPrograms)
   }
   return false
+}
+
+/**
+ * Get the latest version of a program
+ *
+ * @param {array}  allPrograms List of all available programs
+ * @param {string} kilnID      ID for kiln assigned to program
+ * @param {string} name        Name of the program
+ *
+ * @returns {object}
+ */
+export const getLastProgram = (allPrograms, kilnID, name) => {
+  let a = allPrograms.length - 1
+  const b = a
+  for (a; a >= 0; a -= 1) {
+    if (allPrograms[a].kilnID === kilnID && allPrograms[a].name === name) {
+      return allPrograms[a]
+    }
+  }
+  return allPrograms[b]
+}
+
+/**
+ * Get the ID of the input field that should be in focus
+ *
+ * @param {object} errors List of input errors in a form
+ * @param {string} lastID ID of the element that was last
+ *                        successfully updated
+ *
+ * @returns {string} ID of the input field that should have focus
+ *                   (or empty string if none could be found)
+ */
+export const getFocusID = (errors, lastID) => {
+  const editableFields = ['kilnID', 'name', 'description', 'type', 'controllerProgramID']
+  const errorFields = Object.keys(errors)
+
+  console.group('getFocusID()')
+  console.log('editableFields:', editableFields)
+  console.log('errorFields:', errorFields)
+  console.log('lastID:', lastID)
+
+  if (errorFields.length > 0) {
+    console.log('Go to the first field in error')
+    console.log('errorFields[0]:', errorFields[0])
+    console.groupEnd()
+    return errorFields[0]
+  } else {
+    const i = editableFields.indexOf(lastID)
+    if (i > -1) {
+      const b = (i + 1)
+      if (b < editableFields.length) {
+        console.log('Go to the next field')
+        console.log('editableFields[' + b + ']:', editableFields[b])
+        console.groupEnd()
+        return editableFields[b]
+      }
+    }
+  }
+  console.groupEnd()
+  return ''
 }

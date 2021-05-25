@@ -63,28 +63,28 @@ const getViewFromURL = (view, data) => {
 }
 
 export const viewReducer = (state = initialState, action) => {
-  console.group('viewReducer()')
+  // console.group('viewReducer()')
 
   switch (action.type) {
     case viewActions.SET_FROM_URL_INNER:
-      console.groupEnd()
+      // console.groupEnd()
       return getViewFromURL(state, action.payload)
 
     case viewActions.SET_FROM_URL:
       // We don't want anything to happen from this
-      console.groupEnd()
+      // console.groupEnd()
       return state
 
     default:
-      console.log('action:', action)
-      console.log('action.href:', action.href)
+      // console.log('action:', action)
+      // console.log('action.href:', action.href)
       if (!invalidString('href', action) && action.href !== state.url) {
-        console.groupEnd()
+        // console.groupEnd()
         return getViewState(action.href)
       }
   }
 
-  console.groupEnd()
+  // console.groupEnd()
   return state
 }
 

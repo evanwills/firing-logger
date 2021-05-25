@@ -1,11 +1,15 @@
 import { html } from '../../vendor/lit-html/lit-html.mjs'
 import { isBoolTrue, isNonEmptyStr, invalidBool } from '../../utilities/validation.mjs'
+import { idSafe } from '../../utilities/sanitisation.mjs'
 
 export const getNavItem = (label, href, id, actionType, eHandler, active, extraClass) => {
   const _active = isBoolTrue(active) ? ' nav-bar__link--active' : ''
   const extra = isNonEmptyStr(extraClass) ? ' ' + extraClass + '__' : ''
   const extraLi = (extra !== '') ? extra + 'item' : ''
   const extraA = (extra !== '') ? extra + 'link' : ''
+  const _id = isNonEmptyStr(id) ? id : ''
+  const _actionType = isNonEmptyStr(actionType) ? actionType : ''
+  const __id = (_id === '' && _actionType === '') ? idSafe(href) : _id + '-' + _actionType
 
   // console.group('getNavItem()')
   // console.log('extraLi:', extraLi)
@@ -18,7 +22,7 @@ export const getNavItem = (label, href, id, actionType, eHandler, active, extraC
   // console.log('label:', label)
   // console.groupEnd()
 
-  return html`<li class="nav-bar__item${extraLi}"><a href="${href}${isNonEmptyStr(id) ? '/' + id : ''}" id="${id}-${actionType}" class="nav-bar__link${_active}${extraA}" @click=${eHandler}>${label}</a></li>`
+  return html`<li class="nav-bar__item${extraLi}"><a href="${href}${(_id !== '') ? '/' + _id : ''}" id="${__id}" class="nav-bar__link${_active}${extraA}" @click=${eHandler}>${label}</a></li>`
 }
 
 export const getNavBar = (linkList, eHandler, extraClass, wrapClass) => {

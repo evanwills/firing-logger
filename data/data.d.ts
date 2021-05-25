@@ -74,6 +74,13 @@ interface FiringProgram {
   locked: boolean
 }
 
+interface FiringProgramTmp implements FiringProgram {
+  confirmed: boolean,
+  errors: object,
+  lastField: string,
+  mode: string
+}
+
 interface FiringStep {
   endTemp: number, // positive degrees
   rate: number,    // degrees per hour

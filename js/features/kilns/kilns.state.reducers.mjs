@@ -31,7 +31,10 @@ const dummyKiln = {
   isHot: false
 }
 
-export const initialKilnState = [dummyKiln]
+export const initialKilnState = {
+  all: dummyKiln,
+  filters: {}
+}
 
 /**
  * Update a single field in a kiln object
@@ -109,7 +112,7 @@ const updateKiln = (kiln, data) => {
   return kiln
 }
 
-export const kilnReducer = (state = [], action) => {
+export const kilnReducer = (state = initialKilnState, action) => {
   const ID = (typeof action.payload !== 'undefined' && typeof action.payload.id === 'string') ? action.payload.id : ''
 
   switch (action.type) {

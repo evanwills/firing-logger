@@ -194,15 +194,19 @@ export const getFiringLogSVG = (maxDeg, duration, programSteps, firingLog, showC
   const timeGuides = []
   let firingLogPath = ''
 
-  console.group('getFiringLogSVG()')
-  console.log('maxDeg:', maxDeg)
-  console.log('duration:', duration)
-  console.log('programSteps:', programSteps)
-  console.log('hours:', hours)
-  console.log('totlaHrs:', totlaHrs)
-  console.log('totlaHrs:', totlaHrs)
-  console.log('xOffset:', xOffset)
-  console.log('yOffset:', yOffset)
+  if (programSteps.length < 2) {
+    return ''
+  }
+
+  // console.group('getFiringLogSVG()')
+  // console.log('maxDeg:', maxDeg)
+  // console.log('duration:', duration)
+  // console.log('programSteps:', programSteps)
+  // console.log('hours:', hours)
+  // console.log('totlaHrs:', totlaHrs)
+  // console.log('totlaHrs:', totlaHrs)
+  // console.log('xOffset:', xOffset)
+  // console.log('yOffset:', yOffset)
 
   // Build list of temperature guides
   for (let a = 100; a <= maxDeg; a += 100) {

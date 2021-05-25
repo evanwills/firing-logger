@@ -17,12 +17,19 @@ import {
 import { kilnReducer } from '../kilns/kilns.state.reducers.mjs'
 import { programReducer } from '../firing-programs/programs.state.reducer.mjs'
 import { programsMW } from '../firing-programs/programs.state.middleware.mjs'
-import { invalidStrNum, isNumeric, invalidBool, invalidString } from '../../utilities/validation.mjs'
+import {
+  invalidStrNum,
+  invalidNum,
+  isNumeric,
+  invalidBool,
+  invalidString,
+  isStr
+} from '../../utilities/validation.mjs'
 import { getMetaFromID } from '../../utilities/sanitisation.mjs'
 // import { persistToLocal } from './persistant.mw.mjs'
 import { viewReducer, renderReducer } from './view.state.mjs'
 import { firingLoggerMW } from './firing-logger.mw.state.mjs'
-
+import { currentUserReducer, usersReducer } from '../users/users.state.mjs'
 const initialState = {
   studio: {
     kilns: {
@@ -101,7 +108,45 @@ const initialState = {
         deleted: false,
         locked: false
       }],
-      tmp: {},
+      tmp: {
+        averageRate: 113.4,
+        confirmed: false,
+        controllerProgramID: '',
+        created: '',
+        createdBy: '',
+        deleted: false,
+        description: '',
+        duration: 37467,
+        errors: {},
+        id: 0,
+        kilnID: 'woodrow1',
+        lastField: 'type',
+        locked: false,
+        maxTemp: 1180,
+        mode: 'PROGRAM_ADD',
+        name: 'Basic earthenware glaze',
+        steps: [{
+          id: 1,
+          endTemp: 520,
+          hold: 0,
+          rate: 120
+        }, {
+          id: 2,
+          endTemp: 630,
+          hold: 0,
+          rate: 55
+        }, {
+          id: 3,
+          endTemp: 1180,
+          hold: 20,
+          rate: 135
+        }],
+        superseded: false,
+        type: 'glaze',
+        useCount: 0,
+        used: false,
+        version: 0
+      },
       filters: {
       }
     },
@@ -171,7 +216,6 @@ const initialState = {
   },
   render: false
 }
-
 /**
  * @var store Redux store
  */
@@ -179,10 +223,12 @@ export const store = createStore(
   combineReducers({
     studio: combineReducers({
       kilns: kilnReducer,
-      firingPrograms: programReducer
+      firingPrograms: programReducer,
+      users: usersReducer
     }),
     view: viewReducer,
-    render: renderReducer
+    render: renderReducer,
+    currentUser: currentUserReducer
   }),
   initialState,
   compose(
@@ -194,11 +240,9 @@ export const store = createStore(
       // persistToLocal
     ),
     monitorReducerEnhancer
-
   )
   // && window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 )
-
 /**
  * Get Redux action type based on metadata from event
  *
@@ -211,14 +255,10 @@ export const store = createStore(
 const getActionType = (meta) => {
   // This will need to be built upon as more features are added to
   // the app
-
   return meta.type
 }
-
 // const getRout = (meta) => {
-
 // }
-
 /**
  * Get a callback function that can be used as an event handler for
  * the web-worker's onmessage event
@@ -229,7 +269,6 @@ const getActionType = (meta) => {
 export const getWorkerDispatcher = (_store) => (e) => {
   const _state = _store.getState()
   const { meta, value, isChecked, now, ...data } = e.data[0] // eslint-disable-line
-
   _store.dispatch({
     type: getActionType(meta),
     payload: {
@@ -241,12 +280,28 @@ export const getWorkerDispatcher = (_store) => (e) => {
     user: _state.currentUser
   })
 }
-
+export const getDummyPayload = () => {
+  return {
+    id: '',
+    value: '',
+    isChecked: false,
+    extra: '',
+    suffix: ''
+  }
+}
+export const getDummyAction = (action, type, href) => {
+  return {
+    type: isStr(type) ? type : '',
+    payload: getDummyPayload(),
+    href: isStr(href) ? href : '',
+    user: !invalidString('user', action) ? action.user : '',
+    now: !invalidNum('now', action) ? action.now : Date.now()
+  }
+}
 export const generalEventHandler = (_store) => {
   console.log('generalEventHandler()')
   return function (e) {
     e.preventDefault()
-
     console.group('generalEventHandler()')
     console.log('this:', this)
     const _state = _store.getState()
@@ -271,11 +326,9 @@ export const generalEventHandler = (_store) => {
     console.log('_meta:', _meta)
     console.log('output:', output)
     console.groupEnd()
-
     _store.dispatch(output)
   }
 }
-
 /**
  * Get a callback function to push data to the main thread when the
  * Redux store has been updated
@@ -290,14 +343,12 @@ export const generalEventHandler = (_store) => {
  */
 export const getWorkerPoster = (postMessage, getState) => () => {
   const _state = getState()
-
   postMessage({
     type: 'view',
     // TODO: Work out what bits of the state are needed by the
     //       current view and send only those bits
     payload: _state
   })
-
   // Send the URL just in case it's changed
   postMessage({
     type: 'url',

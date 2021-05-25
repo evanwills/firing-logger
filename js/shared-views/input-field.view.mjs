@@ -212,6 +212,7 @@ export const textInputField = (props, multiLine) => {
   const _disabled = getBoolAttr('disabled', props)
   const _required = getBoolAttr('required', props)
   const _read = getBoolAttr('readonly', props)
+  const _focus = getBoolAttr('focus', props) //  ?autofocus=${_focus}
 
   // console.group('textInputField()')
   // console.log('props:', props)
@@ -227,12 +228,12 @@ export const textInputField = (props, multiLine) => {
   return (isBoolTrue(multiLine))
     ? html`
       ${getLabel(props)}
-      <textarea id="${props.id}" class="${getClassName(props, 'input', 'multi-line')}" @change=${props.change} ?required=${_required} ?readonly=${_read} ?disabled=${_disabled} pattern="${ifDefined(_pattern)}" placeholder="${ifDefined(_place)}" maxlength="${ifDefined(_maxLen)}" minlength="${ifDefined(_minLen)}" aria-describedby="${ifDefined(_descBy)}" .value="${props.value}"></textarea>
+      <textarea id="${props.id}" class="${getClassName(props, 'input', 'multi-line')}" @change=${props.change} ?required=${_required} ?readonly=${_read} ?disabled=${_disabled} pattern="${ifDefined(_pattern)}" placeholder="${ifDefined(_place)}" maxlength="${ifDefined(_maxLen)}" minlength="${ifDefined(_minLen)}" aria-describedby="${ifDefined(_descBy)}" .value="${props.value}" ?autofocus=${_focus}></textarea>
       ${(_descBy !== '') ? describedBy(props) : ''}
     `
     : html`
       ${getLabel(props)}
-      <input type="text" id="${props.id}" .value=${props.value} class="${getClassName(props, 'input')}" @change=${props.change} ?required=${getBoolAttr('required', props)} ?readonly=${_read} ?disabled=${_disabled} pattern="${ifDefined(_pattern)}" placeholder="${ifDefined(_place)}" maxlength="${ifDefined(_maxLen)}" minlength="${ifDefined(_minLen)}" aria-describedby="${ifDefined(_descBy)}" />
+      <input type="text" id="${props.id}" .value=${props.value} class="${getClassName(props, 'input')}" @change=${props.change} ?required=${getBoolAttr('required', props)} ?readonly=${_read} ?disabled=${_disabled} pattern="${ifDefined(_pattern)}" placeholder="${ifDefined(_place)}" maxlength="${ifDefined(_maxLen)}" minlength="${ifDefined(_minLen)}" aria-describedby="${ifDefined(_descBy)}" ?autofocus=${_focus} />
       ${(_listAttr !== '') ? dataList(props.id, props.options) : ''}
       ${(_descBy !== '') ? describedBy(props) : ''}
     `
@@ -248,6 +249,7 @@ export const textInputField = (props, multiLine) => {
  */
 export const numberInputField = (props) => {
   const _descBy = getDescbyAttr(props)
+  const _focus = getBoolAttr('focus', props)
 
   // console.group('numberInputField()')
   // console.log('props:', props)
@@ -255,7 +257,7 @@ export const numberInputField = (props) => {
 
   return html`
     ${getLabel(props)}
-    <input type="number" id="${props.id}" .value=${props.value} class="${getClassName(props, 'input', 'number')}" @change=${props.eventHandler} ?required=${getBoolAttr('required', props)} ?readonly=${getBoolAttr('readonly', props)} ?disabled=${getBoolAttr('disabled', props)} pattern="${ifDefined(propOrUn(props.pattern))}" placeholder="${ifDefined(propOrUn(props.placeholder))}" min="${ifDefined(propOrUn(props.min))}" max="${ifDefined(propOrUn(props.max))}" step="${ifDefined(propOrUn(props.step))}" aria-describedby="${ifDefined(_descBy)}" />
+    <input type="number" id="${props.id}" .value=${props.value} class="${getClassName(props, 'input', 'number')}" @change=${props.eventHandler} ?required=${getBoolAttr('required', props)} ?readonly=${getBoolAttr('readonly', props)} ?disabled=${getBoolAttr('disabled', props)} pattern="${ifDefined(propOrUn(props.pattern))}" placeholder="${ifDefined(propOrUn(props.placeholder))}" min="${ifDefined(propOrUn(props.min))}" max="${ifDefined(propOrUn(props.max))}" step="${ifDefined(propOrUn(props.step))}" aria-describedby="${ifDefined(_descBy)}" ?autofocus=${_focus} />
     ${(_descBy !== '') ? describedBy(props) : ''}
   `
 }
@@ -263,11 +265,12 @@ export const numberInputField = (props) => {
 export const colourInput = (props) => {
   const _descBy = getDescbyAttr(props)
   const _error = !invalidBool('error', props, true) ? ' has-error' : '' // ${_error}
+  const _focus = getBoolAttr('focus', props)
 
   return html`
     <li class="input-pair">
       <label for="set-customMode-${props.id}" class="input-pair__label${_error}">Custom mode ${props.label} colour:</label>
-      <input type="color" id="set-customMode-${props.id}" class="input-pair__input${_error}" value="${props.value}" tabindex="${props.tabIndex}" @change=${props.eventHandler} ?required=${getBoolAttr('required', props)} ?readonly=${getBoolAttr('readonly', props)} ?disabled=${getBoolAttr('disabled', props)} aria-describedby="${ifDefined(_descBy)}" /><!--
+      <input type="color" id="set-customMode-${props.id}" class="input-pair__input${_error}" value="${props.value}" tabindex="${props.tabIndex}" @change=${props.eventHandler} ?required=${getBoolAttr('required', props)} ?readonly=${getBoolAttr('readonly', props)} ?disabled=${getBoolAttr('disabled', props)} aria-describedby="${ifDefined(_descBy)}" ?autofocus=${_focus} /><!--
       --><span class="input-pair__suffix" style="background-color: ${props.value};">&nbsp;</span>
       ${(_descBy !== '') ? describedBy(props) : ''}
     </li>
@@ -330,13 +333,14 @@ export const selectField = (props) => {
   const _descBy = getDescbyAttr(props)
 
   const _error = !invalidBool('error', props, true) ? ' has-error' : '' //
+  const _focus = getBoolAttr('focus', props) //
 
   // console.group('selectField()')
   // console.log('props:', props)
   // console.groupEnd()
   return html`
     ${getLabel(props)}
-    <select id=${props.id} class="${getClassName(props, 'select')}${_error}" ?required=${getBoolAttr('required', props)} ?readonly=${getBoolAttr('readonly', props)} ?disabled=${getBoolAttr('disabled', props)} @change=${props.eventHandler} aria-describedby="${ifDefined(_descBy)}" />
+    <select id=${props.id} class="${getClassName(props, 'select')}${_error}" ?required=${getBoolAttr('required', props)} ?readonly=${getBoolAttr('readonly', props)} ?disabled=${getBoolAttr('disabled', props)} @change=${props.eventHandler} aria-describedby="${ifDefined(_descBy)}" ?autofocus=${_focus} />
       ${props.options.map(selectOption)}
     </select>
     ${(_descBy !== '') ? describedBy(props) : ''}
@@ -357,6 +361,7 @@ const checkableInput = (props, fieldType, descBy) => {
   const _id = (fieldType === 'checkbox')
     ? props.id + '-' + idSafe(props.value)
     : props.id
+  const _focus = getBoolAttr('focus', props) //
 
   return html`
     <input type=${fieldType}
@@ -369,7 +374,8 @@ const checkableInput = (props, fieldType, descBy) => {
           ?readonly=${getBoolAttr('readonly', props)}
           ?disabled=${getBoolAttr('disabled', props)}
           aria-describedby="${ifDefined(descBy)}"
-          @change=${props.change} />`
+          @change=${props.change}
+          ?autofocus=${_focus} />`
 }
 
 /**

@@ -66,12 +66,13 @@ export const getID = (time, id) => {
     throw Error('getID() expects second param `id` to be a non-empty string.')
   }
 
-  return window.btoa(
-    // remove microseconds from timestamp
-    window.btoa(time.toString().replace(/[0-9]{3}$/, '')) +
-    '-' +
-    window.btoa(id)
-  )
+  // return window.btoa(
+  //   // remove microseconds from timestamp
+  //   window.btoa(time.toString().replace(/[0-9]{3}$/, '')) +
+  //   '-' +
+  //   window.btoa(id)
+  // )
+  return window.btoa(time.toString().replace(/[0-9]{3}$/, '') + id)
 }
 
 /**

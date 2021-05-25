@@ -14,7 +14,7 @@ svg .grid-line {
 svg .unit-text {
   fill: var(--txt-colour);
   font-family: Verdana;
-  font-size: 0.7rem;
+  font-size: 44px;
   font-weight: bold;
   line-height: 1.25;
   stroke: none;

@@ -192,6 +192,14 @@ interface ReportRow {
     expectedRate: number
 }
 
+interface veiw {
+  route: [string],
+  title: string,
+  url: string,
+  navOpen: false,
+  settingsOpen: false
+}
+
 interface App {
     currentUser: user,
     reports: [firingReport],

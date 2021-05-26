@@ -8,7 +8,7 @@
 @import '../js/features/item-list/item-list.css';
 @import '../js/features/nav-bar/nav-bar.css';
 @import '../js/features/svg/svg.css';
-@import './organisms/header.css';
+@import '../js/features/header/header.css';
 @import './molecules/repeatable-nav.css';
 @import './molecules/item-actions.css';
 @import './molecules/input-field.css';

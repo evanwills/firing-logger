@@ -212,7 +212,9 @@ const initialState = {
   view: {
     route: ['programs', 'add'],
     title: 'Firing programs',
-    url: 'programs/add'
+    url: 'programs/add',
+    navOpen: false,
+    settingsOpen: false
   },
   render: false
 }

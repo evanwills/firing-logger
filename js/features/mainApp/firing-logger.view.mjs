@@ -1,14 +1,14 @@
+import { render, html } from '../../vendor/lit-html/lit-html.mjs'
+import { store } from '../../features/mainApp/firing-logger.state.mjs'
+import { invalidString } from '../../utilities/validation.mjs'
 import { programsView } from '../firing-programs/programs.view.mjs'
 import { kilnsView } from '../kilns/kilns.view.mjs'
 import { logsView } from '../logs/logs.view.mjs'
-import { render, html } from '../../vendor/lit-html/lit-html.mjs'
-import { store } from '../../features/mainApp/firing-logger.state.mjs'
 // import { getLink } from '../../shared-views/navigation.view.mjs'
-import { invalidString } from '../../utilities/validation.mjs'
-import { getNavBar } from '../nav-bar/nav-bar.view.mjs'
+import { header } from '../header/header.view.mjs'
 
 export const firingLoggerView = (domNode, eHandler, titleTag) => () => {
-  // console.group('firingLoggerView()')
+  console.group('firingLoggerView()')
   // console.log('eHandler:', eHandler)
   const state = store.getState()
   // console.log('state:', state)
@@ -18,41 +18,28 @@ export const firingLoggerView = (domNode, eHandler, titleTag) => () => {
     return ''
   }
 
+  console.log('state.view:', state.view)
+  console.log('state.view.route:', state.view.route)
   const [route, ...subRoutes] = state.view.route
   const uiMode = 'ui-darkmode'
   const hasTitle = (!invalidString('title', state.view, true))
-  const title = (hasTitle === true)
-    ? html`: <span class="page-header__sub-head">${state.view.title}</span>`
-    : ''
+  const title = (hasTitle === true) ? state.view.title : ''
   const titleTxt = (hasTitle === true) ? ': ' + state.view.title : ''
+  console.log('route:', route)
 
   let subView = ''
-  const navLinks = [{
-    label: 'Kilns',
-    path: '/kilns'
-  }, {
-    label: 'Firing Programs',
-    path: '/programs'
-  }, {
-    label: 'Firing logs',
-    path: '/firingLogs'
-  // }, {
-  //   label: 'Calendar',
-  //   path: 'calendar'
-  // }, {
-  //   label: 'Maintenance',
-  //   path: 'maintenance'
-  // }, {
-  //   label: 'Users',
-  //   path: 'users'
-  }]
 
   switch (route) {
     case 'programs':
       console.log('state.studio.firingPrograms:', state.studio.firingPrograms)
       console.log('state.studio.kilns.all:', state.studio.kilns.all)
 
-      subView = programsView(state.studio.firingPrograms, state.studio.kilns.all, eHandler, subRoutes)
+      subView = programsView(
+        state.studio.firingPrograms,
+        state.studio.kilns.all,
+        eHandler,
+        subRoutes
+      )
       break
 
     case 'kilns':
@@ -65,16 +52,14 @@ export const firingLoggerView = (domNode, eHandler, titleTag) => () => {
   }
 
   // console.log('titleTag:', titleTag)
+  // set the document title element's contents
   titleTag.innerText = 'Firing logger' + titleTxt
-  // console.groupEnd()
+  console.groupEnd()
 
   render(
     html`
     <div class="firing-logger ${uiMode}">
-      <header class="page-header">
-        <h1>Firing logger${title}</h1>
-        ${getNavBar(navLinks, eHandler, '')}
-      </header>
+      ${header(state.view, eHandler, route, title)}
       <div class="main-content">
         ${subView}
       </div>

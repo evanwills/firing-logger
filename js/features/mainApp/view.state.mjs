@@ -5,13 +5,17 @@ export const viewActions = {
   SET_FROM_URL: 'VIEW_SET_FROM_URL',
   SET_FROM_URL_INNER: 'VIEW_SET_FROM_URL_INNER',
   SET: 'VIEW_SET_FROM_ACTION',
-  OK: 'OK_TO_RENDER'
+  OK: 'OK_TO_RENDER',
+  TOGGLE_NAV: 'VIEW_TOGGLE_NAV',
+  TOGGLE_SETTINGS: 'VIEW_TOGGLE_SETTINGS'
 }
 
 const initialState = {
   url: '',
   route: [],
-  title: ''
+  title: '',
+  navOpen: false,
+  settingsOpen: false
 }
 
 const getViewState = (path) => {
@@ -68,19 +72,42 @@ export const viewReducer = (state = initialState, action) => {
   switch (action.type) {
     case viewActions.SET_FROM_URL_INNER:
       // console.groupEnd()
-      return getViewFromURL(state, action.payload)
+      return {
+        ...getViewFromURL(state, action.payload),
+        navOpen: false,
+        settingsOpen: false
+      }
 
     case viewActions.SET_FROM_URL:
       // We don't want anything to happen from this
       // console.groupEnd()
       return state
 
+    case viewActions.TOGGLE_NAV:
+      // Open or close the main navigation
+      return {
+        ...state,
+        navOpen: !state.navOpen
+      }
+
+    case viewActions.TOGGLE_SETTINGS:
+      // Open or close the main navigation
+      return {
+        ...state,
+        settingsOpen: !state.settingsOpen
+      }
+
     default:
       // console.log('action:', action)
       // console.log('action.href:', action.href)
-      if (!invalidString('href', action) && action.href !== state.url) {
+      if (!invalidString('href', action, true) && action.href !== state.url) {
         // console.groupEnd()
-        return getViewState(action.href)
+        return {
+          ...state,
+          ...getViewState(action.href),
+          navOpen: false,
+          settingsOpen: false
+        }
       }
   }
 

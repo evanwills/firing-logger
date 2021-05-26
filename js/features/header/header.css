@@ -75,3 +75,9 @@
     top: 0;
   }
 }
+
+
+@media screen and (min-width: 48rem) {
+  .main-menu__btn { display: none; }
+  .main-nav--closed { transform: scaleY(1); }
+}

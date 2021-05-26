@@ -35,7 +35,13 @@
   --b-font: Arial, Helvetica, sans-serif;
   --h-font: Verdana, Geneva, Tahoma, sans-serif;
   --c-font: 'Courier New', Courier, monospace;
-}
+
+  --width-xs: 22rem;
+  --width-sm: 34rem;
+  --width-md: 48rem;
+  --width-lg: 62rem;
+  --width-xl: 75rem;
+};
 
 .ui-darkmode {
   --bg-colour: var(--dark-bg, #2d2b2b);

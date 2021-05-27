@@ -1,7 +1,8 @@
 import {
   numberInputField,
   selectField,
-  textInputField
+  textInputField,
+  nonInputField
 } from '../../shared-views/input-field.view.mjs'
 import { html } from '../../vendor/lit-html/lit-html.mjs'
 import { getMainContent } from '../main-content/main-content.view.mjs'
@@ -12,7 +13,10 @@ import {
   // auDateStr,
   // boolYesNo,
   getHourMinSec,
-  getHHMMSS
+  getHHMMSS,
+  roundMinutes
+  // getDeg,
+  // getRate
 } from '../../utilities/sanitisation.mjs'
 import { getFiringLogSVG } from '../svg/svg.mjs'
 import {
@@ -260,7 +264,7 @@ export const editProgram = (program, kilns, user, eHandler) => {
           options: [
             {
               value: '',
-              label: ' -- Select a firing type --',
+              label: ' -- Select a firing type -- ',
               selected: false
             },
             ...getFiringTypes(kilns_[0], program.type)
@@ -278,6 +282,7 @@ export const editProgram = (program, kilns, user, eHandler) => {
         numberInputField({
           id: 'controllerProgramID-' + programActions.TMP_UPDATE_FIELD,
           label: 'Controller program ID',
+          change: eHandler,
           value: program.controllerProgramID,
           min: 0,
           max: kilns[0].maxProgramID,
@@ -289,29 +294,34 @@ export const editProgram = (program, kilns, user, eHandler) => {
       )
 
       fields.push( // maxTemp
-        textInputField({
-          id: 'maxTemp-' + programActions.TMP_UPDATE_FIELD,
+        nonInputField({
+          // this input should never trigger an event
+          id: 'maxTemp',
           readonly: true,
           label: 'Maximum temperature',
-          value: program.maxTemp + '&deg;C'
+          value: program.maxTemp,
+          suffix: html`&deg;C`
         })
       )
 
       fields.push( // duration
         textInputField({
-          id: 'duration-' + programActions.TMP_UPDATE_FIELD,
+          // this input should never trigger an event
+          id: 'duration',
           readonly: true,
           label: 'Firing duration',
-          value: getHourMinSec(program.duration)
+          value: getHourMinSec(roundMinutes(program.duration), true)
         })
       )
 
       fields.push( // averageRate
-        textInputField({
-          id: 'averageRate-' + programActions.TMP_UPDATE_FIELD,
+        nonInputField({
+          // this input should never trigger an event
+          id: 'averageRate',
           readonly: true,
           label: 'Average rate of climb',
-          value: program.averageRate + '&deg;C / hour'
+          value: program.averageRate,
+          suffix: html`&deg;C / hr`
         })
       )
 

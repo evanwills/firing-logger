@@ -5,12 +5,14 @@ import {
   isBoolTrue,
   // isFunction,
   // isInt,
+  isLit,
   isNonEmptyStr,
   isNumber,
   // isNumeric,
   isStr,
   isStrNum,
   invalidBool
+  // invalidString
 } from '../utilities/validation.mjs'
 import {
   getClassName,
@@ -64,6 +66,17 @@ export const getBoolAttr = (attr, props, reverse) => {
   // console.log('(isBoolTrue(reverse)) ? !output : output:', (isBoolTrue(reverse)) ? !output : output)
   // console.groupEnd()
   return (isBoolTrue(reverse)) ? !output : output
+}
+
+export const getPreSuf = (props, className, isSuffix) => {
+  const _end = (isBoolTrue(isSuffix)) ? 'suffix' : 'prefix'
+
+  if (typeof props[_end] !== 'undefined' && (isNonEmptyStr(props[_end]) || isLit(props[_end]))) {
+    return isStr(className)
+      ? html`<span class="${className}__${_end}">${props[_end]}</span>`
+      : props[_end]
+  }
+  return ''
 }
 
 /**
@@ -186,6 +199,14 @@ const propOrUn = (input, defaultStr) => {
       : undefined
 }
 
+export const nonInputField = (props) => {
+  const _className = getClassName(props, 'input')
+
+  return html`
+  <span class="${getClassName(props, 'label')}">${props.label}</span>
+  <span class="${_className}">${getPreSuf(props, _className, false)}${props.value}${getPreSuf(props, _className, true)}</span>`
+}
+
 /**
  * Get an text input field (with label)
  *
@@ -213,6 +234,9 @@ export const textInputField = (props, multiLine) => {
   const _required = getBoolAttr('required', props)
   const _read = getBoolAttr('readonly', props)
   const _focus = getBoolAttr('focus', props) //  ?autofocus=${_focus}
+  const _multi = isBoolTrue(multiLine)
+  const _multiClass = (_multi) ? 'multi-line' : ''
+  const _className = getClassName(props, 'input', _multiClass)
 
   // console.group('textInputField()')
   // console.log('props:', props)
@@ -225,15 +249,15 @@ export const textInputField = (props, multiLine) => {
   // console.log('multiLine:', multiLine)
   // console.groupEnd()
 
-  return (isBoolTrue(multiLine))
+  return (_multi)
     ? html`
       ${getLabel(props)}
-      <textarea id="${props.id}" class="${getClassName(props, 'input', 'multi-line')}" @change=${props.change} ?required=${_required} ?readonly=${_read} ?disabled=${_disabled} pattern="${ifDefined(_pattern)}" placeholder="${ifDefined(_place)}" maxlength="${ifDefined(_maxLen)}" minlength="${ifDefined(_minLen)}" aria-describedby="${ifDefined(_descBy)}" .value="${props.value}" ?autofocus=${_focus}></textarea>
+      <textarea id="${props.id}" class="${_className}" @change=${props.change} ?required=${_required} ?readonly=${_read} ?disabled=${_disabled} pattern="${ifDefined(_pattern)}" placeholder="${ifDefined(_place)}" maxlength="${ifDefined(_maxLen)}" minlength="${ifDefined(_minLen)}" aria-describedby="${ifDefined(_descBy)}" .value="${props.value}" ?autofocus=${_focus}></textarea>
       ${(_descBy !== '') ? describedBy(props) : ''}
     `
     : html`
       ${getLabel(props)}
-      <input type="text" id="${props.id}" .value=${props.value} class="${getClassName(props, 'input')}" @change=${props.change} ?required=${getBoolAttr('required', props)} ?readonly=${_read} ?disabled=${_disabled} pattern="${ifDefined(_pattern)}" placeholder="${ifDefined(_place)}" maxlength="${ifDefined(_maxLen)}" minlength="${ifDefined(_minLen)}" aria-describedby="${ifDefined(_descBy)}" ?autofocus=${_focus} />
+      ${getPreSuf(props, _className, false)}<input type="text" id="${props.id}" class="${_className}" .value=${props.value} @change=${props.change} ?required=${getBoolAttr('required', props)} ?readonly=${_read} ?disabled=${_disabled} pattern="${ifDefined(_pattern)}" placeholder="${ifDefined(_place)}" maxlength="${ifDefined(_maxLen)}" minlength="${ifDefined(_minLen)}" aria-describedby="${ifDefined(_descBy)}" ?autofocus=${_focus} />${getPreSuf(props, _className, true)}
       ${(_listAttr !== '') ? dataList(props.id, props.options) : ''}
       ${(_descBy !== '') ? describedBy(props) : ''}
     `
@@ -250,6 +274,7 @@ export const textInputField = (props, multiLine) => {
 export const numberInputField = (props) => {
   const _descBy = getDescbyAttr(props)
   const _focus = getBoolAttr('focus', props)
+  const _className = getClassName(props, 'input', 'number')
 
   // console.group('numberInputField()')
   // console.log('props:', props)
@@ -257,7 +282,7 @@ export const numberInputField = (props) => {
 
   return html`
     ${getLabel(props)}
-    <input type="number" id="${props.id}" .value=${props.value} class="${getClassName(props, 'input', 'number')}" @change=${props.eventHandler} ?required=${getBoolAttr('required', props)} ?readonly=${getBoolAttr('readonly', props)} ?disabled=${getBoolAttr('disabled', props)} pattern="${ifDefined(propOrUn(props.pattern))}" placeholder="${ifDefined(propOrUn(props.placeholder))}" min="${ifDefined(propOrUn(props.min))}" max="${ifDefined(propOrUn(props.max))}" step="${ifDefined(propOrUn(props.step))}" aria-describedby="${ifDefined(_descBy)}" ?autofocus=${_focus} />
+    ${getPreSuf(props, _className, false)}<input type="number" id="${props.id}" .value=${props.value} class="${_className}" @change=${props.eventHandler} ?required=${getBoolAttr('required', props)} ?readonly=${getBoolAttr('readonly', props)} ?disabled=${getBoolAttr('disabled', props)} pattern="${ifDefined(propOrUn(props.pattern))}" placeholder="${ifDefined(propOrUn(props.placeholder))}" min="${ifDefined(propOrUn(props.min))}" max="${ifDefined(propOrUn(props.max))}" step="${ifDefined(propOrUn(props.step))}" aria-describedby="${ifDefined(_descBy)}" ?autofocus=${_focus} />${getPreSuf(props, _className, true)}
     ${(_descBy !== '') ? describedBy(props) : ''}
   `
 }

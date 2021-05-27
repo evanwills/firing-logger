@@ -82,7 +82,7 @@ const initialState = {
         description: 'Good for firing not quite dry and/or large work',
         maxTemp: 1000,
         duration: 40920,
-        averageRate: 0,
+        averageRate: 88,
         steps: [{
           endTemp: 200,
           rate: 50,

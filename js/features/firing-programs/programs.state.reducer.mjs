@@ -44,6 +44,9 @@ export const initialPrograms = [{
       hold: 10
     }
   ],
+  maxTemp: 1000,
+  duration: 37467,
+  averageRate: 113.4,
   created: '2021-05-06T21:13:25+1000',
   createdBy: 'evanwills',
   superseded: false,

@@ -8,7 +8,9 @@ import {
   invalidNum,
   invalidBool
 } from './validation.mjs'
+import { c2f } from './general.mjs'
 import { cleanGET } from './url.mjs'
+import { html } from '../vendor/lit-html/lit-html.mjs'
 
 /**
  * Convert a string into an array (if possible) and clean up array
@@ -411,6 +413,8 @@ export const getHHMMSS = (seconds, noSeconds) => {
   return tmp.str
 }
 
+export const roundMinutes = (seconds) => (Math.round(seconds / 60) * 60)
+
 /**
  * Convert boolean value to "Yes" or "No" (or "TRUE"/"FALSE")
  *
@@ -448,3 +452,34 @@ export const round = (input, places) => {
 
   return Math.round(input * x) / x
 }
+
+/**
+ * Round a input number to a specified number of decimal places
+ *
+ * @param {number}  degrees Number to be rounded
+ * @param {boolean} metric  Use metric degrees
+ *
+ * @returns {html}
+ */
+export const getDeg = (degrees, metric) => {
+  if (!isNumeric(degrees)) {
+    throw Error(
+      'getDeg() expects first parameter degrees to be a number. ' +
+      typeof degrees + ' given'
+    )
+  }
+  const unit = (isBoolFalse(metric)) ? 'F' : 'C'
+  const deg = (unit === 'F') ? c2f(degrees) : degrees
+
+  return html`${deg}&deg;${unit}`
+}
+
+/**
+ * Round a input number to a specified number of decimal places
+ *
+ * @param {number}  degrees Number to be rounded
+ * @param {boolean} metric  Use metric degrees
+ *
+ * @returns {html}
+ */
+export const getRate = (degrees, metric) => html`${getDeg(degrees, !isBoolFalse(metric))} / hr`

@@ -4,11 +4,22 @@
 
 interface Action {
   type: string,
-  payload: object,
-  meta: {
-    date: Date,
-    user: string
-  }
+  payload: object
+}
+
+interface FancyPayload {
+  id: string,
+  value: any,
+  isChecked: boolean,
+  extra: string|number,
+  suffix: string|number
+}
+interface FancyAction implements Action {
+  type: string,
+  payload: FancyPayload,
+  href: string | null,
+  now: number,
+  user: string
 }
 
 //  END:  REDUX types

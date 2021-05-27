@@ -2,12 +2,11 @@ import { html } from '../../vendor/lit-html/lit-html.mjs'
 // import { isStr } from '../../utilities/validation.mjs'
 // import { selectField } from '../../shared-views/input-field.view.mjs'
 import { getNavBar } from '../nav-bar/nav-bar.view.mjs'
-import { getHourMinSec, getHHMMSS, ucFirst, auDateStr, boolYesNo } from '../../utilities/sanitisation.mjs'
+import { getHourMinSec, getHHMMSS, ucFirst, auDateStr, boolYesNo, getDeg, getRate, roundMinutes } from '../../utilities/sanitisation.mjs'
 import { programActions } from './programs.state.actions.mjs'
 import { viewActions } from '../mainApp/view.state.mjs'
 import { getFiringLogSVG } from '../svg/svg.mjs'
 import { getMainContent } from '../main-content/main-content.view.mjs'
-// import { }
 
 export const programListItem = (id, name, type, maxTemp, duration, SVG, isUsed, kilnName, eHandler) => {
   return html`
@@ -31,13 +30,13 @@ export const programListItem = (id, name, type, maxTemp, duration, SVG, isUsed, 
         <span class="sr-only">
           Maximum temperature:
         </span>
-        ${maxTemp}&deg;C
+        ${getDeg(maxTemp)}
        </p>
        <p class="program-item__time">
         <span class="sr-only">
           Total firing time:
         </span>
-        ${getHourMinSec(duration)}
+        ${getHourMinSec(roundMinutes(duration))}
        </p>
        <!-- SVG -->
      </a>
@@ -130,8 +129,8 @@ export const programSteps = (steps) => {
           return html`
           <tr>
             <th>${(i + 1)}</th>
-            <td class="program-steps__max">${step.endTemp}&deg;C</td>
-            <td class="program-steps__rate">${step.rate}&deg; / hr</td>
+            <td class="program-steps__max">${getDeg(step.endTemp)}</td>
+            <td class="program-steps__rate">${getRate(step.rate)}</td>
             <td class="program-steps__hold">${step.hold} <span class="not-sm">minutes</span></td>
             <td class="program-steps__time">${duration}</td>
           </tr>
@@ -148,10 +147,10 @@ export const programSteps = (steps) => {
   `
 }
 export const singleProgram = (state, kilnName, eHandler) => {
-  // console.group('singleProgram')
+  console.group('singleProgram')
   const id = state.id
-  // console.log('state:', state)
-  // console.groupEnd()
+  console.log('state:', state)
+  console.groupEnd()
 
   let actionLinks = []
   if (state.useCount > 0) {
@@ -240,10 +239,13 @@ export const singleProgram = (state, kilnName, eHandler) => {
         <dd class="program-fields__val">${state.version}</dd>
 
       <dt class="program-fields__key">Max temp</dt>
-        <dd class="program-fields__val">${state.maxTemp}&deg;C</dd>
+        <dd class="program-fields__val">${getDeg(state.maxTemp)}</dd>
 
       <dt class="program-fields__key">Total firing time</dt>
         <dd class="program-fields__val">${getHourMinSec(state.duration)}</dd>
+
+      <dt class="program-fields__key">Average rate</dt>
+        <dd class="program-fields__val">${getRate(state.averageRate)}</dd>
 
       <dt class="program-fields__key">Created</dt>
         <dd class="program-fields__val">

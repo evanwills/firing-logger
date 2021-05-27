@@ -13,24 +13,6 @@ export const fieldHandler = (postToWorker) => function (e) {
 }
 
 /**
- * Convert degrees Fahrenheit to degrees Celsius
- *
- * @param {number} degrees Degrees Fahrenheit
- *
- * @returns {number} Degrees Celsius
- */
-export const f2c = (degrees) => ((degrees - 32) / 1.8)
-
-/**
- * Convert degrees Celsius to degrees Fahrenheit
- *
- * @param {number} degrees Degrees Celsius
- *
- * @returns {number} Degrees Fahrenheit
- */
-export const c2f = (degrees) => ((degrees * 1.8) + 32)
-
-/**
  * Get a unique ID based on the current time
  *
  * ID is a sanitised base64 encoded JS timestamp

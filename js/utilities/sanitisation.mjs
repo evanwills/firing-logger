@@ -8,9 +8,24 @@ import {
   invalidNum,
   invalidBool
 } from './validation.mjs'
-import { c2f } from './general.mjs'
 import { cleanGET } from './url.mjs'
 import { html } from '../vendor/lit-html/lit-html.mjs'
+
+
+/**
+ * Round a input number to a specified number of decimal places
+ *
+ * @param {number} input  Number to be rounded
+ * @param {number} places number of decimal places to round the input
+ *
+ * @returns {number}
+ */
+export const round = (input, places) => {
+  const p = (typeof input === 'number') ? Math.round(places) : 0
+  const x = Math.pow(10, p)
+
+  return Math.round(input * x) / x
+}
 
 /**
  * Convert a string into an array (if possible) and clean up array
@@ -433,29 +448,6 @@ export const boolYesNo = (input, yes) => {
 /**
  * Round a input number to a specified number of decimal places
  *
- * @param {number} input  Number to be rounded
- * @param {number} places number of decimal places to round the input
- *
- * @returns {number}
- */
-export const round = (input, places) => {
-  const p = isNumeric(places) ? Math.round(places) : 0
-  const x = Math.pow(10, p)
-
-  // console.group('round()')
-  // console.log('input:', input)
-  // console.log('places:', places)
-  // console.log('p:', p)
-  // console.log('x:', x)
-  // console.log('Math.round(' + input + ' * ' + x + ') / ' + x + ':', Math.round(input * x) / x)
-  // console.groupEnd()
-
-  return Math.round(input * x) / x
-}
-
-/**
- * Round a input number to a specified number of decimal places
- *
  * @param {number}  degrees Number to be rounded
  * @param {boolean} metric  Use metric degrees
  *
@@ -469,7 +461,7 @@ export const getDeg = (degrees, metric) => {
     )
   }
   const unit = (isBoolFalse(metric)) ? 'F' : 'C'
-  const deg = (unit === 'F') ? c2f(degrees) : degrees
+  const deg = (unit === 'F') ? round(c2f(degrees)) : degrees
 
   return html`${deg}&deg;${unit}`
 }
@@ -482,4 +474,50 @@ export const getDeg = (degrees, metric) => {
  *
  * @returns {html}
  */
-export const getRate = (degrees, metric) => html`${getDeg(degrees, !isBoolFalse(metric))} / hr`
+export const getRate = (degrees, metric) => {
+  return html`${getDeg(degrees, !isBoolFalse(metric))} / hr`
+}
+
+/**
+ * Convert degrees Fahrenheit to degrees Celsius
+ *
+ * @param {number} degrees Degrees Fahrenheit
+ *
+ * @returns {number} Degrees Celsius
+ */
+export const f2c = (degrees) => ((degrees - 32) / 1.8)
+
+/**
+ * Convert degrees Celsius to degrees Fahrenheit
+ *
+ * @param {number} degrees Degrees Celsius
+ *
+ * @returns {number} Degrees Fahrenheit
+ */
+export const c2f = (degrees) => ((degrees * 1.8) + 32)
+
+
+/**
+ * Convert millimetres to inches
+ *
+ * @param {number} mm Number of millimetres to be converted
+ *
+ * @returns {number} Inches
+ */
+export const mm2in = (mm) => round((mm / 25.4), 3)
+
+/**
+ * Convert inches to millimetres
+ *
+ * @param {number} mm Number of inches to be converted
+ *
+ * @returns {number} millimetres
+ */
+export const in2mm = (inch) => round((inch * 25.4), 3)
+
+export const getLen = (len, metric) => {
+  const unit = (isBoolFalse(metric)) ? 'inch' : 'mm'
+  const _len = (unit === 'in') ? round(mm2in(len), 2) : len
+  const _s = (unit === 'inc' && _len !== 1) ? 'es' : ''
+  return _len + unit + _s
+}

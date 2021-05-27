@@ -39,7 +39,7 @@ const initialState = {
         model: '1',
         name: 'New Woodrow',
         installDate: '2021-04-29T11:24:35+1000',
-        energy: 'electric',
+        fuel: 'electric',
         type: 'general',
         maxTemp: 1280,
         width: 500,

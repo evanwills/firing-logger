@@ -33,7 +33,7 @@ interface Kiln {
   model: string,
   name: string,
   installDate: DateTime,
-  energy: energySource,
+  fuel: fuelSource,
   type: kilnType,
   maxTemp: number,
   maxProgramID: number,
@@ -256,7 +256,7 @@ enum view {
     users
 }
 
-enum energySource {
+enum fuelSource {
   electric,
   gas,
   wood,

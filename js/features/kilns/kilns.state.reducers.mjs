@@ -1,10 +1,10 @@
 import {
   validInstallDate,
   validKilnType,
-  validEnergySource,
+  validfuelSource,
   validMaxTemp,
   validateDimension
-} from './kilnDataValiation.mjs'
+} from './kiln-data-valiation.mjs'
 import {
   invalidBool
 } from '../../utilities/validation.mjs'
@@ -15,7 +15,7 @@ const dummyKiln = {
   brand: 'woodrow',
   model: '',
   type: 'general',
-  energy: 'electric',
+  fuel: 'electric',
   installDate: '2021-05-05T08:54:03+1000',
   maxTemp: 1260,
   height: 450,
@@ -65,8 +65,8 @@ const updateKiln = (kiln, data) => {
               newValue = validKilnType(val)
               break
 
-            case 'energy':
-              newValue = validEnergySource(val)
+            case 'fuel':
+              newValue = validfuelSource(val)
               break
 
             case 'maxTemp':

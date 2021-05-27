@@ -1,4 +1,4 @@
-import { isBoolTrue, isInt, isNumeric } from '../../utilities/validation.mjs'
+import { isBoolTrue, isInt, isNumeric, invalidBool } from '../../utilities/validation.mjs'
 
 export const validKilnTypes = [
   'general',
@@ -8,7 +8,7 @@ export const validKilnTypes = [
   'anagamma'
 ]
 
-export const validEnergySources = [
+export const validfuelSources = [
   'electric',
   'gas',
   'wood',
@@ -31,17 +31,17 @@ export const validKilnType = (kilnType) => {
 }
 
 /**
- * Test whether the value for the type of energy source used by the
+ * Test whether the value for the type of fuel source used by the
  * kiln is valid
  *
  * @param {string} source Name of the type of kiln
  *
  * @returns {string}
  */
-export const validEnergySource = (source) => {
+export const validfuelSource = (source) => {
   const _source = source.toLowerCase()
-  if (validEnergySources.indexOf(_source) === -1) {
-    throw Error('Kiln object expects `energy` property to match one of the following strings: "' + validEnergySources.join('", "') + '"')
+  if (validfuelSources.indexOf(_source) === -1) {
+    throw Error('Kiln object expects `fuel` property to match one of the following strings: "' + validfuelSources.join('", "') + '"')
   }
   return _source
 }
@@ -152,7 +152,7 @@ export const validateKilnData = (dummyKiln, kiln, isNew = false) => {
   }
 
   try { // eslint-disable-line
-    newKiln.energy = validEnergySource(newKiln.energy)
+    newKiln.fuel = validfuelSource(newKiln.fuel)
   } catch (e) {
     throw e
   }
@@ -182,4 +182,20 @@ export const validateKilnData = (dummyKiln, kiln, isNew = false) => {
   }
 
   return newKiln
+}
+
+export const listFiringTypes = (kiln) => {
+  const allTypes = [
+    'bisque',
+    'glaze',
+    'luster',
+    'onglaze',
+    'raku',
+    'pit',
+    'sagga',
+    'salt'
+  ]
+
+  return allTypes.filter(ftype => !invalidBool(ftype, kiln, true)).
+                  map(ftype => html`<li>ucFirst(ftype)</li>`)
 }

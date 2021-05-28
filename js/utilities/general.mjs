@@ -93,17 +93,18 @@ export const decodeID = (id) => {
 /**
  * Get the item from the supplied list that matches the given ID
  *
- * @param {array}  itemList  List of items to be searched through
- * @param {string} id        ID of item to be returned
- * @param {string} fieldName Field name to match against
+ * @param {array}  itemList List of items to be searched through
+ * @param {string} id       ID of item to be returned
+ * @param {string} propName [default: "id"] Field name to match
+ *                          against
  *
  * @returns {object,false} Matched object or FALSE if not object could be found
  */
-export const getItemByID = (itemList, id, fieldName) => {
+export const getItemByID = (itemList, id, propName) => {
   const _id = isNonEmptyStr(id) ? id : ''
-  const prop = (isNonEmptyStr(fieldName) && itemList.length > 0 && !invalidStr(fieldName, itemList[0])) ? fieldName : 'id'
+  const prop = (isNonEmptyStr(propName) && itemList.length > 0 && !invalidStr(propName, itemList[0])) ? propName : 'id'
   for (let a = 0; a < itemList.length; a += 1) {
-    if (itemList[a][prop] === id) {
+    if (itemList[a][prop] === _id) {
       return itemList[a]
     }
   }
@@ -111,16 +112,20 @@ export const getItemByID = (itemList, id, fieldName) => {
 }
 
 /**
- * Get the name of a kiln by ID
+ * Get the value of a property ()
  *
- * @param {string} kilnID ID of the kiln to be named
- * @param {array}  kilns  List of all kilns available
+ * @param {array}  itemList List of items to be searched through
+ * @param {string} id       ID of item from which property value is
+ *                          to be returned
+ * @param {string} propName [default: "id"] Field name to match
+ *                          against
  *
- * @returns {string}
+ * @returns {mixed,null} The matched value or null if no item could
+ *                          be found
  */
-export const getPropByID = (itemList, id, fieldName) => {
+export const getPropByID = (itemList, id, propName) => {
   const _id = isNonEmptyStr(id) ? id : ''
-  const prop = (isNonEmptyStr(fieldName) && itemList.length > 0 && !invalidStr(fieldName, itemList[0])) ? fieldName : 'name'
+  const prop = (isNonEmptyStr(propName) && itemList.length > 0 && !invalidStr(propName, itemList[0])) ? propName : 'name'
 
   const items = itemList.filter(item => item.id === _id).map(item => {
     return (typeof item[prop] !== 'undefined') ? item[prop] : null
@@ -131,5 +136,5 @@ export const getPropByID = (itemList, id, fieldName) => {
       return items[a]
     }
   }
-  return ''
+  return null
 }

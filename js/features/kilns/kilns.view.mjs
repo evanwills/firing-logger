@@ -9,8 +9,11 @@ import { kilnListItem, singleKiln, editKiln } from './kiln-single.view.mjs'
 const getFilteredKilns = (filters) => (kiln) => true
 
 export const kilnsView = (state, eHandler, routes) => {
-  const { route, ...subRoutes } = routes
+  const [route, kilnID, ...subRoutes] = routes
   console.group('kilnsView()')
+  console.log('route:', route)
+  console.log('kilnID:', kilnID)
+  console.log('subRoutes:', subRoutes)
 
   let error = ''
   let subView = ''

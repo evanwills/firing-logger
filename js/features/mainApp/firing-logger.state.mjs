@@ -54,7 +54,8 @@ const initialState = {
         retired: false,
         isWorking: true,
         isInUse: false,
-        isHot: false
+        isHot: false,
+        useCount: 0
       }],
       tmp: {},
       filters: {

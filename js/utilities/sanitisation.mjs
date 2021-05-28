@@ -515,9 +515,18 @@ export const mm2in = (mm) => round((mm / 25.4), 3)
  */
 export const in2mm = (inch) => round((inch * 25.4), 3)
 
+export const mm2Ft = (mm) => round((mm / 304.8), 2)
+
 export const getLen = (len, metric) => {
   const unit = (isBoolFalse(metric)) ? 'inch' : 'mm'
   const _len = (unit === 'in') ? round(mm2in(len), 2) : len
   const _s = (unit === 'inc' && _len !== 1) ? 'es' : ''
   return _len + unit + _s
+}
+export const getVol = (x, y, z, metric) => {
+  const unit = (isBoolFalse(metric)) ? 'feet' : 'm'
+  let _vol = (x * y * z)
+  _vol = (unit === 'in') ? mm2Ft(_vol) : (_vol / 1000000000)
+  // const _s = (_vol !== 1) ? 's' : ''
+  return _vol + unit
 }

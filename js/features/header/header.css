@@ -37,7 +37,7 @@
 }
 .main-nav {
   position: absolute;
-  bottom: -2.5rem;
+  bottom: -2.3rem;
   left: 0;
   right: 0;
   transition: transform ease-in-out 0.3s;

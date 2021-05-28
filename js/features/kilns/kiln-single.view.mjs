@@ -3,18 +3,23 @@ import {
   // getHourMinSec,
   // getHHMMSS,
   ucFirst,
-  // auDateStr,
-  // boolYesNo,
+  auDateStr,
+  boolYesNo,
   getDeg,
+  getVol,
   // getRate,
   // roundMinutes,
   getLen
 } from '../../utilities/sanitisation.mjs'
+import { getNavBar } from '../nav-bar/nav-bar.view.mjs'
+import { kilnActions } from './kilns.state.actions.mjs'
+import { programActions } from '../firing-programs/programs.state.actions.mjs'
 import {
   // isNonEmptyStr,
   invalidBool
 } from '../../utilities/validation.mjs'
 import { viewActions } from '../mainApp/view.state.mjs'
+import { getMainContent } from '../main-content/main-content.view.mjs'
 // import { listFiringTypes } from './kiln-data-valiation.mjs'
 
 
@@ -35,7 +40,91 @@ export const listFiringTypes = (kiln) => {
 }
 
 export const singleKiln = (kiln, user, eHandler) => {
+  const actionLinks = [{
+    label: 'View programs',
+    path: '/programs/?filterField=kilnID',
+    id: kiln.id,
+    action: kilnActions.UPDATE
+  }, {
+    label: 'Being repaired',
+    path: '/kilns/not-working',
+    id: kiln.id,
+    action: kilnActions.NOT_WORKING
+  }, {
+    label: 'Edit',
+    path: '/kilns/edit',
+    id: kiln.id,
+    action: kilnActions.UPDATE
+  }, {
+    label: 'Copy',
+    path: '/kilns/copy',
+    id: kiln.id,
+    action: kilnActions.CLONE
+  }, {
+    label: 'Retire',
+    path: '/kilns/delete',
+    id: kiln.id,
+    action: kilnActions.DELETE
+  }]
+  return getMainContent(
+    html`<h2>${kiln.name}</h2>`,
+    html`
+      <h3>Details</h3>
 
+      <dl class="key-value content--bleed">
+        <dt class="key-value__key">Brand</dt>
+          <dd class="key-value__val">${kiln.brand}</dd>
+
+        <dt class="key-value__key">Model</dt>
+          <dd class="key-value__val">${kiln.model}</dd>
+
+        <dt class="key-value__key">Fuel</dt>
+          <dd class="key-value__val">${kiln.fuel}</dd>
+
+        <dt class="key-value__key">Type</dt>
+          <dd class="key-value__val">${kiln.type}</dd>
+
+        <dt class="key-value__key">Max temp</dt>
+          <dd class="key-value__val">${getDeg(kiln.maxTemp)}</dd>
+
+        <dt class="key-value__key">Allowed firings</dt>
+          <dd class="key-value__val"><ul class="basic-list">${listFiringTypes(kiln)}</ul></dd>
+
+        <dt class="key-value__key">Packing dimensions</dt>
+          <dd class="key-value__val">
+            <dl class="basic-k-v">
+              <dt class="basic-k-v__key">Width</dt>
+                <dd class="basic-k-v__val">${getLen(kiln.width)}</dd>
+              <dt class="basic-k-v__key">Depth</dt>
+                <dd class="basic-k-v__val">${getLen(kiln.depth)}</dd>
+              <dt class="basic-k-v__key">Height</dt>
+                <dd class="basic-k-v__val">${getLen(kiln.height)}</dd>
+              <dt class="basic-k-v__key">Total volume</dt>
+                <dd class="basic-k-v__val">${getVol(kiln.width, kiln.depth, kiln.height)}&sup3;</dd>
+            </dl>
+          </dd>
+
+        <dt class="key-value__key">Possible programs</dt>
+          <dd class="key-value__val">${kiln.maxProgramID}</dd>
+
+        <dt class="key-value__key">Installed</dt>
+          <dd class="key-value__val">${auDateStr(kiln.installDate, true)}</dd>
+
+        <dt class="key-value__key">Working</dt>
+          <dd class="key-value__val">${boolYesNo(kiln.isWorking)}</dd>
+
+        <dt class="key-value__key">In use</dt>
+          <dd class="key-value__val">${boolYesNo(kiln.isInUse)}</dd>
+
+        <dt class="key-value__key">Is hot</dt>
+          <dd class="key-value__val">${boolYesNo(kiln.isHot)}</dd>
+
+        <dt class="key-value__key">Firing count</dt>
+          <dd class="key-value__val">${kiln.useCount}</dd>
+      </dl>`,
+    html`${getNavBar(actionLinks, eHandler)}`,
+    'kiln'
+  )
 }
 
 export const editKiln = (kiln, user, eHandler) => {

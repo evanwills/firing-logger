@@ -225,42 +225,42 @@ export const singleProgram = (state, kilnName, eHandler) => {
 
     <h3>Details</h3>
 
-    <dl class="program-fields content--bleed">
-      <dt class="program-fields__key">Kiln</dt>
-        <dd class="program-fields__val">${kilnName}</dd>
+    <dl class="key-value content--bleed">
+      <dt class="key-value__key">Kiln</dt>
+        <dd class="key-value__val">${kilnName}</dd>
 
-      <dt class="program-fields__key">Program No.</dt>
-        <dd class="program-fields__val">${state.controllerProgramID}</dd>
+      <dt class="key-value__key">Program No.</dt>
+        <dd class="key-value__val">${state.controllerProgramID}</dd>
 
-      <dt class="program-fields__key">Firing type</dt>
-        <dd class="program-fields__val">${state.type}</dd>
+      <dt class="key-value__key">Firing type</dt>
+        <dd class="key-value__val">${state.type}</dd>
 
-      <dt class="program-fields__key">Version</dt>
-        <dd class="program-fields__val">${state.version}</dd>
+      <dt class="key-value__key">Version</dt>
+        <dd class="key-value__val">${state.version}</dd>
 
-      <dt class="program-fields__key">Max temp</dt>
-        <dd class="program-fields__val">${getDeg(state.maxTemp)}</dd>
+      <dt class="key-value__key">Max temp</dt>
+        <dd class="key-value__val">${getDeg(state.maxTemp)}</dd>
 
-      <dt class="program-fields__key">Total firing time</dt>
-        <dd class="program-fields__val">${getHourMinSec(state.duration)}</dd>
+      <dt class="key-value__key">Total firing time</dt>
+        <dd class="key-value__val">${getHourMinSec(state.duration)}</dd>
 
-      <dt class="program-fields__key">Average rate</dt>
-        <dd class="program-fields__val">${getRate(state.averageRate)}</dd>
+      <dt class="key-value__key">Average rate</dt>
+        <dd class="key-value__val">${getRate(state.averageRate)}</dd>
 
-      <dt class="program-fields__key">Created</dt>
-        <dd class="program-fields__val">
+      <dt class="key-value__key">Created</dt>
+        <dd class="key-value__val">
           ${auDateStr(state.created, true)} <br />
           by: ${state.createdBy}
         </dd>
 
-      <dt class="program-fields__key">Superseded</dt>
-        <dd class="program-fields__val">${boolYesNo(state.superseded)}</dd>
+      <dt class="key-value__key">Superseded</dt>
+        <dd class="key-value__val">${boolYesNo(state.superseded)}</dd>
 
-      <dt class="program-fields__key">Used</dt>
-        <dd class="program-fields__val">${boolYesNo(state.used)}</dd>
+      <dt class="key-value__key">Used</dt>
+        <dd class="key-value__val">${boolYesNo(state.used)}</dd>
 
-      <dt class="program-fields__key">Usage count</dt>
-        <dd class="program-fields__val">${state.useCount}</dd>
+      <dt class="key-value__key">Usage count</dt>
+        <dd class="key-value__val">${state.useCount}</dd>
     </dl>
     `,
     html`${getNavBar(actionLinks, eHandler)}`,

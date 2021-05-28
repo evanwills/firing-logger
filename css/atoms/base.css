@@ -3,11 +3,11 @@ body {
   box-sizing: border-box;
   color: var(--txt-colour);
   margin: 0;
-  padding: 2rem 0 0 0;
+  padding: 3.5rem 0 0 0;
 }
 
 
 
 @media screen and (min-width: 48rem) {
-  body { padding-top: 5.2rem; }
+  body { padding-top: 6rem; }
 }

@@ -24,7 +24,7 @@ import {
   invalidBool
 } from '../../utilities/validation.mjs'
 import { getNavBar } from '../nav-bar/nav-bar.view.mjs'
-import { getFocusID } from './programUtils.mjs'
+import { getFocusID } from './program-utils.mjs'
 
 const kilnsToOptions = (id) => (kiln) => {
   return {

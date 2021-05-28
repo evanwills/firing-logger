@@ -6,7 +6,7 @@ import {
   isInvalidProgramField,
   getLastProgram,
   getTmpProgram
-} from './programUtils.mjs'
+} from './program-utils.mjs'
 
 export const programsMW = store => next => action => {
   let _state = store.getState()

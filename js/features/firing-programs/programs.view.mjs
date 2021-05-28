@@ -1,7 +1,7 @@
 import { html } from '../../vendor/lit-html/lit-html.mjs'
 import { programListItem, singleProgram } from './program.view.mjs'
 // import { programActions } from './programs.state.actions.mjs'
-import { getFilteredPrograms, getKilnName } from './programUtils.mjs'
+import { getFilteredPrograms, getKilnName } from './program-utils.mjs'
 import { getNavBar } from '../nav-bar/nav-bar.view.mjs'
 import { editProgram } from './program-edit.view.mjs'
 import { programActions } from './programs.state.actions.mjs'

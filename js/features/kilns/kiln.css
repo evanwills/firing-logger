@@ -1,0 +1,39 @@
+.kiln-item {
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    "  name   name  "
+    "subName subName"
+    "  type    max  "
+    "  size   size  "
+    " firing firing ";
+}
+.kiln-item__size {
+  grid-area: size;
+  padding-top: 0.5rem;
+}
+.kiln-item__firing {
+  grid-area: firing;
+}
+/* .program-item--svg {
+  grid-template-columns: 4rem auto auto auto auto;
+  grid-template-rows: 4rem auto auto auto auto;
+  grid-template-areas:
+    'svg name name subName'
+    'svg type max   time';
+} */
+
+
+@media screen and (min-width: 34rem) {
+  .kiln-item {
+    grid-template-columns: 1fr auto auto auto;
+    grid-template-rows: 1fr auto auto auto;
+    grid-template-areas:
+      "name subName  type   max "
+      "name subName size size"
+      "name subName firing firing";
+  }
+  .kiln-item__sub-name {
+    padding: 0 0.5rem;
+  }
+}

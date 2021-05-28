@@ -1,4 +1,4 @@
-import { invalidStrNum, invalidBool, isNonEmptyStr, isNumeric } from './validation.mjs'
+import { invalidStr, invalidStrNum, invalidBool, isNonEmptyStr, isNumeric } from './validation.mjs'
 import { getMetaFromID } from './sanitisation.mjs'
 
 export const fieldHandler = (postToWorker) => function (e) {
@@ -88,4 +88,48 @@ export const decodeID = (id) => {
     date: new Date(step2[0] * 1000),
     id: step2[1]
   }
+}
+
+/**
+ * Get the item from the supplied list that matches the given ID
+ *
+ * @param {array}  itemList  List of items to be searched through
+ * @param {string} id        ID of item to be returned
+ * @param {string} fieldName Field name to match against
+ *
+ * @returns {object,false} Matched object or FALSE if not object could be found
+ */
+export const getItemByID = (itemList, id, fieldName) => {
+  const _id = isNonEmptyStr(id) ? id : ''
+  const prop = (isNonEmptyStr(fieldName) && itemList.length > 0 && !invalidStr(fieldName, itemList[0])) ? fieldName : 'id'
+  for (let a = 0; a < itemList.length; a += 1) {
+    if (itemList[a][prop] === id) {
+      return itemList[a]
+    }
+  }
+  return false
+}
+
+/**
+ * Get the name of a kiln by ID
+ *
+ * @param {string} kilnID ID of the kiln to be named
+ * @param {array}  kilns  List of all kilns available
+ *
+ * @returns {string}
+ */
+export const getPropByID = (itemList, id, fieldName) => {
+  const _id = isNonEmptyStr(id) ? id : ''
+  const prop = (isNonEmptyStr(fieldName) && itemList.length > 0 && !invalidStr(fieldName, itemList[0])) ? fieldName : 'name'
+
+  const items = itemList.filter(item => item.id === _id).map(item => {
+    return (typeof item[prop] !== 'undefined') ? item[prop] : null
+  })
+
+  for (let a = 0; a < items.length; a += 1) {
+    if (items[a] !== null) {
+      return items[a]
+    }
+  }
+  return ''
 }

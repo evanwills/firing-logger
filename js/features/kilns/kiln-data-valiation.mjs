@@ -183,19 +183,3 @@ export const validateKilnData = (dummyKiln, kiln, isNew = false) => {
 
   return newKiln
 }
-
-export const listFiringTypes = (kiln) => {
-  const allTypes = [
-    'bisque',
-    'glaze',
-    'luster',
-    'onglaze',
-    'raku',
-    'pit',
-    'sagga',
-    'salt'
-  ]
-
-  return allTypes.filter(ftype => !invalidBool(ftype, kiln, true)).
-                  map(ftype => html`<li>ucFirst(ftype)</li>`)
-}

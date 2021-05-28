@@ -10,23 +10,23 @@ import { getMainContent } from '../main-content/main-content.view.mjs'
 
 export const programListItem = (id, name, type, maxTemp, duration, SVG, isUsed, kilnName, eHandler) => {
   return html`
-    <a href="/programs/${id}" id="${id}-${viewActions.SET}-program" class="program-item" @click=${eHandler} title="View full details of &ldquo;${name}&rdquo; firing program">
-       <h2 class="program-item__name">
+    <a href="/programs/${id}" id="${id}-${viewActions.SET}-program" class="program-item item-list__link" @click=${eHandler} title="View full details of &ldquo;${name}&rdquo; firing program">
+       <h2 class="item-link__name">
          ${name}
        </h2>
-       <p class="program-item__kiln">
+       <p class="item-link__sub-name">
         <span class="sr-only">
           Kiln:
         </span>
         ${ucFirst(kilnName)}
        </p>
-       <p class="program-item__type">
+       <p class="item-link__type">
         <span class="sr-only">
           Firing type:
         </span>
         ${ucFirst(type)}
        </p>
-       <p class="program-item__max">
+       <p class="item-link__max">
         <span class="sr-only">
           Maximum temperature:
         </span>

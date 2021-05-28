@@ -19,52 +19,19 @@
 }
 
 .program-item {
-  color: var(--txt-colour);
-  display: grid;
   grid-template-columns: auto auto auto;
   grid-template-rows: auto auto auto;
   grid-template-areas:
-    "header header kiln"
-    "type   temp   time";
-  padding: 0.3rem var(--bleed);
-  text-decoration: none;
-  transition: box-shadow ease-in-out 0.3s, color ease-in-out 0.3s, background-color ease-in-out 0.3s;
-}
-
-.program-item:hover, .program-item:focus {
-  box-shadow: 0.3rem 0.3rem 1rem var(--over-colour);
-  color: var(--bg-colour);
-  background-color: var(--over-colour-rev);
-}
-
-.program-item > * {
-  font-size: .9rem;
-  margin: 0;
-  padding: 0 .3rem 0 0;
+    "name name subName"
+    "type max   time";
 }
 
 .program-item--svg {
   grid-template-columns: 4rem auto auto auto auto;
   grid-template-rows: 4rem auto auto auto auto;
   grid-template-areas:
-    'svg header header kiln'
-    'svg type   temp   time';
-}
-
-.program-item__name {
-  font-size: 1.1rem;
-  grid-area: header;
-  margin: 0;
-  padding: 0 0 .3rem 0;
-}
-
-.program-item__type {
-  grid-area: type;
-}
-
-.program-item__max {
-  grid-area: temp;
-  text-align: right;
+    'svg name name subName'
+    'svg type max   time';
 }
 
 .program-item__time {
@@ -72,10 +39,6 @@
   grid-area: time;
   padding: 0;
   text-align: right;
-}
-
-.program-item__kiln {
-  grid-area: kiln;
 }
 
 .program-item__svg {
@@ -150,15 +113,15 @@
     grid-template-columns: auto auto auto;
     grid-template-rows: auto auto auto;
     grid-template-areas:
-      "header header kiln"
-      "type   temp   time";
+      "name name subName"
+      "type max  time";
   }
   .program-item--svg {
     grid-template-columns: 4rem auto auto auto auto;
     grid-template-rows: 4rem auto auto auto auto;
     grid-template-areas:
-      'svg header header kiln'
-      'svg type   temp   time';
+      'svg name name subName'
+      'svg type max  time';
   }
 
   .program-item__max {
@@ -175,15 +138,15 @@
     grid-template-columns: 1fr auto auto auto;
     grid-template-rows: 1fr auto auto auto;
     grid-template-areas:
-      "header kiln type temp"
-      "header kiln time time";
+      "name subName type max"
+      "name subName time time";
   }
   .program-item--svg {
     grid-template-columns: 4rem auto auto auto auto;
     grid-template-rows: 4rem auto auto auto auto;
     grid-template-areas:
-      'svg header kiln type temp'
-      'svg header kiln time time';
+      'svg name subName type max'
+      'svg name subName time time';
   }
 
   .program-item__max {

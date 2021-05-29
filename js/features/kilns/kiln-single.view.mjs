@@ -42,7 +42,7 @@ export const listFiringTypes = (kiln) => {
 export const singleKiln = (kiln, user, eHandler) => {
   const actionLinks = [{
     label: 'View programs',
-    path: '/programs/?filterField=kilnID',
+    path: '/programs/byKilnID',
     id: kiln.id,
     action: kilnActions.UPDATE
   }, {

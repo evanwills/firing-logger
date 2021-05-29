@@ -79,6 +79,7 @@ interface FiringProgram {
   created: number,
   createdBy: string,
   superseded: boolean,
+  parentID: string,
   used: boolean,
   useCount: number,
   deleted: boolean,

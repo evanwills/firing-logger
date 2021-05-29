@@ -178,6 +178,10 @@ export const ucFirst = (input) => {
   return input.substr(0, 1).toUpperCase() + input.substr(1)
 }
 
+export const lcFirst = (input) => {
+  return input.substr(0, 1).toLowerCase() + input.substr(1)
+}
+
 /**
  * makeHumanReadableAttr() makes a string safe to be used as an ID or
  * class name

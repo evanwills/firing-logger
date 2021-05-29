@@ -104,6 +104,7 @@ const initialState = {
         created: '2021-05-06T21:13:34+1000',
         createdBy: 'evanwills',
         superseded: false,
+        parentID: '',
         used: true,
         useCount: 4,
         deleted: false,

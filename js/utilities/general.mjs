@@ -112,6 +112,22 @@ export const getItemByID = (itemList, id, propName) => {
 }
 
 /**
+ * Get the item from the supplied list that matches the given ID
+ *
+ * @param {array}  itemList List of items to be searched through
+ * @param {string} id       ID of item to be returned
+ * @param {string} propName [default: "id"] Field name to match
+ *                          against
+ *
+ * @returns {object,false} Matched object or FALSE if not object could be found
+ */
+export const getItemsByID = (itemList, id, propName) => {
+  const _id = isNonEmptyStr(id) ? id : ''
+  const prop = (isNonEmptyStr(propName) && itemList.length > 0 && !invalidStr(propName, itemList[0])) ? propName : 'id'
+  return itemList.filter(item => item[prop] === _id)
+}
+
+/**
  * Get the value of a property ()
  *
  * @param {array}  itemList List of items to be searched through

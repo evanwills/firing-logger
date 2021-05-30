@@ -1,15 +1,17 @@
 import { html } from '../../vendor/lit-html/lit-html.mjs'
-import { programListItem, singleProgram } from './program-single.view.mjs'
-// import { programActions } from './programs.state.actions.mjs'
-import { getFilteredPrograms, getKilnName } from './program-utils.mjs'
-import { getNavBar } from '../nav-bar/nav-bar.view.mjs'
-import { editProgram } from './program-edit.view.mjs'
-import { programActions } from './programs.state.actions.mjs'
-import { isNonEmptyStr } from '../../utilities/validation.mjs'
-import { getMainContent } from '../main-content/main-content.view.mjs'
+
 import { getItemList } from '../item-list/item-list.view.mjs'
+import { getNavBar } from '../nav-bar/nav-bar.view.mjs'
+
+import { getFilteredPrograms, getKilnName } from './program-utils.mjs'
+import { programListItem, singleProgram } from './programs.view.single.mjs'
+import { editProgram } from './programs.view.edit.mjs'
+import { programActions } from './programs.state.actions.mjs'
+import { getMainContent } from '../main-content/main-content.view.mjs'
+
 import { getItemsByID } from '../../utilities/general.mjs'
 import { lcFirst } from '../../utilities/sanitisation.mjs'
+import { isNonEmptyStr } from '../../utilities/validation.mjs'
 
 const getFieldName = (prop) => {
   const props = {

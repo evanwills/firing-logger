@@ -1,5 +1,5 @@
 import { programActions } from './programs.state.actions.mjs'
-import { uniquePogramName, validFiringType } from './programDataValidation.mjs'
+import { uniquePogramName, validFiringType } from './program-utils.mjs'
 import {
   // isBoolTrue,
   invalidBool,

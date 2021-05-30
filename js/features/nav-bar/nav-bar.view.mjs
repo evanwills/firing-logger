@@ -2,7 +2,7 @@ import { html } from '../../vendor/lit-html/lit-html.mjs'
 import { isBoolTrue, isNonEmptyStr, invalidBool } from '../../utilities/validation.mjs'
 import { idSafe } from '../../utilities/sanitisation.mjs'
 
-export const getNavItem = (label, href, id, actionType, eHandler, active, extraClass) => {
+export const getNavItem = (label, href, id, actionType, eHandler, active, extraClass, isBtn) => {
   const _active = isBoolTrue(active) ? ' nav-bar__link--active' : ''
   const extra = isNonEmptyStr(extraClass) ? ' ' + extraClass + '__' : ''
   const extraLi = (extra !== '') ? extra + 'item' : ''
@@ -10,6 +10,10 @@ export const getNavItem = (label, href, id, actionType, eHandler, active, extraC
   const _id = isNonEmptyStr(id) ? id : ''
   const _actionType = isNonEmptyStr(actionType) ? actionType : ''
   const __id = (_id === '' && _actionType === '') ? idSafe(href) : _id + '-' + _actionType
+
+  const btn = (isBoolTrue(isBtn))
+    ? html`<button id="${__id}" class="nav-bar__link${_active}${extraA}" @click=${eHandler}>${label}</button>`
+    : html`<a href="${href}${(_id !== '') ? '/' + _id : ''}" id="${__id}" class="nav-bar__link${_active}${extraA}" @click=${eHandler}>${label}</a>`
 
   // console.group('getNavItem()')
   // console.log('extraLi:', extraLi)
@@ -22,7 +26,7 @@ export const getNavItem = (label, href, id, actionType, eHandler, active, extraC
   // console.log('label:', label)
   // console.groupEnd()
 
-  return html`<li class="nav-bar__item${extraLi}"><a href="${href}${(_id !== '') ? '/' + _id : ''}" id="${__id}" class="nav-bar__link${_active}${extraA}" @click=${eHandler}>${label}</a></li>`
+  return html`<li class="nav-bar__item${extraLi}">${btn}</li>`
 }
 
 export const getNavBar = (linkList, eHandler, extraClass, wrapClass) => {
@@ -30,6 +34,10 @@ export const getNavBar = (linkList, eHandler, extraClass, wrapClass) => {
   const extraNav = (extra !== '') ? ' ' + extra : ''
   const extraUl = (extra !== '') ? ' ' + extra + '__' + 'list' : ''
   const wrap = isNonEmptyStr(wrapClass) ? ' ' + wrapClass : ''
+
+  console.group('getNavBar()')
+  console.log('linkList:', linkList)
+  console.groupEnd()
 
   return html`
     <nav class="nav-bar${wrap}${extraNav}">
@@ -41,7 +49,8 @@ export const getNavBar = (linkList, eHandler, extraClass, wrapClass) => {
           link.action,
           eHandler,
           !invalidBool('active', link, true),
-          extra
+          extra,
+          !invalidBool('isBtn', link, true)
         ))}
       </ul>
     </nav>

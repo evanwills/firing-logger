@@ -1,4 +1,4 @@
-import { invalidStr, invalidStrNum, invalidBool, isNonEmptyStr, isNumeric } from './validation.mjs'
+import { invalidStr, invalidStrNum, invalidBool, isNonEmptyStr, isNumeric, isStr, isFunction } from './validation.mjs'
 import { getMetaFromID } from './sanitisation.mjs'
 
 export const fieldHandler = (postToWorker) => function (e) {
@@ -154,3 +154,51 @@ export const getPropByID = (itemList, id, propName) => {
   }
   return null
 }
+
+const getAutoFocuser = () => {
+  let focusID = ''
+  // let lastFocus = ''
+
+  /**
+   * Set the ID of an element to receive focus after view is rendered
+   *
+   * @param {string} id The ID of an element that is to receive focus
+   *                    after view is rendered
+   *
+   * @returns {void}
+   */
+  const setFocusableID = (id) => {
+    if (isStr(id)) {
+      // if (lastFocus !== id) {
+      focusID = id
+      //   lastFocus = ''
+      // } else {
+      //   focusID = ''
+      // }
+    }
+  }
+
+  /**
+   * Set the focus for on an element, if one is specified
+   *
+   * @returns {void}
+   */
+  const autoFocus = () => {
+    if (focusID !== '') {
+      const ID = document.getElementById(focusID)
+      if (ID !== null && typeof isFunction(ID.focus)) {
+        ID.focus()
+      }
+    }
+  }
+
+  return {
+    focusOn: setFocusableID,
+    setFocus: autoFocus
+  }
+}
+
+/**
+ * @var {object} focuser A singleton object used for specifying an ID that is to receive focus
+ */
+export const focuser = getAutoFocuser()

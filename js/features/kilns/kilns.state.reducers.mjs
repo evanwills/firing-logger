@@ -123,22 +123,40 @@ export const kilnReducer = (state = initialKilnState, action) => {
       return [...state, action.payload]
 
     case kilnActions.UPDATE:
-      return state.map(kiln => {
-        if (kiln.id === ID) {
-          return updateKiln(kiln, action.payload)
-        } else {
-          return kiln
-        }
-      })
+      return {
+        ...state,
+        all: state.all.map(kiln => {
+          if (kiln.id === ID) {
+            return updateKiln(kiln, action.payload)
+          } else {
+            return kiln
+          }
+        })
+      }
 
     case kilnActions.DELETE:
-      return state.map(kiln => {
-        if (kiln.id === ID) {
-          return { ...kiln, retired: true }
-        } else {
-          return kiln
-        }
-      })
+      return {
+        ...state,
+        all: state.all.map(kiln => {
+          if (kiln.id === ID) {
+            return { ...kiln, retired: true }
+          } else {
+            return kiln
+          }
+        })
+      }
+
+    case kilnActions.TOGGLE_WORKING:
+      return {
+        ...state,
+        all: state.all.map(kiln => {
+          if (kiln.id === ID) {
+            return { ...kiln, isWorking: !kiln.isWorking }
+          } else {
+            return kiln
+          }
+        })
+      }
 
     default:
       return state

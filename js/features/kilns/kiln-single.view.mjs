@@ -13,7 +13,7 @@ import {
 } from '../../utilities/sanitisation.mjs'
 import { getNavBar } from '../nav-bar/nav-bar.view.mjs'
 import { kilnActions } from './kilns.state.actions.mjs'
-import { programActions } from '../firing-programs/programs.state.actions.mjs'
+// import { programActions } from '../firing-programs/programs.state.actions.mjs'
 import {
   // isNonEmptyStr,
   invalidBool
@@ -21,8 +21,6 @@ import {
 import { viewActions } from '../mainApp/view.state.mjs'
 import { getMainContent } from '../main-content/main-content.view.mjs'
 // import { listFiringTypes } from './kiln-data-valiation.mjs'
-
-
 
 export const listFiringTypes = (kiln) => {
   const allTypes = [
@@ -40,16 +38,18 @@ export const listFiringTypes = (kiln) => {
 }
 
 export const singleKiln = (kiln, user, eHandler) => {
+  console.group('singleKiln()')
   const actionLinks = [{
     label: 'View programs',
     path: '/programs/byKilnID',
     id: kiln.id,
     action: kilnActions.UPDATE
   }, {
-    label: 'Being repaired',
+    label: (kiln.isWorking) ? 'Being repaired' : 'Repairs complete',
     path: '/kilns/not-working',
     id: kiln.id,
-    action: kilnActions.NOT_WORKING
+    action: kilnActions.TOGGLE_WORKING,
+    isBtn: true
   }, {
     label: 'Edit',
     path: '/kilns/edit',
@@ -66,6 +66,11 @@ export const singleKiln = (kiln, user, eHandler) => {
     id: kiln.id,
     action: kilnActions.DELETE
   }]
+  console.log('kilnActions:', kilnActions)
+  console.log('kilnActions.TOGGLE_WORKING:', kilnActions.TOGGLE_WORKING)
+  console.log('eHandler:', eHandler)
+
+  console.groupEnd()
   return getMainContent(
     html`<h2>${kiln.name}</h2>`,
     html`
@@ -104,12 +109,6 @@ export const singleKiln = (kiln, user, eHandler) => {
             </dl>
           </dd>
 
-        <dt class="key-value__key">Possible programs</dt>
-          <dd class="key-value__val">${kiln.maxProgramID}</dd>
-
-        <dt class="key-value__key">Installed</dt>
-          <dd class="key-value__val">${auDateStr(kiln.installDate, true)}</dd>
-
         <dt class="key-value__key">Working</dt>
           <dd class="key-value__val">${boolYesNo(kiln.isWorking)}</dd>
 
@@ -121,6 +120,12 @@ export const singleKiln = (kiln, user, eHandler) => {
 
         <dt class="key-value__key">Firing count</dt>
           <dd class="key-value__val">${kiln.useCount}</dd>
+
+        <dt class="key-value__key">Possible programs</dt>
+          <dd class="key-value__val">${kiln.maxProgramID}</dd>
+
+        <dt class="key-value__key">Installed</dt>
+          <dd class="key-value__val">${auDateStr(kiln.installDate, true)}</dd>
       </dl>`,
     html`${getNavBar(actionLinks, eHandler)}`,
     'kiln'

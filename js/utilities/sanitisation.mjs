@@ -11,7 +11,6 @@ import {
 import { cleanGET } from './url.mjs'
 import { html } from '../vendor/lit-html/lit-html.mjs'
 
-
 /**
  * Round a input number to a specified number of decimal places
  *
@@ -499,7 +498,6 @@ export const f2c = (degrees) => ((degrees - 32) / 1.8)
  * @returns {number} Degrees Fahrenheit
  */
 export const c2f = (degrees) => ((degrees * 1.8) + 32)
-
 
 /**
  * Convert millimetres to inches

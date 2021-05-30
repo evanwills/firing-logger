@@ -214,7 +214,7 @@ const initialState = {
   view: {
     route: ['programs', 'add'],
     title: 'Firing programs',
-    url: 'programs/add',
+    url: 'kilns/add',
     navOpen: false,
     settingsOpen: false
   },
@@ -333,6 +333,7 @@ export const generalEventHandler = (_store) => {
     _store.dispatch(output)
   }
 }
+
 /**
  * Get a callback function to push data to the main thread when the
  * Redux store has been updated

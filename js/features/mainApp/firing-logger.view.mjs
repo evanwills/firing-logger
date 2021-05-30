@@ -6,6 +6,7 @@ import { kilnsView } from '../kilns/kilns.view.mjs'
 import { logsView } from '../logs/logs.view.mjs'
 // import { getLink } from '../../shared-views/navigation.view.mjs'
 import { header } from '../header/header.view.mjs'
+import { focuser } from '../../utilities/general.mjs'
 
 export const firingLoggerView = (domNode, eHandler, titleTag) => () => {
   console.group('firingLoggerView()')
@@ -28,7 +29,6 @@ export const firingLoggerView = (domNode, eHandler, titleTag) => () => {
   console.log('route:', route)
 
   let subView = ''
-
   switch (route) {
     case 'programs':
       console.log('state.studio.firingPrograms:', state.studio.firingPrograms)
@@ -38,16 +38,27 @@ export const firingLoggerView = (domNode, eHandler, titleTag) => () => {
         state.studio.firingPrograms,
         state.studio.kilns.all,
         eHandler,
-        subRoutes
+        subRoutes,
+        focuser
       )
       break
 
     case 'kilns':
-      subView = kilnsView(state.studio.kilns, eHandler, subRoutes)
+      subView = kilnsView(
+        state.studio.kilns,
+        eHandler,
+        subRoutes,
+        focuser
+      )
       break
 
     case 'logs':
-      subView = logsView(state.studio.logs, subRoutes, eHandler)
+      subView = logsView(
+        state.studio.logs,
+        eHandler,
+        subRoutes,
+        focuser
+      )
       break
   }
 
@@ -66,4 +77,6 @@ export const firingLoggerView = (domNode, eHandler, titleTag) => () => {
     </div>`,
     domNode
   )
+
+  focuser.setFocus()
 }

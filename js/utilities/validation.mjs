@@ -211,6 +211,17 @@ export const isFunction = (functionToCheck) => {
 }
 
 /**
+ * Check whether something is an object
+ * @param {any} input
+ * @returns
+ */
+export const isObject = (input, notEmpty) => {
+  const _notE = isBoolTrue(notEmpty)
+  return (typeof input === 'object' && input !== null &&
+          (_notE === false || (Object.keys(input).length > 0)))
+}
+
+/**
  * Test whether a variable is iterable
  *
  * @param {any} value to be tested
@@ -262,7 +273,7 @@ export const invalidString = (prop, input, notEmpty) => {
   if (!isStr(prop)) {
     throw new Error('invalidString() expects first parameter "prop" to be a string matching the name of a property in the object. ' + typeof prop + ' given.')
   }
-  if (typeof input !== 'object') {
+  if (!isObject(input)) {
     throw new Error('invalidString() expects second parameter "input" to be a an object containing "' + prop + '" property. ' + typeof input + ' given.')
   }
 
@@ -329,7 +340,7 @@ export const invalidNum = (prop, input) => {
   if (typeof prop !== 'string') {
     throw new Error('invalidNum() expects first parameter "prop" to be a string matching the name of a property in the object. ' + typeof prop + ' given.')
   }
-  if (typeof input !== 'object') {
+  if (!isObject(input)) {
     throw new Error('invalidNum() expects second parameter "input" to be a an object containing "' + prop + '" property. ' + typeof input + ' given.')
   }
 
@@ -365,7 +376,7 @@ export const invalidArray = (prop, input, notEmpty) => {
   if (typeof prop !== 'string') {
     throw new Error('invalidArray() expects first parameter "prop" to be a string matching the name of a property in the object. ' + typeof prop + ' given.')
   }
-  if (typeof input !== 'object') {
+  if (!isObject(input)) {
     throw new Error('invalidArray() expects second parameter "input" to be a an object containing "' + prop + '" property. ' + typeof input + ' given.')
   }
 
@@ -399,7 +410,7 @@ export const invalidBool = (prop, input, trueFalse) => {
   if (typeof prop !== 'string') {
     throw new Error('invalidBool() expects first parameter "prop" to be a string matching the name of a property in the object. ' + typeof prop + ' given.')
   }
-  if (typeof input !== 'object') {
+  if (!isObject(input)) {
     throw new Error('invalidBool() expects second parameter "input" to be a an object containing "' + prop + '" property. ' + typeof input + ' given.')
   }
   const _trueFalse = (isBool(trueFalse)) ? trueFalse : null
@@ -434,10 +445,36 @@ export const invalidScalar = (prop, input) => {
   if (typeof prop !== 'string') {
     throw new Error('invalidScalar() expects first parameter "prop" to be a string matching the name of a property in the object. ' + typeof prop + ' given.')
   }
-  if (typeof input !== 'object') {
+  if (!isObject(input)) {
     throw new Error('invalidScalar() expects second parameter "input" to be a an object containing "' + prop + '" property. ' + typeof input + ' given.')
   }
 
   const _type = typeof input[prop]
   return (_type === 'boolean' && _type !== 'string' && _type !== 'number') ? _type : false
+}
+
+/**
+ * Test whether an object contains a given property and the value
+ * of that property is another object
+ *
+ * @param {string} prop  name of the property to be tested
+ * @param {object} input object that might contain the property of
+ *                       the correct type
+ *
+ * @returns {false,string} If the value is an objet then it is NOT
+ *                         invalid. Otherwise the value's data type
+ *                         returned (so it can be used when
+ *                         reporting errors).
+ */
+export const invalidObject = (prop, input, notEmpty) => {
+  if (typeof prop !== 'string') {
+    throw new Error('invalidScalar() expects first parameter "prop" to be a string matching the name of a property in the object. ' + typeof prop + ' given.')
+  }
+  if (!isObject(input)) {
+    throw new Error('invalidScalar() expects second parameter "input" to be a an object containing "' + prop + '" property. ' + typeof input + ' given.')
+  }
+
+  const _type = typeof input[prop]
+
+  return (_type !== 'undefined' && isObject(input[prop]), notEmpty) ? false : _type
 }

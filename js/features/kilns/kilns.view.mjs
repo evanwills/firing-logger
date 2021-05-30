@@ -5,7 +5,7 @@ import { getNavBar } from '../nav-bar/nav-bar.view.mjs'
 import { isNonEmptyStr } from '../../utilities/validation.mjs'
 import { kilnActions } from './kilns.state.actions.mjs'
 import { kilnListItem, singleKiln } from './kiln-single.view.mjs'
-import { kilnEdit } from './kiln-edit.view.mjs'
+import { editKiln } from './kiln-edit.view.mjs'
 
 const getFilteredKilns = (filters) => (kiln) => true
 
@@ -27,9 +27,12 @@ export const kilnsView = (state, eHandler, routes) => {
     } else if (['add', 'edit', 'copy'].indexOf(route) > -1) {
       // console.log('state:', state)
       // console.log('kilns:', kilns)
-      subView = editKiln(state.tmp, '', eHandler)
+      subView = editKiln(state.tmp, state.all, eHandler)
     } else {
-      error = html`<p class="error"></p>Could not find kiln kiln matching ID: <code>${route}</code></p>`
+      error = html`<p class="error">
+        Could not find kiln kiln matching ID:
+        <code>${route}</code>
+      </p>`
     }
   }
 

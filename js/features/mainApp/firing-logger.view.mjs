@@ -78,5 +78,5 @@ export const firingLoggerView = (domNode, eHandler, titleTag) => () => {
     domNode
   )
 
-  focuser.setFocus()
+  focuser.applyFocus()
 }

@@ -183,7 +183,8 @@ const getAutoFocuser = () => {
    *
    * @returns {void}
    */
-  const autoFocus = () => {
+  const applyFocus = () => {
+    console.group('autoFocus')
     if (focusID !== '') {
       const ID = document.getElementById(focusID)
       if (ID !== null && typeof isFunction(ID.focus)) {
@@ -194,11 +195,13 @@ const getAutoFocuser = () => {
 
   return {
     focusOn: setFocusableID,
-    setFocus: autoFocus
+    applyFocus: applyFocus
   }
 }
 
 /**
- * @var {object} focuser A singleton object used for specifying an ID that is to receive focus
+ * @var {object} focuser A singleton object used for specifying an ID
+ *                       that is to receive focus and then (after the
+ *                       view is rendered) giving that element focus
  */
 export const focuser = getAutoFocuser()

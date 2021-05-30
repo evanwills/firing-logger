@@ -13,18 +13,19 @@ import {
   // auDateStr,
   // boolYesNo,
   getHourMinSec,
-  getHHMMSS,
+  // getHHMMSS,
   roundMinutes
   // getDeg,
   // getRate
 } from '../../utilities/sanitisation.mjs'
-import { getFiringLogSVG } from '../svg/svg.mjs'
+// import { getFiringLogSVG } from '../svg/svg.mjs'
 import {
+  // invalidBool,
   invalidString,
-  invalidBool
+  invalidObject
 } from '../../utilities/validation.mjs'
-import { getNavBar } from '../nav-bar/nav-bar.view.mjs'
-import { getFocusID } from './program-utils.mjs'
+// import { getNavBar } from '../nav-bar/nav-bar.view.mjs'
+import { getFocusID } from './kilns-utils.mjs'
 
 const fuelToOptions = (id) => (kiln) => {
   return {
@@ -92,7 +93,6 @@ export const editKiln = (kiln, kilns, user, eHandler) => {
   const name = (kiln.name === '') ? 'New (unamed) kiln' : kiln.name
   const focusID = getFocusID(kiln.errors, kiln.lastField)
   let nav = ''
-  let stepBlock = ''
   let tmp
 
   console.group('editkiln()')
@@ -125,7 +125,7 @@ export const editKiln = (kiln, kilns, user, eHandler) => {
   if (kiln.kilnID !== '') {
     console.log('kiln.kilnID:', kiln.kilnID)
 
-    tmp = (!invalidString('name', kiln.errors, true))
+    tmp = (!invalidObject('errors', kiln) && !invalidString('name', kiln.errors, true))
       ? kiln.errors.name
       : ''
     fields.push( // name
@@ -140,7 +140,7 @@ export const editKiln = (kiln, kilns, user, eHandler) => {
         focus: (focusID === 'name')
       })
     )
-    if (kiln.name !== '' && invalidString('name', kiln.errors)) {
+    if (kiln.name !== '' && !invalidObject('errors', kiln) && invalidString('name', kiln.errors)) {
       // Must have a valid name before we can progress
       tmp = !invalidString('description', kiln.errors)
         ? kiln.errors.description
@@ -231,41 +231,6 @@ export const editKiln = (kiln, kilns, user, eHandler) => {
       )
 
       nav = getErrorMsg(kiln.errors)
-
-      if (nav === '' && kiln.maxTemp > 400) {
-        nav = getNavBar([
-          {
-            label: 'Save',
-            path: '/kilns/save',
-            id: '-' + kilnActions.TMP_COMMIT,
-            action: kilnActions.TMP_COMMIT
-          }, {
-            label: 'Reset',
-            path: '/kilns/clear',
-            id: '-' + kilnActions.TMP_CLEAR,
-            action: kilnActions.TMP_CLEAR
-          }
-        ], eHandler)
-      }
-
-      const lastStep = kiln.steps.length - 1
-
-      // console.log('lastStep:', lastStep)
-      // console.log('kiln.steps[' + lastStep + ']:', kiln.steps[lastStep])
-      // console.log('kiln.steps[' + lastStep + '].endTemp:', kiln.steps[lastStep].endTemp)
-      // console.log('kiln.steps[' + lastStep + '].rate:', kiln.steps[lastStep].rate)
-      // console.log('kiln.steps[' + lastStep + '].hold:', kiln.steps[lastStep].hold)
-      const steps = (kiln.steps[lastStep].endTemp > 0 && kiln.steps[lastStep].rate > 1)
-        ? [...kiln.steps, { endTemp: 0, rate: 0, hold: 0 }]
-        : kiln.steps
-
-      stepBlock = html`
-        <h3>Steps</h3>
-        <div class="firing-steps">
-          ${getFiringLogSVG(kiln.maxTemp, kiln.duration, kiln.steps, [], false)}
-          ${kilnSteps(steps, kilns[0].maxTemp, eHandler)}
-        </div>
-      `
     }
   } else {
     nav = getErrorMsg(kiln.errors)
@@ -273,15 +238,14 @@ export const editKiln = (kiln, kilns, user, eHandler) => {
 
   console.log('nav:', nav)
   console.log('kiln.errors:', kiln.errors)
-  console.log('Object.keys(kiln.errors):', Object.keys(kiln.errors))
-  console.log('Object.keys(kiln.errors).length:', Object.keys(kiln.errors).length)
-  console.log('Object.keys(kiln.errors).length > 0:', Object.keys(kiln.errors).length > 0)
+  // console.log('Object.keys(kiln.errors):', Object.keys(kiln.errors))
+  // console.log('Object.keys(kiln.errors).length:', Object.keys(kiln.errors).length)
+  // console.log('Object.keys(kiln.errors).length > 0:', Object.keys(kiln.errors).length > 0)
   console.groupEnd()
 
   return getMainContent(
     html`<h2>${name}</h2>`,
-    html`${getItemList(fields, '', 'input-fields', 'content--bleed')}
-    ${stepBlock}`,
+    html`${getItemList(fields, '', 'input-fields', 'content--bleed')}`,
     nav
   )
 }

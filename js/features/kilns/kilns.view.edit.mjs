@@ -25,7 +25,7 @@ import {
   invalidObject
 } from '../../utilities/validation.mjs'
 // import { getNavBar } from '../nav-bar/nav-bar.view.mjs'
-import { getFocusID } from './kilns-utils.mjs'
+import { getFocusID } from './kiln-utils.mjs'
 
 const fuelToOptions = (id) => (kiln) => {
   return {

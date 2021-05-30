@@ -4,7 +4,7 @@ import {
   validfuelSource,
   validMaxTemp,
   validateDimension
-} from './kiln-data-valiation.mjs'
+} from './kiln-utils.mjs'
 import {
   invalidBool
 } from '../../utilities/validation.mjs'

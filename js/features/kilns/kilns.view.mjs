@@ -1,11 +1,14 @@
 import { html } from '../../vendor/lit-html/lit-html.mjs'
+
 import { getItemList } from '../item-list/item-list.view.mjs'
 import { getMainContent } from '../main-content/main-content.view.mjs'
 import { getNavBar } from '../nav-bar/nav-bar.view.mjs'
 import { isNonEmptyStr } from '../../utilities/validation.mjs'
+
 import { kilnActions } from './kilns.state.actions.mjs'
-import { kilnListItem, singleKiln } from './kiln-single.view.mjs'
-import { editKiln } from './kiln-edit.view.mjs'
+
+import { kilnListItem, singleKiln } from './kilns.view.single.mjs'
+import { editKiln } from './kilns.view.edit.mjs'
 
 const getFilteredKilns = (filters) => (kiln) => true
 

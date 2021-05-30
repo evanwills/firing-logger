@@ -11,16 +11,15 @@ import {
   // roundMinutes,
   getLen
 } from '../../utilities/sanitisation.mjs'
-import { getNavBar } from '../nav-bar/nav-bar.view.mjs'
-import { kilnActions } from './kilns.state.actions.mjs'
-// import { programActions } from '../firing-programs/programs.state.actions.mjs'
 import {
   // isNonEmptyStr,
   invalidBool
 } from '../../utilities/validation.mjs'
+import { getNavBar } from '../nav-bar/nav-bar.view.mjs'
+// import { programActions } from '../firing-programs/programs.state.actions.mjs'
 import { viewActions } from '../mainApp/view.state.mjs'
 import { getMainContent } from '../main-content/main-content.view.mjs'
-// import { listFiringTypes } from './kiln-data-valiation.mjs'
+import { kilnActions } from './kilns.state.actions.mjs'
 
 export const listFiringTypes = (kiln) => {
   const allTypes = [

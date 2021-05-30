@@ -1,14 +1,17 @@
 import { html } from '../../vendor/lit-html/lit-html.mjs'
-import { logListItem, viewFiringLog, updateFiringLog } from './log-single.view.mjs'
 // import { programActions } from './programs.state.actions.mjs'
-import { getFilteredLogs } from './log-utils.mjs'
 // import { getNavBar } from '../nav-bar/nav-bar.view.mjs'
 // import { editlog } from './log-edit.view.mjs'
 // import { logActions } from './log.state.actions.mjs'
+
+import { getItemByID, getPropByID } from '../../utilities/general.mjs'
 import { isNonEmptyStr } from '../../utilities/validation.mjs'
+
 import { getMainContent } from '../main-content/main-content.view.mjs'
 import { getItemList } from '../item-list/item-list.view.mjs'
-import { getItemByID, getPropByID } from '../../utilities/general.mjs'
+
+import { getFilteredLogs } from './log-utils.mjs'
+import { logListItem, viewFiringLog, updateFiringLog } from './logs.view.single.mjs'
 
 export const logsView = (logs, programs, kilns, eHandler, routes) => {
   const [route, id, ...subRoutes] = routes // eslint-disable-line

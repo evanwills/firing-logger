@@ -28,7 +28,7 @@ import {
 import { getMetaFromID } from '../../utilities/sanitisation.mjs'
 // import { persistToLocal } from './persistant.mw.mjs'
 import { viewReducer, renderReducer } from './view.state.mjs'
-import { firingLoggerMW } from './firing-logger.mw.state.mjs'
+import { firingLoggerMW } from './firing-logger.state.middleware.mjs'
 import { currentUserReducer, usersReducer } from '../users/users.state.mjs'
 const initialState = {
   studio: {
@@ -247,6 +247,7 @@ export const store = createStore(
   )
   // && window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 )
+
 /**
  * Get Redux action type based on metadata from event
  *

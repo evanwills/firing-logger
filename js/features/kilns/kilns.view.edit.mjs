@@ -1,23 +1,23 @@
 import {
+  // nonInputField,
   numberInputField,
   selectField,
-  textInputField,
-  nonInputField
+  textInputField
 } from '../../shared-views/input-field.view.mjs'
 import { html } from '../../vendor/lit-html/lit-html.mjs'
 import { getMainContent } from '../main-content/main-content.view.mjs'
 import { kilnActions } from './kilns.state.actions.mjs'
 import { getItemList } from '../item-list/item-list.view.mjs'
-import {
-  // ucFirst,
-  // auDateStr,
-  // boolYesNo,
-  getHourMinSec,
-  // getHHMMSS,
-  roundMinutes
-  // getDeg,
-  // getRate
-} from '../../utilities/sanitisation.mjs'
+// import {
+//   ucFirst,
+//   auDateStr,
+//   boolYesNo,
+//   getHourMinSec,
+//   getHHMMSS,
+//   roundMinutes
+//   getDeg,
+//   getRate
+// } from '../../utilities/sanitisation.mjs'
 // import { getFiringLogSVG } from '../svg/svg.mjs'
 import {
   // invalidBool,
@@ -26,14 +26,48 @@ import {
 } from '../../utilities/validation.mjs'
 // import { getNavBar } from '../nav-bar/nav-bar.view.mjs'
 import { getFocusID } from './kiln-utils.mjs'
+import { getNavBar } from '../nav-bar/nav-bar.view.mjs'
+import { checkboxBtnGroup } from '../../shared-views/checkbox.view.mjs'
 
-const fuelToOptions = (id) => (kiln) => {
-  return {
-    value: kiln.id,
-    label: kiln.name,
-    selected: (kiln.id === id)
-  }
-}
+const firingTypes = [{
+  label: 'Bisque',
+  value: 'bisque'
+}, {
+  label: 'Black firing',
+  value: 'black'
+}, {
+  label: 'Glaze',
+  value: 'glaze'
+}, {
+  label: 'Luster',
+  value: 'luster'
+}, {
+  label: 'Onglaze',
+  value: 'onglaze'
+}, {
+  label: 'Pit firing',
+  value: 'pit'
+}, {
+  label: 'Raku',
+  value: 'raku'
+}, {
+  label: 'Raw glaze',
+  value: 'rawGlaze'
+}, {
+  label: 'Saggar',
+  value: 'saggar'
+}, {
+  label: 'Salt glaze',
+  value: 'saltGlaze'
+}]
+
+// const fuelToOptions = (id) => (kiln) => {
+//   return {
+//     value: kiln.id,
+//     label: kiln.name,
+//     selected: (kiln.id === id)
+//   }
+// }
 
 const getErrorMsg = (errors) => {
   const keys = Object.keys(errors)
@@ -103,7 +137,8 @@ export const editKiln = (kiln, kilns, user, eHandler) => {
   ]
   // console.log('kiln.kilnID:', kiln.kilnID)
 
-  console.log('kiln.kilnID:', kiln.kilnID)
+  console.log('kiln.id:', kiln.id)
+  console.log('eHandler:', eHandler)
 
   tmp = (!invalidObject('errors', kiln) && !invalidString('name', kiln.errors, true))
     ? kiln.errors.name
@@ -117,59 +152,178 @@ export const editKiln = (kiln, kilns, user, eHandler) => {
       value: kiln.name,
       desc: tmp,
       error: (tmp !== ''),
-      focus: (focusID === 'name')
+      focus: (focusID === 'name'),
+      class: 'input-field'
     })
   )
-  if (kiln.name !== '' && !invalidObject('errors', kiln) && invalidString('name', kiln.errors)) {
+
+  console.log('kiln.name:', kiln.name)
+  console.log('kiln.name !== "":', kiln.name !== '')
+  console.log('invalidObject("errors", kiln):', invalidObject('errors', kiln))
+  console.log('!invalidObject("errors", kiln):', !invalidObject('errors', kiln))
+  console.log('invalidString("name", kiln.errors) !== false:', invalidString('name', kiln.errors) !== false)
+
+  if (kiln.name !== '' && !invalidObject('errors', kiln) && invalidString('name', kiln.errors) !== false) {
     // Must have a valid name before we can progress
-    tmp = !invalidString('description', kiln.errors)
-      ? kiln.errors.description
+    tmp = !invalidString('brand', kiln.errors)
+      ? kiln.errors.brand
       : ''
     fields.push( // description
       textInputField({
-        id: 'description-' + kilnActions.TMP_UPDATE_FIELD,
-        label: 'Description',
+        id: 'brand-' + kilnActions.TMP_UPDATE_FIELD,
+        label: 'Brand',
         change: eHandler,
-        value: kiln.description,
+        value: kiln.brand,
         desc: tmp,
         error: (tmp !== ''),
-        focus: (focusID === 'description')
-      }, true)
+        focus: (focusID === 'brand'),
+        class: 'input-field'
+      })
     )
-
-    fields.push( // maxTemp
-      nonInputField({
-        // this input should never trigger an event
-        id: 'maxTemp',
-        readonly: true,
-        label: 'Maximum temperature',
-        value: kiln.maxTemp,
-        suffix: html`&deg;C`
+    tmp = !invalidString('model', kiln.errors)
+      ? kiln.errors.model
+      : ''
+    fields.push( // description
+      textInputField({
+        id: 'model-' + kilnActions.TMP_UPDATE_FIELD,
+        label: 'model',
+        change: eHandler,
+        value: kiln.model,
+        desc: tmp,
+        error: (tmp !== ''),
+        focus: (focusID === 'model'),
+        class: 'input-field'
       })
     )
 
     fields.push( // duration
-      textInputField({
+      selectField({
         // this input should never trigger an event
-        id: 'duration',
-        readonly: true,
-        label: 'Firing duration',
-        value: getHourMinSec(roundMinutes(kiln.duration), true)
+        id: 'fuel',
+        label: 'Energy source',
+        eventHandler: eHandler,
+        options: [
+          {
+            value: '',
+            label: ' -- Select an energy source -- ',
+            selected: false
+          },
+          ...getFuelTypes(kiln.fuel)
+        ],
+        change: eHandler,
+        focus: (focusID === 'fuel'),
+        class: 'input-field'
       })
     )
 
-    fields.push( // averageRate
-      nonInputField({
+    tmp = !invalidString('maxTemp', kiln.errors)
+      ? kiln.errors.maxTemp
+      : ''
+    fields.push( // maxTemp
+      numberInputField({
         // this input should never trigger an event
-        id: 'averageRate',
-        readonly: true,
-        label: 'Average rate of climb',
-        value: kiln.averageRate,
-        suffix: html`&deg;C / hr`
+        id: 'maxTemp',
+        label: 'Maximum temperature',
+        value: kiln.maxTemp,
+        change: eHandler,
+        desc: tmp,
+        suffix: html`&deg;C`,
+        class: 'input-field'
       })
     )
 
-    nav = getErrorMsg(kiln.errors)
+    tmp = !invalidString('width', kiln.errors)
+      ? kiln.errors.width
+      : ''
+    fields.push( // width
+      numberInputField({
+        // this input should never trigger an event
+        id: 'width',
+        label: 'Internal width',
+        value: kiln.width,
+        change: eHandler,
+        desc: tmp,
+        class: 'input-field',
+        suffix: 'mm'
+      })
+    )
+
+    tmp = !invalidString('depth', kiln.errors)
+      ? kiln.errors.depth
+      : ''
+    fields.push( // depth
+      numberInputField({
+        // this input should never trigger an event
+        id: 'depth',
+        label: 'Internal depth',
+        value: kiln.width,
+        desc: tmp,
+        change: eHandler,
+        class: 'input-field',
+        suffix: 'mm'
+      })
+    )
+
+    tmp = !invalidString('height', kiln.errors)
+      ? kiln.errors.height
+      : ''
+    fields.push( // height
+      numberInputField({
+        // this input should never trigger an event
+        id: 'height',
+        label: 'Internal height',
+        value: kiln.height,
+        desc: tmp,
+        class: 'input-field',
+        change: eHandler,
+        suffix: 'mm'
+      })
+    )
+
+    tmp = !invalidString('maxProgramCount', kiln.errors)
+      ? kiln.errors.maxProgramCount
+      : ''
+    fields.push( // maxProgramCount
+      numberInputField({
+        // this input should never trigger an event
+        id: 'maxProgramCount',
+        label: 'Max stored programs',
+        value: kiln.maxProgramCount,
+        change: eHandler,
+        desc: tmp,
+        class: 'input-field'
+      })
+    )
+
+    fields.push(
+      checkboxBtnGroup(
+        'firingTypes',
+        'Allowed firing types',
+        kiln,
+        firingTypes,
+        eHandler
+      )
+    )
+  }
+
+  nav = getErrorMsg(kiln.errors)
+
+  if (nav === '') {
+    nav = getNavBar([
+      {
+        label: 'Save',
+        path: '/kilns/save',
+        id: kiln.id,
+        action: kilnActions.TMP_COMMIT,
+        isBtn: true
+      }, {
+        label: 'Reset',
+        path: '/kilns/clear',
+        id: kiln.id,
+        action: kilnActions.TMP_CLEAR,
+        isBtn: true
+      }
+    ], eHandler)
   }
 
   console.log('nav:', nav)

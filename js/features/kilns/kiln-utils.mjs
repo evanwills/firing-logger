@@ -26,12 +26,17 @@ export const getNewKiln = () => {
     width: 0,
     depth: 0,
     height: 0,
-    maxProgramID: 0,
-    glaze: false,
-    bisque: false,
-    singleFire: false,
-    luster: false,
-    onglaze: false,
+    maxProgramCount: 0,
+    bisque: true,
+    black: false,
+    glaze: true,
+    luster: true,
+    onglaze: true,
+    pit: false,
+    raku: false,
+    rawGlaze: false,
+    saggar: false,
+    saltGlaze: false,
     retired: false,
     isWorking: false,
     isInUse: false,
@@ -49,6 +54,7 @@ export const getTmpKiln = (kiln, mode) => {
     ...kiln,
     confirmed: false,
     lastField: 'name',
+    errors: {},
     mode: mode
   }
 }
@@ -69,6 +75,7 @@ export const cloneUpdateKiln = (kiln, clone, date) => {
   const newKiln = {
     ...kiln
   }
+  console.group('cloneUpdateKiln()')
 
   if (_clone === true) {
     newKiln.name = '{{' + getISODateStr(date) + '}}' + newKiln.name
@@ -80,6 +87,9 @@ export const cloneUpdateKiln = (kiln, clone, date) => {
     newKiln.useCount = 0
   }
 
+  console.log('kiln:', kiln)
+  console.log('newKiln:', newKiln)
+  console.groupEnd()
   return newKiln
 }
 

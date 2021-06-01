@@ -4,13 +4,39 @@
   flex-direction: column;
   padding: 0.5rem var(--bleed);
   width: calc(100% - 2rem);
+  overflow: hidden;
+  /* gap: 1rem; */
 }
-.input-fields__item > input,
-.input-fields__item > textarea,
-.input-fields__item > select {
-  display: block;
+.input-fields__item select {
   width: 100%;
+}
+.input-fields__item input,
+.input-fields__item textarea {
+  width: calc(100% - 1rem);
+}
+.input-fields__item input,
+.input-fields__item textarea,
+.input-fields__item select {
+  display: block;
   font-size: 1rem;
+  padding: 0.3rem 0.5rem;
+}
+
+.input-field__input[type='number'] {
+  display: inline-block;
+  width: 10rem;
+}
+.input-field__input--number__prefix {
+  padding-right: 0.5rem;
+}
+.input-field__input--number__suffix {
+  padding-left: 0.5rem;
+}
+
+.input-field__label {
+  font-weight: bold;
+  padding-right: 0.5rem;
+  padding-top: 0.3rem;
 }
 .input-fields__item > label {
   padding-bottom: 0.5rem;
@@ -23,12 +49,15 @@
   .input-fields__item {
     display: grid;
     grid-template-columns: 12rem auto;
-    grid-template-areas: 'label field' 'label error';
+    grid-template-areas:
+      'label field'
+      'label error';
   }
   .input-fields__item > div {
     grid-area: error;
   }
-  .input-fields__item > input {
+  .input-fields__item > input,
+  .input-fields__item > div.checkable-grp__wrap {
     grid-area: field;
   }
   .input-fields__item > label {

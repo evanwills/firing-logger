@@ -11,8 +11,9 @@ import {
   // isNumeric,
   isStr,
   isStrNum,
-  invalidBool
-  // invalidString
+  invalidBool,
+  invalidObject,
+  invalidString
 } from '../utilities/validation.mjs'
 import {
   getClassName,
@@ -77,6 +78,14 @@ export const getPreSuf = (props, className, isSuffix) => {
       : props[_end]
   }
   return ''
+}
+
+export const wrapPreSuf = (field, props, className) => {
+  return (!invalidObject('prefix', props) || !invalidString('prefix', props) ||
+          !invalidObject('suffix', props) || !invalidString('suffix', props)
+  )
+    ? html`<span class="${className}__input__wrap">${getPreSuf(props, className, false)}${field}${getPreSuf(props, className, true)}</span>`
+    : field
 }
 
 /**
@@ -249,18 +258,24 @@ export const textInputField = (props, multiLine) => {
   // console.log('multiLine:', multiLine)
   // console.groupEnd()
 
-  return (_multi)
-    ? html`
+  if (_multi) {
+    return html`
       ${getLabel(props)}
       <textarea id="${props.id}" class="${_className}" @change=${props.change} ?required=${_required} ?readonly=${_read} ?disabled=${_disabled} pattern="${ifDefined(_pattern)}" placeholder="${ifDefined(_place)}" maxlength="${ifDefined(_maxLen)}" minlength="${ifDefined(_minLen)}" aria-describedby="${ifDefined(_descBy)}" .value="${props.value}" ?autofocus=${_focus}></textarea>
       ${(_descBy !== '') ? describedBy(props) : ''}
     `
-    : html`
+  } else {
+    return html`
       ${getLabel(props)}
-      ${getPreSuf(props, _className, false)}<input type="text" id="${props.id}" class="${_className}" .value=${props.value} @change=${props.change} ?required=${getBoolAttr('required', props)} ?readonly=${_read} ?disabled=${_disabled} pattern="${ifDefined(_pattern)}" placeholder="${ifDefined(_place)}" maxlength="${ifDefined(_maxLen)}" minlength="${ifDefined(_minLen)}" aria-describedby="${ifDefined(_descBy)}" ?autofocus=${_focus} />${getPreSuf(props, _className, true)}
+      ${wrapPreSuf(
+        html`<input type="text" id="${props.id}" class="${_className}" .value=${props.value} @change=${props.change} ?required=${getBoolAttr('required', props)} ?readonly=${_read} ?disabled=${_disabled} pattern="${ifDefined(_pattern)}" placeholder="${ifDefined(_place)}" maxlength="${ifDefined(_maxLen)}" minlength="${ifDefined(_minLen)}" aria-describedby="${ifDefined(_descBy)}" ?autofocus=${_focus} />`,
+        props,
+        _className
+      )}
       ${(_listAttr !== '') ? dataList(props.id, props.options) : ''}
       ${(_descBy !== '') ? describedBy(props) : ''}
     `
+  }
 }
 
 /**
@@ -278,11 +293,18 @@ export const numberInputField = (props) => {
 
   // console.group('numberInputField()')
   // console.log('props:', props)
+  // console.log('!invalidString("suffix", props):', !invalidString('suffix', props))
+  // console.log('props["suffix"]:', props.suffix)
+  // console.log('props:', props)
   // console.groupEnd()
 
   return html`
     ${getLabel(props)}
-    ${getPreSuf(props, _className, false)}<input type="number" id="${props.id}" .value=${props.value} class="${_className}" @change=${props.eventHandler} ?required=${getBoolAttr('required', props)} ?readonly=${getBoolAttr('readonly', props)} ?disabled=${getBoolAttr('disabled', props)} pattern="${ifDefined(propOrUn(props.pattern))}" placeholder="${ifDefined(propOrUn(props.placeholder))}" min="${ifDefined(propOrUn(props.min))}" max="${ifDefined(propOrUn(props.max))}" step="${ifDefined(propOrUn(props.step))}" aria-describedby="${ifDefined(_descBy)}" ?autofocus=${_focus} />${getPreSuf(props, _className, true)}
+    ${wrapPreSuf(
+      html`<input type="number" id="${props.id}" .value=${props.value} class="${_className}" @change=${props.change} ?required=${getBoolAttr('required', props)} ?readonly=${getBoolAttr('readonly', props)} ?disabled=${getBoolAttr('disabled', props)} pattern="${ifDefined(propOrUn(props.pattern))}" placeholder="${ifDefined(propOrUn(props.placeholder))}" min="${ifDefined(propOrUn(props.min))}" max="${ifDefined(propOrUn(props.max))}" step="${ifDefined(propOrUn(props.step))}" aria-describedby="${ifDefined(_descBy)}" ?autofocus=${_focus} />`,
+      props,
+      _className
+    )}
     ${(_descBy !== '') ? describedBy(props) : ''}
   `
 }
@@ -365,7 +387,7 @@ export const selectField = (props) => {
   // console.groupEnd()
   return html`
     ${getLabel(props)}
-    <select id=${props.id} class="${getClassName(props, 'select')}${_error}" ?required=${getBoolAttr('required', props)} ?readonly=${getBoolAttr('readonly', props)} ?disabled=${getBoolAttr('disabled', props)} @change=${props.eventHandler} aria-describedby="${ifDefined(_descBy)}" ?autofocus=${_focus} />
+    <select id=${props.id} class="${getClassName(props, 'select')}${_error}" ?required=${getBoolAttr('required', props)} ?readonly=${getBoolAttr('readonly', props)} ?disabled=${getBoolAttr('disabled', props)} @change=${props.change} aria-describedby="${ifDefined(_descBy)}" ?autofocus=${_focus} />
       ${props.options.map(selectOption)}
     </select>
     ${(_descBy !== '') ? describedBy(props) : ''}

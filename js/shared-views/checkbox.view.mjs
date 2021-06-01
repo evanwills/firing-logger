@@ -2,12 +2,13 @@ import { html } from '../vendor/lit-html/lit-html.mjs'
 import {
   // isBool,
   isBoolTrue,
-  isNonEmptyStr
+  isNonEmptyStr,
+  invalidBool
 } from '../utilities/validation.mjs'
 import {
   getTabI,
   makeAttributeSafe
-} from '../utilities/sanitise.mjs'
+} from '../utilities/sanitisation.mjs'
 
 /**
  * Get a whole checkbox input with label and wrapping li tag with
@@ -44,7 +45,7 @@ export const checkboxBtn = (id, label, value, isChecked, eventHandler, tabIndex,
 
 // const getFieldDesc = (id, description) => html`<div id="${id}-desc" class="field-description">${description}</div>`
 
-const cbIsChecked = (value, allValues) => (allValues[value])
+const cbIsChecked = (value, allValues) => !invalidBool(value, allValues, true)
 const radioIsChecked = (value, allValues) => (value == allValues) // eslint-disable-line
 
 /**
@@ -63,7 +64,7 @@ const radioIsChecked = (value, allValues) => (value == allValues) // eslint-disa
  *
  * @returns {html}
  */
-export const checkboxBtnGroup = (id, label, value, btns, eventHandler, tabIndex, badge, isRadio, description) => {
+export const checkboxBtnGroup = (id, label, values, btns, eventHandler, tabIndex, badge, isRadio, description) => {
   const _isRadio = isBoolTrue(isRadio)
   // let _describe = ''
   let _describedBy = ''
@@ -72,7 +73,7 @@ export const checkboxBtnGroup = (id, label, value, btns, eventHandler, tabIndex,
     _describedBy = id + '-desc'
     // _describe = getFieldDesc(id, description)
   }
-  console.log('value:', value)
+  console.log('values:', values)
 
   const isChecked = (_isRadio) ? radioIsChecked : cbIsChecked
 
@@ -85,7 +86,7 @@ export const checkboxBtnGroup = (id, label, value, btns, eventHandler, tabIndex,
           id,
           btn.label,
           btn.value,
-          isChecked(btn.value, value),
+          isChecked(btn.value, values),
           eventHandler,
           tabIndex,
           badge,

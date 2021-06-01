@@ -6,7 +6,7 @@ import {
   validateDimension
 } from './kiln-utils.mjs'
 import {
-  invalidBool
+  invalidBool, invalidObject, invalidStr
 } from '../../utilities/validation.mjs'
 import { kilnActions } from './kilns.state.actions.mjs'
 
@@ -23,7 +23,7 @@ const dummyKiln = {
   width: 450,
   glaze: true,
   bisque: true,
-  singleFire: false,
+  rawGlaze: false,
   celsius: true,
   retired: false,
   isWorking: true,
@@ -83,7 +83,7 @@ const updateKiln = (kiln, data) => {
             case 'model':
             case 'glaze':
             case 'bisque':
-            case 'singleFire':
+            case 'rawGlaze':
             case 'celsius':
             case 'isWorking':
             case 'isInUse':
@@ -113,18 +113,30 @@ const updateKiln = (kiln, data) => {
 }
 
 export const kilnReducer = (state = initialKilnState, action) => {
-  const ID = (typeof action.payload !== 'undefined' && typeof action.payload.id === 'string') ? action.payload.id : ''
+  const ID = (!invalidObject('payload', action) && !invalidStr('id', action.payload))
+    ? action.payload.id
+    : ''
+
+  // console.group('kilnReducer()')
+  // console.log('kilnActions:', kilnActions)
+  // console.log('action.type:', action.type)
+  // console.log(
+  //   action.type + ' ==== ' + kilnActions.TMP_SET + ':',
+  //   action.type === kilnActions.TMP_SET
+  // )
 
   switch (action.type) {
-    case kilnActions.ADD:
-    case kilnActions.UPDATE:
-    case kilnActions.CLONE:
-      return {
-        ...state,
-        tmp: action.payload.value
-      }
+    // case kilnActions.ADD:
+    // case kilnActions.UPDATE:
+    // case kilnActions.CLONE:
+    //   console.groupEnd()
+    //   return {
+    //     ...state,
+    //     tmp: action.payload.value
+    //   }
 
     case kilnActions.DELETE:
+      // console.groupEnd()
       return {
         ...state,
         all: state.all.map(kiln => {
@@ -137,6 +149,7 @@ export const kilnReducer = (state = initialKilnState, action) => {
       }
 
     case kilnActions.TOGGLE_WORKING:
+      // console.groupEnd()
       return {
         ...state,
         all: state.all.map(kiln => {
@@ -148,13 +161,26 @@ export const kilnReducer = (state = initialKilnState, action) => {
         })
       }
 
-    case kilnActions.SET_TMP:
+    case kilnActions.TMP_SET:
+      // console.group('kilnReducer()')
+      // console.log('kilnActions:', kilnActions)
+      // console.log('action.type:', action.type)
+      // console.log(
+      //   action.type + ' ==== ' + kilnActions.SET_TMP + ':',
+      //   action.type === kilnActions.SET_TMP
+      // )
+      // console.log('action:', action)
+      // console.log('action.payload:', action.payload)
+      // console.log('action.payload.value:', action.payload.value)
+      // // console.log('action:', action)
+      // console.groupEnd()
       return {
         ...state,
         tmp: action.payload.value
       }
 
     default:
+      // console.groupEnd()
       return state
   }
 }

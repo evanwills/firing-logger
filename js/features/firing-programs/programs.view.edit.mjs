@@ -205,7 +205,7 @@ export const editProgram = (program, kilns, user, eHandler) => {
     id: 'kilnID-' + programActions.TMP_UPDATE_FIELD,
     required: true,
     label: 'Kiln',
-    eventHandler: eHandler,
+    change: eHandler,
     options: [
       {
         value: '',
@@ -213,7 +213,8 @@ export const editProgram = (program, kilns, user, eHandler) => {
         selected: false
       },
       ...kilns_.map(kilnsToOptions(program.kilnID))
-    ]
+    ],
+    class: 'input-field'
   }))
   // console.log('program.kilnID:', program.kilnID)
 
@@ -232,7 +233,8 @@ export const editProgram = (program, kilns, user, eHandler) => {
         value: program.name,
         desc: tmp,
         error: (tmp !== ''),
-        focus: (focusID === 'name')
+        focus: (focusID === 'name'),
+        class: 'input-field'
       })
     )
     if (program.name !== '' && invalidString('name', program.errors)) {
@@ -248,7 +250,8 @@ export const editProgram = (program, kilns, user, eHandler) => {
           value: program.description,
           desc: tmp,
           error: (tmp !== ''),
-          focus: (focusID === 'description')
+          focus: (focusID === 'description'),
+          class: 'input-field'
         }, true)
       )
 
@@ -260,7 +263,7 @@ export const editProgram = (program, kilns, user, eHandler) => {
           id: 'type-' + programActions.TMP_UPDATE_FIELD,
           required: true,
           label: 'Firing type',
-          eventHandler: eHandler,
+          change: eHandler,
           options: [
             {
               value: '',
@@ -271,7 +274,8 @@ export const editProgram = (program, kilns, user, eHandler) => {
           ],
           desc: tmp,
           error: (tmp !== ''),
-          focus: (focusID === 'type')
+          focus: (focusID === 'type'),
+          class: 'input-field'
         })
       )
 
@@ -285,11 +289,12 @@ export const editProgram = (program, kilns, user, eHandler) => {
           change: eHandler,
           value: program.controllerProgramID,
           min: 0,
-          max: kilns[0].maxProgramID,
+          max: kilns[0].maxProgramCount,
           step: 1,
           desc: tmp,
           error: (tmp !== ''),
-          focus: (focusID === 'controllerProgramID')
+          focus: (focusID === 'controllerProgramID'),
+          class: 'input-field'
         })
       )
 
@@ -300,17 +305,19 @@ export const editProgram = (program, kilns, user, eHandler) => {
           readonly: true,
           label: 'Maximum temperature',
           value: program.maxTemp,
-          suffix: html`&deg;C`
+          suffix: html`&deg;C`,
+          class: 'input-field'
         })
       )
 
       fields.push( // duration
-        textInputField({
+        nonInputField({
           // this input should never trigger an event
           id: 'duration',
           readonly: true,
           label: 'Firing duration',
-          value: getHourMinSec(roundMinutes(program.duration), true)
+          value: getHourMinSec(roundMinutes(program.duration), true),
+          class: 'input-field'
         })
       )
 
@@ -321,7 +328,8 @@ export const editProgram = (program, kilns, user, eHandler) => {
           readonly: true,
           label: 'Average rate of climb',
           value: program.averageRate,
-          suffix: html`&deg;C / hr`
+          suffix: html`&deg;C / hr`,
+          class: 'input-field'
         })
       )
 
@@ -333,12 +341,14 @@ export const editProgram = (program, kilns, user, eHandler) => {
             label: 'Save',
             path: '/programs/save',
             id: '-' + programActions.TMP_COMMIT,
-            action: programActions.TMP_COMMIT
+            action: programActions.TMP_COMMIT,
+            isBtn: true
           }, {
             label: 'Reset',
             path: '/programs/clear',
             id: '-' + programActions.TMP_CLEAR,
-            action: programActions.TMP_CLEAR
+            action: programActions.TMP_CLEAR,
+            isBtn: true
           }
         ], eHandler)
       }

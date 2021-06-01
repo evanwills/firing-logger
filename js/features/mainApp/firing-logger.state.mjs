@@ -25,14 +25,14 @@ import {
   invalidString,
   isNumeric,
   isObject,
-  isStr
+  isStr,
+  isScalar
 } from '../../utilities/validation.mjs'
 import { getMetaFromID } from '../../utilities/sanitisation.mjs'
 // import { persistToLocal } from './persistant.mw.mjs'
 import { viewReducer, renderReducer } from './view.state.mjs'
 import { firingLoggerMW } from './firing-logger.state.middleware.mjs'
 import { currentUserReducer, usersReducer } from '../users/users.state.mjs'
-import { isScalar } from '../../utilities/validation.mjs'
 
 const initialState = {
   studio: {
@@ -49,12 +49,17 @@ const initialState = {
         width: 500,
         depth: 500,
         height: 500,
-        maxProgramID: 36,
-        glaze: true,
+        maxProgramCount: 36,
         bisque: true,
-        singleFire: false,
+        black: false,
+        glaze: true,
         luster: true,
         onglaze: true,
+        pit: false,
+        raku: false,
+        rawGlaze: false,
+        saggar: false,
+        saltGlaze: false,
         retired: false,
         isWorking: true,
         isInUse: false,
@@ -290,6 +295,10 @@ export const getDummyAction = (action, type, href, id) => {
   }
 }
 
+export const nonAction = () => {
+  return { type: 'void' }
+}
+
 export const generalEventHandler = (_store) => {
   console.group('getGeneralEventHandler()')
   console.groupEnd()
@@ -357,7 +366,7 @@ export const getWorkerPoster = (postMessage, getState) => () => {
  * @param {object} store
  * @returns {void}
  */
- export const getWorkerDispatcher = (_store) => (e) => {
+export const getWorkerDispatcher = (_store) => (e) => {
   const _state = _store.getState()
   const { meta, value, isChecked, now, ...data } = e.data[0] // eslint-disable-line
   _store.dispatch({

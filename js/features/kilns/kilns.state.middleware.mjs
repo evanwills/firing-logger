@@ -1,4 +1,4 @@
-import { getDummyAction } from '../mainApp/firing-logger.state.mjs'
+import { getDummyAction, nonAction } from '../mainApp/firing-logger.state.mjs'
 
 import { kilnActions } from './kilns.state.actions.mjs'
 import { getNewKiln, getTmpKiln, cloneUpdateKiln, isInvalidKilnField } from './kiln-utils.mjs'
@@ -22,7 +22,11 @@ export const kilnsMW = store => next => action => {
       return next(getDummyAction())
 
     case kilnActions.UPDATE:
-      kiln = getItemByID(_state.studio.firingPrograms.all, action.payload.id)
+      // console.group('kilnsMW()')
+      // console.log('action.type:', action.type)
+      kiln = getItemByID(_state.studio.kilns.all, action.payload.id)
+      // console.log('kiln:', kiln)
+
       if (kiln !== false) {
         store.dispatch({
           ...action,
@@ -32,12 +36,13 @@ export const kilnsMW = store => next => action => {
             value: getTmpKiln(cloneUpdateKiln(kiln, false, action.now), kilnActions.UPDATE)
           }
         })
-        return next(getDummyAction())
+        // console.groupEnd()
+        return next(nonAction())
       }
       break
 
     case kilnActions.CLONE:
-      kiln = getItemByID(_state.studio.firingPrograms.all, action.payload.id)
+      kiln = getItemByID(_state.studio.kilns.all, action.payload.id)
       if (kiln !== false) {
         store.dispatch({
           ...action,
@@ -47,7 +52,7 @@ export const kilnsMW = store => next => action => {
             value: getTmpKiln(cloneUpdateKiln(kiln, true, action.now), kilnActions.CLONE)
           }
         })
-        return next(getDummyAction())
+        return next(nonAction())
       }
       break
 

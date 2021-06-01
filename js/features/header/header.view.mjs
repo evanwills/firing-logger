@@ -10,14 +10,14 @@ import {
 import { viewActions } from '../mainApp/view.state.mjs'
 
 export const header = (viewState, eHandler, route, title) => {
-  console.group('header()')
+  // console.group('header()')
   const _title = (title !== '')
     ? html`: <span class="page-header__sub-head">${title}</span>`
     : ''
-  console.log('viewState:', viewState)
-  console.log('eHandler:', eHandler)
-  console.log('route:', route)
-  console.log('title:', title)
+  // console.log('viewState:', viewState)
+  // console.log('eHandler:', eHandler)
+  // console.log('route:', route)
+  // console.log('title:', title)
   let navLinks = [{
     label: 'Kilns',
     path: 'kilns'
@@ -47,7 +47,7 @@ export const header = (viewState, eHandler, route, title) => {
 
   let navClass = 'main-nav main-nav--'
   navClass += (viewState.navOpen) ? 'opened' : 'closed'
-  console.groupEnd()
+  // console.groupEnd()
   const btnState = isBoolTrue(viewState.navOpen) ? 'Close' : 'Open'
   const btnClass = isBoolTrue(viewState.navOpen) ? 'opened' : 'closed'
   return html`

@@ -217,6 +217,7 @@ export const isFunction = (functionToCheck) => {
  */
 export const isObject = (input, notEmpty) => {
   const _notE = isBoolTrue(notEmpty)
+
   return (typeof input === 'object' && input !== null &&
           (_notE === false || (Object.keys(input).length > 0)))
 }
@@ -476,5 +477,13 @@ export const invalidObject = (prop, input, notEmpty) => {
 
   const _type = typeof input[prop]
 
-  return (_type !== 'undefined' && isObject(input[prop]), notEmpty) ? false : _type
+  // console.group('invalidObject()')
+  // console.log('prop:', prop)
+  // console.log('input:', input)
+  // console.log('_type:', _type)
+  // console.log('_type !== "undefined":', _type !== 'undefined')
+  // console.log('isObject(input[prop], notEmpty):', isObject(input[prop], notEmpty))
+  // console.groupEnd()
+
+  return (_type !== 'undefined' && isObject(input[prop], notEmpty)) ? false : _type
 }

@@ -121,7 +121,7 @@ export const singleKiln = (kiln, user, eHandler) => {
           <dd class="key-value__val">${kiln.useCount}</dd>
 
         <dt class="key-value__key">Possible programs</dt>
-          <dd class="key-value__val">${kiln.maxProgramID}</dd>
+          <dd class="key-value__val">${kiln.maxProgramCount}</dd>
 
         <dt class="key-value__key">Installed</dt>
           <dd class="key-value__val">${auDateStr(kiln.installDate, true)}</dd>

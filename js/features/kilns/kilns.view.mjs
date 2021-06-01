@@ -30,7 +30,8 @@ export const kilnsView = (state, eHandler, routes) => {
     } else if (['add', 'edit', 'copy'].indexOf(route) > -1 && state.tmp) {
       // console.log('state:', state)
       // console.log('kilns:', kilns)
-      subView = editKiln(state.tmp, state.all, eHandler)
+      // console.log('eHandler:', eHandler)
+      subView = editKiln(state.tmp, state.all, '', eHandler)
     } else {
       error = html`<p class="error">
         Could not find kiln kiln matching ID:

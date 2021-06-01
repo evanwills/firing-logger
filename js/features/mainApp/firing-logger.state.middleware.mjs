@@ -19,12 +19,14 @@ export const firingLoggerMW = store => next => action => {
 
       const [top, mode, id] = state.view.route // eslint-disable-line
 
+      // console.group('firingLoggerMW()')
       // console.log('state.view:', state.view)
       // console.log('top:', top)
       // console.log('mode:', mode)
       // console.log('id:', id)
       let actions = null // eslint-disable-line
 
+      // Get the right set of actions for the route
       switch (top) {
         case 'programs':
           actions = programActions
@@ -43,7 +45,7 @@ export const firingLoggerMW = store => next => action => {
           break
       }
 
-      // console.log('actions:', actions)
+      console.log('actions:', actions)
       if (actions !== null && isNonEmptyStr(mode)) {
         const MODE = (mode === 'edit')
           ? 'UPDATE'
@@ -53,6 +55,7 @@ export const firingLoggerMW = store => next => action => {
         // console.log('actions[' + MODE + ']:', actions[MODE])
 
         if (!invalidString(MODE, actions)) {
+          // console.log('new action:', getDummyAction({}, actions[MODE], '', id))
           // console.groupEnd()
           return next(getDummyAction({}, actions[MODE], '', id))
         }

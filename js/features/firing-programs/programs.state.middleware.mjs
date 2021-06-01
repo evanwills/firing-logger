@@ -7,6 +7,7 @@ import {
   getLastProgram,
   getTmpProgram
 } from './program-utils.mjs'
+import { cloneUpdateProgram } from './program-utils.mjs'
 
 export const programsMW = store => next => action => {
   let _state = store.getState()
@@ -42,7 +43,7 @@ export const programsMW = store => next => action => {
           type: programActions.TMP_SET,
           payload: {
             ...action.payload,
-            value: getTmpProgram(program, programActions.CLONE)
+            value: getTmpProgram(cloneUpdateProgram(program, true, action.now), programActions.CLONE)
           }
         })
       } else {

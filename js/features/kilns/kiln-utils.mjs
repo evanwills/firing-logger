@@ -9,6 +9,79 @@ import {
   isNumeric
   // invalidBool
 } from '../../utilities/validation.mjs'
+import { getISODateStr, normalisedID } from '../../utilities/sanitisation.mjs'
+import { kilnActions } from './kilns.state.actions.mjs'
+
+export const getNewKiln = () => {
+  return {
+    id: '',
+    mode: kilnActions.ADD,
+    brand: '',
+    model: '',
+    name: '',
+    installDate: '',
+    fuel: '',
+    type: '',
+    maxTemp: 0,
+    width: 0,
+    depth: 0,
+    height: 0,
+    maxProgramID: 0,
+    glaze: false,
+    bisque: false,
+    singleFire: false,
+    luster: false,
+    onglaze: false,
+    retired: false,
+    isWorking: false,
+    isInUse: false,
+    isHot: false,
+    useCount: 0
+  }
+}
+
+export const getTmpKiln = (kiln, mode) => {
+  console.group('getTmpKiln()')
+  console.log('kiln:', kiln)
+  console.log('mode:', mode)
+  console.groupEnd()
+  return {
+    ...kiln,
+    confirmed: false,
+    lastField: 'name',
+    mode: mode
+  }
+}
+
+/**
+ *
+ * @param {object}   kiln  Program object to be copied/updated
+ * @param {bloolean} clone    Whether or not the object is to be
+ *                            cloned as a new program or to receive
+ *                            updates to the original
+ * @param {string}   date     ISO8601 date formatted string
+ * @param {string}   username User ID for the user doing the action
+ * @returns
+ */
+export const cloneUpdateKiln = (kiln, clone, date) => {
+  const _clone = isBoolTrue(clone)
+
+  const newKiln = {
+    ...kiln
+  }
+
+  if (_clone === true) {
+    newKiln.name = '{{' + getISODateStr(date) + '}}' + newKiln.name
+    newKiln.used = false
+    newKiln.retired = false
+    newKiln.isHot = false
+    newKiln.isInUse = false
+    newKiln.isWorking = false
+    newKiln.useCount = 0
+  }
+
+  return newKiln
+}
 
 /**
  * Get the ID of the input field that should be in focus
@@ -232,4 +305,35 @@ export const validateKilnData = (dummyKiln, kiln, isNew = false) => {
   }
 
   return newKiln
+}
+
+const validateKilnName = (kName, allKilns) => {
+  console.group('validateKilnName()')
+
+  if (kName.length > 64) {
+    console.groupEnd()
+    return 'Program name is too long. Must not exceed 64 characters'
+  } else if (kName.match(/[^a-z0-9 \-[\](),.'":&+]/i) !== null) {
+    console.groupEnd()
+    return 'Program name contains invalid characters. Allowed characters: A-Z, a-z, 0-9, " ", "[", "]", "(", ")", ",", ".", "\'", \'"\', ":", "&", "+"'
+  } else {
+    for (let a = 0; a < allKilns.length; a += 1) {
+      if (allKilns[a].kilnID + normalisedID(allKilns[a].name) === kName) {
+        console.groupEnd()
+        return 'Program name is not unique for specified kiln'
+      }
+    }
+  }
+  console.groupEnd()
+  return false
+}
+
+export const isInvalidKilnField = (action, tmpKiln, allKilns) => {
+  // let tmp = ''
+
+  switch (action.payload.id) {
+    case 'name':
+      return validateKilnName(action.payload.value, allKilns)
+  }
+  return false
 }

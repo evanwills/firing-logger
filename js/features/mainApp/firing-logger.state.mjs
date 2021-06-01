@@ -15,14 +15,16 @@ import {
   // vanillaPromise,
 } from '../../vendor/redux/standard-middleware.mjs'
 import { kilnReducer } from '../kilns/kilns.state.reducers.mjs'
+import { kilnsMW } from '../kilns/kilns.state.middleware.mjs'
 import { programReducer } from '../firing-programs/programs.state.reducer.mjs'
 import { programsMW } from '../firing-programs/programs.state.middleware.mjs'
 import {
   invalidStrNum,
   invalidNum,
-  isNumeric,
   invalidBool,
   invalidString,
+  isNumeric,
+  isObject,
   isStr
 } from '../../utilities/validation.mjs'
 import { getMetaFromID } from '../../utilities/sanitisation.mjs'
@@ -30,11 +32,13 @@ import { getMetaFromID } from '../../utilities/sanitisation.mjs'
 import { viewReducer, renderReducer } from './view.state.mjs'
 import { firingLoggerMW } from './firing-logger.state.middleware.mjs'
 import { currentUserReducer, usersReducer } from '../users/users.state.mjs'
+import { isScalar } from '../../utilities/validation.mjs'
+
 const initialState = {
   studio: {
     kilns: {
       all: [{
-        id: 'woodrow1',
+        id: 'MTYyMjUyODg5OTI2NQ',
         brand: 'Woodrow',
         model: '1',
         name: 'New Woodrow',
@@ -74,8 +78,8 @@ const initialState = {
     },
     firingPrograms: {
       all: [{
-        id: 'tF3Kq7NJnSVfGs',
-        kilnID: 'woodrow1',
+        id: 'MTYyMjUyODgxMjgyNQ',
+        kilnID: 'MTYyMjUyODg5OTI2NQ',
         controllerProgramID: 6,
         version: 0,
         type: 'bisque',
@@ -102,31 +106,24 @@ const initialState = {
           hold: 10
         }],
         created: '2021-05-06T21:13:34+1000',
-        createdBy: 'evanwills',
+        createdBy: 'MTYyMjUyOTI5MzMwMg',
         superseded: false,
         parentID: '',
         used: true,
         useCount: 4,
         deleted: false,
         locked: false
-      }],
-      tmp: {
-        averageRate: 113.4,
-        confirmed: false,
-        controllerProgramID: '',
-        created: '',
-        createdBy: '',
-        deleted: false,
-        description: '',
-        duration: 37467,
-        errors: {},
-        id: 0,
-        kilnID: 'woodrow1',
-        lastField: 'type',
-        locked: false,
-        maxTemp: 1180,
-        mode: 'PROGRAM_ADD',
+      }, {
+        id: 'MTYyMjUyODk3NjgzOQ',
         name: 'Basic earthenware glaze',
+        controllerProgramID: 7,
+        kilnID: 'MTYyMjUyODg5OTI2NQ',
+        type: 'glaze',
+        version: 0,
+        description: '',
+        averageRate: 113.4,
+        duration: 38667,
+        maxTemp: 1180,
         steps: [{
           id: 1,
           endTemp: 520,
@@ -143,11 +140,15 @@ const initialState = {
           hold: 20,
           rate: 135
         }],
-        superseded: false,
-        type: 'glaze',
-        useCount: 0,
         used: false,
-        version: 0
+        useCount: 0,
+        created: '2021-06-01T16:35:19+1000',
+        createdBy: 'MTYyMjUyOTI5MzMwMg',
+        superseded: false,
+        deleted: false,
+        locked: false
+      }],
+      tmp: {
       },
       filters: {
       }
@@ -162,7 +163,7 @@ const initialState = {
     },
     users: {
       all: [{
-        id: 'evanwills',
+        id: 'MTYyMjUyOTI5MzMwMg',
         firstName: 'Evan',
         lastName: 'Wills',
         contact: {
@@ -170,7 +171,7 @@ const initialState = {
           email: 'evan.wills@acu.edu.au'
         },
         created: 1621349154990,
-        createdBy: 'evanwills',
+        createdBy: 'MTYyMjUyOTI5MzMwMg',
         active: true,
         isSuper: true,
         permissions: {
@@ -240,7 +241,8 @@ export const store = createStore(
       crashReporter,
       logger,
       firingLoggerMW,
-      programsMW
+      programsMW,
+      kilnsMW
       // persistToLocal
     ),
     monitorReducerEnhancer
@@ -264,47 +266,33 @@ const getActionType = (meta) => {
 }
 // const getRout = (meta) => {
 // }
-/**
- * Get a callback function that can be used as an event handler for
- * the web-worker's onmessage event
- *
- * @param {object} store
- * @returns {void}
- */
-export const getWorkerDispatcher = (_store) => (e) => {
-  const _state = _store.getState()
-  const { meta, value, isChecked, now, ...data } = e.data[0] // eslint-disable-line
-  _store.dispatch({
-    type: getActionType(meta),
-    payload: {
-      id: meta.id,
-      value: value,
-      isChecked: isChecked
-    },
-    now: now,
-    user: _state.currentUser
-  })
-}
-export const getDummyPayload = () => {
+
+export const getDummyPayload = (id, value) => {
+  const _id = isStr(id) ? id : ''
+  const _value = isScalar(value) ? value : ''
   return {
-    id: '',
-    value: '',
+    id: _id,
+    value: _value,
     isChecked: false,
     extra: '',
     suffix: ''
   }
 }
-export const getDummyAction = (action, type, href) => {
+
+export const getDummyAction = (action, type, href, id) => {
+  const _action = isObject(action) ? action : {}
   return {
     type: isStr(type) ? type : '',
-    payload: getDummyPayload(),
+    payload: getDummyPayload(id),
     href: isStr(href) ? href : '',
-    user: !invalidString('user', action) ? action.user : '',
-    now: !invalidNum('now', action) ? action.now : Date.now()
+    user: !invalidString('user', _action) ? _action.user : '',
+    now: !invalidNum('now', _action) ? _action.now : Date.now()
   }
 }
+
 export const generalEventHandler = (_store) => {
-  console.log('generalEventHandler()')
+  console.group('getGeneralEventHandler()')
+  console.groupEnd()
   return function (e) {
     e.preventDefault()
     console.group('generalEventHandler()')
@@ -359,5 +347,27 @@ export const getWorkerPoster = (postMessage, getState) => () => {
   postMessage({
     type: 'url',
     payload: _state.url.pathnme + _state.url.search
+  })
+}
+
+/**
+ * Get a callback function that can be used as an event handler for
+ * the web-worker's onmessage event
+ *
+ * @param {object} store
+ * @returns {void}
+ */
+ export const getWorkerDispatcher = (_store) => (e) => {
+  const _state = _store.getState()
+  const { meta, value, isChecked, now, ...data } = e.data[0] // eslint-disable-line
+  _store.dispatch({
+    type: getActionType(meta),
+    payload: {
+      id: meta.id,
+      value: value,
+      isChecked: isChecked
+    },
+    now: now,
+    user: _state.currentUser
   })
 }

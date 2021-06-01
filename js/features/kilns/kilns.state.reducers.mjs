@@ -117,21 +117,11 @@ export const kilnReducer = (state = initialKilnState, action) => {
 
   switch (action.type) {
     case kilnActions.ADD:
-      if (state.filter(kiln => (kiln.id === ID)).length > 0) {
-        throw Error('Cannot add Kiln with ID "' + ID + '". ID is already in use')
-      }
-      return [...state, action.payload]
-
     case kilnActions.UPDATE:
+    case kilnActions.CLONE:
       return {
         ...state,
-        all: state.all.map(kiln => {
-          if (kiln.id === ID) {
-            return updateKiln(kiln, action.payload)
-          } else {
-            return kiln
-          }
-        })
+        tmp: action.payload.value
       }
 
     case kilnActions.DELETE:
@@ -156,6 +146,12 @@ export const kilnReducer = (state = initialKilnState, action) => {
             return kiln
           }
         })
+      }
+
+    case kilnActions.SET_TMP:
+      return {
+        ...state,
+        tmp: action.payload.value
       }
 
     default:

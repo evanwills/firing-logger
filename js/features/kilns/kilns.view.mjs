@@ -27,7 +27,7 @@ export const kilnsView = (state, eHandler, routes) => {
     const kiln = state.all.filter(kiln => kiln.id === route)
     if (kiln.length === 1) {
       subView = singleKiln(kiln[0], '', eHandler)
-    } else if (['add', 'edit', 'copy'].indexOf(route) > -1) {
+    } else if (['add', 'edit', 'copy'].indexOf(route) > -1 && state.tmp) {
       // console.log('state:', state)
       // console.log('kilns:', kilns)
       subView = editKiln(state.tmp, state.all, eHandler)

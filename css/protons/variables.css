@@ -1,16 +1,19 @@
 :root {
   --dark-bg: #2d2b2b;
   --dark-txt: #fff;
+  --dark-txt-rev: #000;
   --dark-over-colour: rgba(0, 0, 0, 0.85);
   --dark-over-colour-rev: rgba(255, 255, 255, 0.85);
 
   --light-bg: #fff;
   --light-txt: #2d2b2b;
+  --light-txt-rev: #fff;
   --light-over-colour: rgba(255, 255, 255, 0.85);
   --light-over-colour-rev: rgba(0, 0, 0, 0.85);
 
   --custom-bg: #2d2b2b;
   --custom-txt: #fff;
+  --custom-txt-rev: #000;
   --custom-over-colour: rgba(0, 0, 0, 0.85);
   --custom-over-colour-rev: rgba(255, 255, 255, 0.85);
 
@@ -41,25 +44,28 @@
   --width-md: 48rem;
   --width-lg: 62rem;
   --width-xl: 75rem;
-};
+}
 
 .ui-darkmode {
-  --bg-colour: var(--dark-bg, #2d2b2b);
-  --txt-colour: var(--dark-txt ,#fff);
+  --bg-colour:      var(--dark-bg,      #2d2b2b);
+  --txt-colour:     var(--dark-txt,     #fff);
+  --txt-colour-rev: var(--dark-txt-rev, #000);
   --over-colour: var(--dark-over-colour, rgba(0, 0, 0, 0.85));
   --over-colour-rev: var(--dark-over-colour-rev, rgba(255, 255, 255, 0.85));
 }
 
 .ui-lightMode {
-  --bg-colour: var(--light-bg, #2d2b2b);
-  --txt-colour: var(--light-txt ,#fff);
+  --bg-colour:      var(--light-bg,     #fff);
+  --txt-colour:     var(--light-txt,    #2d2b2b);
+  --txt-colour-rev: var(--dark-txt-rev ,#fff);
   --over-colour: var(--light-over-colour, rgba(255, 255, 255, 0.85));
   --over-colour-rev: var(--light-over-colour-rev, rgba(0, 0, 0, 0.85));
 }
 
 .ui-customMode {
-  --bg-colour: var(--custom-bg, #2d2b2b);
-  --txt-colour: var(--custom-txt ,#fff);
+  --bg-colour:      var(--custom-bg,      #2d2b2b);
+  --txt-colour:     var(--custom-txt,     #fff);
+  --txt-colour-rev: var(--custom-txt-rev, #000);
   --over-colour: var(--custom-over-colour, rgba(0, 0, 0, 0.85));
   --over-colour-rev: var(--custom-over-colour-rev, rgba(255, 255, 255, 0.85));
 }

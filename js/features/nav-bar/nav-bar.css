@@ -43,6 +43,7 @@
   background-color: var(--over-colour);
   border: 0.025rem solid #ddd;
   display: block;
+  font-size: 1rem;
   padding: 0.5rem;
   text-align: center;
   width: 100%;

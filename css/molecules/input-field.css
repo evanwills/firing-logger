@@ -12,11 +12,15 @@
 }
 .input-fields__item input,
 .input-fields__item textarea {
+  /* font-weight: bold; */
   width: calc(100% - 1rem);
 }
 .input-fields__item input,
 .input-fields__item textarea,
 .input-fields__item select {
+  background-color: var(--over-colour-rev);
+  border: none;
+  color: var(--txt-colour-rev);
   display: block;
   font-size: 1rem;
   padding: 0.3rem 0.5rem;

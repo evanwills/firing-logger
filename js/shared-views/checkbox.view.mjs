@@ -79,9 +79,9 @@ export const checkboxBtnGroup = (id, label, values, btns, eventHandler, tabIndex
 
   if (isNonEmptyStr(label)) {
     return html`
-    <div class="checkable-grp__wrap checkbox-grp__wrapper" role="group" aria-labelledby="${id}-label" ?aria-describedby="${_describedBy}">
-      <h4 id="${id}-label" class="checkable-grp__h checkbox-grp__h">${label}</h4>
-      <ul class="list-clean checkable-grp__items checkbox-grp__items">
+    <div class="field-grp__wrap checkbox-grp__wrap" role="group" aria-labelledby="${id}-label" ?aria-describedby="${_describedBy}">
+      <h4 id="${id}-label" class="field-grp__h checkbox-grp__h">${label}</h4>
+      <ul class="list-clean field-grp__items checkbox-grp__items">
         ${btns.map(btn => checkboxBtn(
           id,
           btn.label,
@@ -98,7 +98,7 @@ export const checkboxBtnGroup = (id, label, values, btns, eventHandler, tabIndex
     `
   } else {
     return html`
-      <ul class="list-clean list-inline checkable-grp__wrap checkbox-grp__items" role="group" ?aria-describedby="${_describedBy}">
+      <ul class="list-clean list-inline field-grp__wrap checkbox-grp__items" role="group" ?aria-describedby="${_describedBy}">
         ${btns.map(btn => checkboxBtn(
           id,
           btn.label,
@@ -163,8 +163,8 @@ export const radioBtnGroup = (id, label, value, btns, eventHandler, tabIndex, ba
 
   if (isNonEmptyStr(label)) {
     return html`
-    <div class="checkable-grp__wrap radio-grp__wrapper" role="radiogroup" aria-labelledby="${id}-label" ?aria-describedby="${_describedBy}">
-      <h4 id="${id}-label" class="checkable-grp__h radio-grp__h">${label}</h4>
+    <div class="field-grp__wrap radio-grp__wrapper" role="radiogroup" aria-labelledby="${id}-label" ?aria-describedby="${_describedBy}">
+      <h4 id="${id}-label" class="field-grp__h radio-grp__h">${label}</h4>
       <ul class="list-clean list-clean--tight list-inline radio-grp__items">
         ${btns.map(btn => singleRadioBtn(
           id,
@@ -181,7 +181,7 @@ export const radioBtnGroup = (id, label, value, btns, eventHandler, tabIndex, ba
     `
   } else {
     return html`
-      <ul class="list-clean list-inline checkable-grp__wrap radio-grp__items" role="radiogroup" ?aria-describedby="${_describedBy}">
+      <ul class="list-clean list-inline field-grp__wrap radio-grp__items" role="radiogroup" ?aria-describedby="${_describedBy}">
         ${btns.map(btn => singleRadioBtn(
           id,
           btn.label,

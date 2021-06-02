@@ -252,6 +252,10 @@ export const isLit = (input) => {
   return (typeof input !== 'undefined' && typeof input.type === 'string' && (input.type === 'html' || input.type === 'svg'))
 }
 
+export const isLitOrStr = (input) => {
+  return (isStr(input) || isLit(input))
+}
+
 // ========================================================
 
 /**
@@ -452,6 +456,31 @@ export const invalidScalar = (prop, input) => {
 
   const _type = typeof input[prop]
   return (_type === 'boolean' && _type !== 'string' && _type !== 'number') ? _type : false
+}
+
+/**
+ * Test whether an object contains a given property and the value
+ * of that property is a lit-html object or string
+ *
+ * @param {string} prop  name of the property to be tested
+ * @param {object} input object that might contain the property of
+ *                       the correct type
+ *
+ * @returns {false,string} If the value is a lit-html object or an
+ *                         string, then it is NOT invalid.
+ *                         Otherwise the value's data type returned
+ *                         (so it can be used when reporting errors).
+ */
+export const invalidLit = (prop, input) => {
+  if (typeof prop !== 'string') {
+    throw new Error('invalidLit() expects first parameter "prop" to be a string matching the name of a property in the object. ' + typeof prop + ' given.')
+  }
+  if (!isObject(input)) {
+    throw new Error('invalidLit() expects second parameter "input" to be a an object containing "' + prop + '" property. ' + typeof input + ' given.')
+  }
+
+  const _type = typeof input[prop]
+  return (_type === 'undefined' || !isLitOrStr(input[prop])) ? _type : false
 }
 
 /**

@@ -28,6 +28,7 @@ import {
 import { getFocusID } from './kiln-utils.mjs'
 import { getNavBar } from '../nav-bar/nav-bar.view.mjs'
 import { checkboxBtnGroup } from '../../shared-views/checkbox.view.mjs'
+import { fieldGroup } from '../../shared-views/input-field.view.mjs'
 
 const firingTypes = [{
   label: 'Bisque',
@@ -126,6 +127,7 @@ const getFuelTypes = (fuelType) => {
 export const editKiln = (kiln, kilns, user, eHandler) => {
   const name = (kiln.name === '') ? 'New (unamed) kiln' : kiln.name
   const focusID = getFocusID(kiln.errors, kiln.lastField)
+  const extraClass = 'input-fields__item input-fields__item--07'
   let nav = ''
   let tmp
 
@@ -228,57 +230,78 @@ export const editKiln = (kiln, kilns, user, eHandler) => {
         change: eHandler,
         desc: tmp,
         suffix: html`&deg;C`,
+        max: 1400,
+        min: 400,
+        step: 1,
         class: 'input-field'
       })
     )
 
-    tmp = !invalidString('width', kiln.errors)
-      ? kiln.errors.width
-      : ''
-    fields.push( // width
-      numberInputField({
-        // this input should never trigger an event
-        id: 'width',
-        label: 'Internal width',
-        value: kiln.width,
-        change: eHandler,
-        desc: tmp,
-        class: 'input-field',
-        suffix: 'mm'
-      })
-    )
-
-    tmp = !invalidString('depth', kiln.errors)
-      ? kiln.errors.depth
-      : ''
-    fields.push( // depth
-      numberInputField({
-        // this input should never trigger an event
-        id: 'depth',
-        label: 'Internal depth',
-        value: kiln.width,
-        desc: tmp,
-        change: eHandler,
-        class: 'input-field',
-        suffix: 'mm'
-      })
-    )
-
-    tmp = !invalidString('height', kiln.errors)
-      ? kiln.errors.height
-      : ''
-    fields.push( // height
-      numberInputField({
-        // this input should never trigger an event
-        id: 'height',
-        label: 'Internal height',
-        value: kiln.height,
-        desc: tmp,
-        class: 'input-field',
-        change: eHandler,
-        suffix: 'mm'
-      })
-    )
+    tmp = {
+      width: !invalidString('width', kiln.errors)
+        ? kiln.errors.width
+        : '',
+      depth: !invalidString('depth', kiln.errors)
+        ? kiln.errors.depth
+        : '',
+      height: !invalidString('height', kiln.errors)
+        ? kiln.errors.height
+        : ''
+    }
+    fields.push(fieldGroup({
+      id: 'packingSpace',
+      label: 'Packing space',
+      fields: [
+        {
+          className: extraClass,
+          children: numberInputField({
+            // this input should never trigger an event
+            id: 'width',
+            label: 'Width',
+            value: kiln.width,
+            change: eHandler,
+            desc: tmp.width,
+            class: 'input-field',
+            max: 2000,
+            min: 100,
+            step: 1,
+            suffix: 'mm'
+          })
+        },
+        {
+          className: extraClass,
+          children: numberInputField({
+            // this input should never trigger an event
+            id: 'depth',
+            label: 'Depth',
+            value: kiln.depth,
+            desc: tmp.depth,
+            change: eHandler,
+            class: 'input-field',
+            max: 20000,
+            min: 100,
+            step: 1,
+            suffix: 'mm'
+          })
+        },
+        {
+          className: extraClass,
+          children: numberInputField({
+            // this input should never trigger an event
+            id: 'height',
+            label: 'Height',
+            value: kiln.height,
+            desc: tmp.height,
+            class: 'input-field',
+            max: 2000,
+            min: 100,
+            step: 1,
+            change: eHandler,
+            suffix: 'mm'
+          })
+        }
+      ]
+    }))
 
     tmp = !invalidString('maxProgramCount', kiln.errors)
       ? kiln.errors.maxProgramCount
@@ -291,19 +314,23 @@ export const editKiln = (kiln, kilns, user, eHandler) => {
         value: kiln.maxProgramCount,
         change: eHandler,
         desc: tmp,
+        max: 200,
+        min: 1,
+        step: 1,
         class: 'input-field'
       })
     )
 
-    fields.push(
-      checkboxBtnGroup(
+    fields.push({
+      isGroup: true,
+      children: checkboxBtnGroup(
         'firingTypes',
         'Allowed firing types',
         kiln,
         firingTypes,
         eHandler
       )
-    )
+    })
   }
 
   nav = getErrorMsg(kiln.errors)

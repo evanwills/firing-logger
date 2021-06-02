@@ -21,6 +21,8 @@ import {
   // makeHTMLsafe,
   ucFirst
 } from '../utilities/sanitisation.mjs'
+import { getItemList } from '../features/item-list/item-list.view.mjs'
+import { invalidLit } from '../utilities/validation.mjs'
 
 /**
  * Get the attribute string for an HTML input/select/textarea field
@@ -74,18 +76,23 @@ export const getPreSuf = (props, className, isSuffix) => {
 
   if (typeof props[_end] !== 'undefined' && (isNonEmptyStr(props[_end]) || isLit(props[_end]))) {
     return isStr(className)
-      ? html`<span class="${className}__${_end}">${props[_end]}</span>`
+      ? html`<span class="input-field__input__${_end}">${props[_end]}</span>`
       : props[_end]
   }
   return ''
 }
 
 export const wrapPreSuf = (field, props, className) => {
-  return (!invalidObject('prefix', props) || !invalidString('prefix', props) ||
+  if (!invalidObject('prefix', props) || !invalidString('prefix', props) ||
           !invalidObject('suffix', props) || !invalidString('suffix', props)
-  )
-    ? html`<span class="${className}__input__wrap">${getPreSuf(props, className, false)}${field}${getPreSuf(props, className, true)}</span>`
-    : field
+  ) {
+    const pre = getPreSuf(props, className, false)
+    const post = getPreSuf(props, className, true)
+
+    return html`<span class="input-field__input-wrap ${(pre === '') ? '' : 'input-field__input-wrap--left'}">${pre}${field}${post}</span>`
+  } else {
+    return field
+  }
 }
 
 /**
@@ -210,10 +217,14 @@ const propOrUn = (input, defaultStr) => {
 
 export const nonInputField = (props) => {
   const _className = getClassName(props, 'input')
-
+  console.group('nonInputField()')
+  console.log('props', props)
+  console.log('props.prefix', props.prefix)
+  console.log('props.suffix', props.suffix)
+  console.groupEnd()
   return html`
   <span class="${getClassName(props, 'label')}">${props.label}</span>
-  <span class="${_className}">${getPreSuf(props, _className, false)}${props.value}${getPreSuf(props, _className, true)}</span>`
+  <span class="${_className}--">${!invalidLit('prefix', props) ? props.prefix : ''} ${props.value} ${!invalidLit('suffix', props) ? props.suffix : ''}</span>`
 }
 
 /**
@@ -485,6 +496,21 @@ export const checkableInputGroup = (props, outside) => {
           },
           _outside
         ))}
+      </ul>
+    </div>
+  `
+}
+
+export const fieldGroup = (props, ) => {
+  return html`
+    <p class="input-field__label" id="${props.id}-grp-lbl">
+      ${props.label}
+    </p>
+
+    <div role="group" aria-labelledby="${props.id}-grp-lbl" class=${getClassName(props, 'grp')}>
+      <ul class="item-list input-fields__list">
+
+        ${getItemList(props.fields, '', 'input-fields')}
       </ul>
     </div>
   `

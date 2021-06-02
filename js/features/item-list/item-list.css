@@ -31,6 +31,14 @@
   padding: 0 ;
   border-top: 0.05rem solid #ccc;
 }
+.item-list .item-list {
+  border-bottom: none;
+  margin-top: -0.4rem;
+  margin-bottom: -0.4rem;
+}
+.item-list .item-list .item-list__item:first-child {
+  border-top: none;
+}
 
 .item-list__link {
   align-items: center;

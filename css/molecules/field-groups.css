@@ -1,0 +1,34 @@
+.field-grp__wrap {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem var(--bleed);
+  width: calc(100% - 2rem);
+  overflow: hidden;
+  /* gap: 1rem; */
+}
+
+@media screen and (min-width: 30rem) {
+  .field-grp__wrap {
+    display: grid;
+    grid-template-columns: 12rem auto;
+    grid-template-areas:
+      'label field'
+      'label error';
+  }
+  .field-grp__wrap > div {
+    grid-area: error;
+  }
+  .field-grp__wrap > input,
+  .field-grp__wrap > div.field-grp__wrap {
+    grid-area: field;
+  }
+  .field-grp__wrap > label {
+    grid-area: label;
+    font-weight: bold;
+  }
+  .field-grp__wrap--09 { grid-template-columns: 9rem auto; }
+  .field-grp__wrap--15 { grid-template-columns: 15rem auto; }
+  .field-grp__wrap--18 { grid-template-columns: 18rem auto; }
+  .field-grp__wrap--21 { grid-template-columns: 21rem auto; }
+}

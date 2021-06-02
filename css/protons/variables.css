@@ -22,7 +22,7 @@
   --over-colour: var(--dark-over-colour, rgba(0, 0, 0, 0.85));
   --over-colour-rev: var(--dark-over-colour-rev, rgba(255, 255, 255, 0.85));
 
-  --font-size: 16px;
+  --font-size: inherit;
   --timing: 0.4s;
   --ease: ease-in-out;
   --line-weight: 0.05rem;

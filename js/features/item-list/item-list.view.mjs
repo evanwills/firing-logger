@@ -1,5 +1,5 @@
 import { html } from '../../vendor/lit-html/lit-html.mjs'
-import { isNonEmptyStr } from '../../utilities/validation.mjs'
+import { invalidBool, invalidString, isLit, isNonEmptyStr } from '../../utilities/validation.mjs'
 
 export const getItemList = (items, label, extraClass, wrapClass) => {
   const extra = isNonEmptyStr(extraClass)
@@ -26,9 +26,16 @@ export const getItemList = (items, label, extraClass, wrapClass) => {
     ${isNonEmptyStr(label) ? html`<p class="${extraP}">label</p>` : ''}
     <ul class="item-list${extraUl}${wrap}">
       ${items.map((item) => {
+        const extraClass = (!invalidBool('isGroup', item, true))
+          ? extraLi + '--group'
+          : (!invalidString('className', item, true))
+            ? ' ' + item.className
+            : extraLi
+        const output = (isLit(item)) ? item : item.children
+
         return html`
-          <li class="item-list__item${extraLi}">
-            ${item}
+          <li class="item-list__item${extraClass}">
+            ${output}
           </li>`
       })}
     </ul>

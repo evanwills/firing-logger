@@ -8,8 +8,8 @@ import { html } from '../../vendor/lit-html/lit-html.mjs'
 import { getMainContent } from '../main-content/main-content.view.mjs'
 import { kilnActions } from './kilns.state.actions.mjs'
 import { getItemList } from '../item-list/item-list.view.mjs'
-// import {
-//   ucFirst,
+import {
+  ucFirst
 //   auDateStr,
 //   boolYesNo,
 //   getHourMinSec,
@@ -17,7 +17,7 @@ import { getItemList } from '../item-list/item-list.view.mjs'
 //   roundMinutes
 //   getDeg,
 //   getRate
-// } from '../../utilities/sanitisation.mjs'
+} from '../../utilities/sanitisation.mjs'
 // import { getFiringLogSVG } from '../svg/svg.mjs'
 import {
   // invalidBool,
@@ -25,50 +25,10 @@ import {
   invalidObject
 } from '../../utilities/validation.mjs'
 // import { getNavBar } from '../nav-bar/nav-bar.view.mjs'
-import { getFocusID } from './kiln-utils.mjs'
+import { getFocusID, validKilnTypes, validfuelSources, firingTypes } from './kiln-utils.mjs'
 import { getNavBar } from '../nav-bar/nav-bar.view.mjs'
 import { checkboxBtnGroup } from '../../shared-views/checkbox.view.mjs'
 import { fieldGroup } from '../../shared-views/input-field.view.mjs'
-
-const firingTypes = [{
-  label: 'Bisque',
-  value: 'bisque'
-}, {
-  label: 'Black firing',
-  value: 'black'
-}, {
-  label: 'Glaze',
-  value: 'glaze'
-}, {
-  label: 'Luster',
-  value: 'luster'
-}, {
-  label: 'Onglaze',
-  value: 'onglaze'
-}, {
-  label: 'Pit firing',
-  value: 'pit'
-}, {
-  label: 'Raku',
-  value: 'raku'
-}, {
-  label: 'Raw glaze',
-  value: 'rawGlaze'
-}, {
-  label: 'Saggar',
-  value: 'saggar'
-}, {
-  label: 'Salt glaze',
-  value: 'saltGlaze'
-}]
-
-// const fuelToOptions = (id) => (kiln) => {
-//   return {
-//     value: kiln.id,
-//     label: kiln.name,
-//     selected: (kiln.id === id)
-//   }
-// }
 
 const getErrorMsg = (errors) => {
   const keys = Object.keys(errors)
@@ -97,29 +57,30 @@ const getErrorMsg = (errors) => {
  *                  field template
  */
 const getFuelTypes = (fuelType) => {
-  const types = [{
-    value: 'electric',
-    label: 'Electric'
-  }, {
-    value: 'gas',
-    label: 'Gas'
-  }, {
-    value: 'wood',
-    label: 'Wood'
-  }, {
-    value: 'oil',
-    label: 'Oil'
-  }]
-
-  console.group('getFuelTypes()')
-  console.log('fuelType:', fuelType)
-  console.log('types:', types)
-  console.groupEnd()
-
-  return types.map(fType => {
+  return validfuelSources.map(fType => {
     return {
-      ...fType,
-      selected: (fType.value === fuelType)
+      value: fType,
+      label: ucFirst(fType),
+      selected: (fType === fuelType)
+    }
+  })
+}
+
+/**
+ * Get a select box of firing types available for the selected kiln
+ *
+ * @param {object} kiln        All the details for the selected kiln
+ * @param {string} fuelType Selected firing type
+ *
+ * @returns {array} List of option objects to be passed to a select
+ *                  field template
+ */
+const getKilnTypes = (kilnType) => {
+  return validKilnTypes.map(kType => {
+    return {
+      value: kType,
+      label: ucFirst(kType),
+      selected: (kType === kilnType)
     }
   })
 }
@@ -128,26 +89,27 @@ export const editKiln = (kiln, kilns, user, eHandler) => {
   const name = (kiln.name === '') ? 'New (unamed) kiln' : kiln.name
   const focusID = getFocusID(kiln.errors, kiln.lastField)
   const extraClass = 'input-fields__item input-fields__item--07'
+  const idTail = '-' + kilnActions.TMP_UPDATE_FIELD
   let nav = ''
   let tmp
 
-  console.group('editkiln()')
-  console.log('kiln:', kiln)
-  console.log('kilns:', kilns)
+  // console.group('editkiln()')
+  // console.log('kiln:', kiln)
+  // console.log('kilns:', kilns)
 
   const fields = [
   ]
   // console.log('kiln.kilnID:', kiln.kilnID)
 
-  console.log('kiln.id:', kiln.id)
-  console.log('eHandler:', eHandler)
+  // console.log('kiln.id:', kiln.id)
+  // console.log('eHandler:', eHandler)
 
   tmp = (!invalidObject('errors', kiln) && !invalidString('name', kiln.errors, true))
     ? kiln.errors.name
     : ''
   fields.push( // name
     textInputField({
-      id: 'name-' + kilnActions.TMP_UPDATE_FIELD,
+      id: 'name' + idTail,
       required: true,
       label: 'kiln name',
       change: eHandler,
@@ -159,11 +121,11 @@ export const editKiln = (kiln, kilns, user, eHandler) => {
     })
   )
 
-  console.log('kiln.name:', kiln.name)
-  console.log('kiln.name !== "":', kiln.name !== '')
-  console.log('invalidObject("errors", kiln):', invalidObject('errors', kiln))
-  console.log('!invalidObject("errors", kiln):', !invalidObject('errors', kiln))
-  console.log('invalidString("name", kiln.errors) !== false:', invalidString('name', kiln.errors) !== false)
+  // console.log('kiln.name:', kiln.name)
+  // console.log('kiln.name !== "":', kiln.name !== '')
+  // console.log('invalidObject("errors", kiln):', invalidObject('errors', kiln))
+  // console.log('!invalidObject("errors", kiln):', !invalidObject('errors', kiln))
+  // console.log('invalidString("name", kiln.errors) !== false:', invalidString('name', kiln.errors) !== false)
 
   if (kiln.name !== '' && !invalidObject('errors', kiln) && invalidString('name', kiln.errors) !== false) {
     // Must have a valid name before we can progress
@@ -172,7 +134,7 @@ export const editKiln = (kiln, kilns, user, eHandler) => {
       : ''
     fields.push( // description
       textInputField({
-        id: 'brand-' + kilnActions.TMP_UPDATE_FIELD,
+        id: 'brand' + idTail,
         label: 'Brand',
         change: eHandler,
         value: kiln.brand,
@@ -187,7 +149,7 @@ export const editKiln = (kiln, kilns, user, eHandler) => {
       : ''
     fields.push( // description
       textInputField({
-        id: 'model-' + kilnActions.TMP_UPDATE_FIELD,
+        id: 'model' + idTail,
         label: 'model',
         change: eHandler,
         value: kiln.model,
@@ -201,7 +163,27 @@ export const editKiln = (kiln, kilns, user, eHandler) => {
     fields.push( // duration
       selectField({
         // this input should never trigger an event
-        id: 'fuel',
+        id: 'type' + idTail,
+        label: 'Kiln type',
+        eventHandler: eHandler,
+        options: [
+          {
+            value: '',
+            label: ' -- Select kiln type -- ',
+            selected: false
+          },
+          ...getKilnTypes(kiln.type)
+        ],
+        change: eHandler,
+        focus: (focusID === 'fuel'),
+        class: 'input-field'
+      })
+    )
+
+    fields.push( // duration
+      selectField({
+        // this input should never trigger an event
+        id: 'fuel' + idTail,
         label: 'Energy source',
         eventHandler: eHandler,
         options: [
@@ -224,8 +206,8 @@ export const editKiln = (kiln, kilns, user, eHandler) => {
     fields.push( // maxTemp
       numberInputField({
         // this input should never trigger an event
-        id: 'maxTemp',
-        label: 'Maximum temperature',
+        id: 'maxTemp' + idTail,
+        label: 'Max temperature',
         value: kiln.maxTemp,
         change: eHandler,
         desc: tmp,
@@ -249,14 +231,14 @@ export const editKiln = (kiln, kilns, user, eHandler) => {
         : ''
     }
     fields.push(fieldGroup({
-      id: 'packingSpace',
+      id: 'packingSpace' + idTail,
       label: 'Packing space',
       fields: [
         {
           className: extraClass,
           children: numberInputField({
             // this input should never trigger an event
-            id: 'width',
+            id: 'width' + idTail,
             label: 'Width',
             value: kiln.width,
             change: eHandler,
@@ -272,7 +254,7 @@ export const editKiln = (kiln, kilns, user, eHandler) => {
           className: extraClass,
           children: numberInputField({
             // this input should never trigger an event
-            id: 'depth',
+            id: 'depth' + idTail,
             label: 'Depth',
             value: kiln.depth,
             desc: tmp.depth,
@@ -288,7 +270,7 @@ export const editKiln = (kiln, kilns, user, eHandler) => {
           className: extraClass,
           children: numberInputField({
             // this input should never trigger an event
-            id: 'height',
+            id: 'height' + idTail,
             label: 'Height',
             value: kiln.height,
             desc: tmp.height,
@@ -309,7 +291,7 @@ export const editKiln = (kiln, kilns, user, eHandler) => {
     fields.push( // maxProgramCount
       numberInputField({
         // this input should never trigger an event
-        id: 'maxProgramCount',
+        id: 'maxProgramCount' + idTail,
         label: 'Max stored programs',
         value: kiln.maxProgramCount,
         change: eHandler,
@@ -324,7 +306,7 @@ export const editKiln = (kiln, kilns, user, eHandler) => {
     fields.push({
       isGroup: true,
       children: checkboxBtnGroup(
-        'firingTypes',
+        'firingTypes-' + kilnActions.TMP_UPDATE_CHECKBOX_FIELD,
         'Allowed firing types',
         kiln,
         firingTypes,
@@ -336,29 +318,66 @@ export const editKiln = (kiln, kilns, user, eHandler) => {
   nav = getErrorMsg(kiln.errors)
 
   if (nav === '') {
-    nav = getNavBar([
+    tmp = []
+    if (kiln.mode === kilnActions.UPDATE) {
+      if (kiln.installDate === '') {
+        tmp = {
+          label: 'Installed',
+          action: kilnActions.INSTALL
+        }
+      } else if (kiln.isRetired === false) {
+        tmp = {
+          label: 'Retire',
+          action: kilnActions.RETIRE
+        }
+      } else {
+        tmp = {
+          label: 'Resurect',
+          action: kilnActions.RESURECT
+        }
+      }
+      tmp = {
+        ...tmp,
+        id: kiln.id,
+        isBtn: true
+      }
+
+      tmp = [
+        {
+          label: (kiln.isWorking) ? 'Set to "Being repaired"' : 'Set to "Working"',
+          path: '/kilns/not-working',
+          id: kiln.id,
+          action: kilnActions.TOGGLE_WORKING,
+          isBtn: true
+        },
+        tmp
+      ]
+    }
+
+    const navBtns = [
+      ...tmp,
       {
         label: 'Save',
-        path: '/kilns/save',
         id: kiln.id,
         action: kilnActions.TMP_COMMIT,
         isBtn: true
       }, {
         label: 'Reset',
-        path: '/kilns/clear',
         id: kiln.id,
         action: kilnActions.TMP_CLEAR,
         isBtn: true
       }
-    ], eHandler)
+    ]
+
+    nav = getNavBar(navBtns, eHandler)
   }
 
-  console.log('nav:', nav)
-  console.log('kiln.errors:', kiln.errors)
+  // console.log('nav:', nav)
+  // console.log('kiln.errors:', kiln.errors)
   // console.log('Object.keys(kiln.errors):', Object.keys(kiln.errors))
   // console.log('Object.keys(kiln.errors).length:', Object.keys(kiln.errors).length)
   // console.log('Object.keys(kiln.errors).length > 0:', Object.keys(kiln.errors).length > 0)
-  console.groupEnd()
+  // console.groupEnd()
 
   return getMainContent(
     html`<h2>${name}</h2>`,

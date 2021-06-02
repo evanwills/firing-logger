@@ -24,28 +24,28 @@ import {
 import { getItemList } from '../features/item-list/item-list.view.mjs'
 import { invalidLit } from '../utilities/validation.mjs'
 
-/**
- * Get the attribute string for an HTML input/select/textarea field
- *
- * @param {string} attr   Key in props object
- *                        (and HTML attribute name)
- * @param {object} props  Object to get attribute values from
- * @param {string} prefix Prefix for object property name to allow
- *                        for the component to have multiple elements
- *                        with different values for the same
- *                        attribute name
- *
- * @returns {string} HTML attribute with value or empty string
- */
-export const getAttr = (attr, props, prefix) => {
-  const _attr = (typeof prefix === 'string')
-    ? prefix.trim() + ucFirst(attr.trim())
-    : attr
+// /**
+//  * Get the attribute string for an HTML input/select/textarea field
+//  *
+//  * @param {string} attr   Key in props object
+//  *                        (and HTML attribute name)
+//  * @param {object} props  Object to get attribute values from
+//  * @param {string} prefix Prefix for object property name to allow
+//  *                        for the component to have multiple elements
+//  *                        with different values for the same
+//  *                        attribute name
+//  *
+//  * @returns {string} HTML attribute with value or empty string
+//  */
+// export const getAttr = (attr, props, prefix) => {
+//   const _attr = (typeof prefix === 'string')
+//     ? prefix.trim() + ucFirst(attr.trim())
+//     : attr
 
-  return (isNumber(props[_attr]) || isNonEmptyStr(props[_attr]))
-    ? ' ' + attr.toLowerCase() + '="' + props[_attr] + '"'
-    : ''
-}
+//   return (isNumber(props[_attr]) || isNonEmptyStr(props[_attr]))
+//     ? ' ' + attr.toLowerCase() + '="' + props[_attr] + '"'
+//     : ''
+// }
 
 /**
  * Get the bolean attribute string for an HTML input/select/textarea
@@ -64,7 +64,7 @@ export const getBoolAttr = (attr, props, reverse) => {
   // console.log('attr:', attr)
   // console.log('props:', props)
   // console.log('reverse:', reverse)
-  const output = isBoolTrue(props[attr])
+  const output = !invalidBool(attr, props, true)
   // console.log('output:', output)
   // console.log('(isBoolTrue(reverse)) ? !output : output:', (isBoolTrue(reverse)) ? !output : output)
   // console.groupEnd()

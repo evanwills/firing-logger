@@ -3,6 +3,7 @@ import { getDummyAction, nonAction } from '../mainApp/firing-logger.state.mjs'
 import { kilnActions } from './kilns.state.actions.mjs'
 import { getNewKiln, getTmpKiln, cloneUpdateKiln, isInvalidKilnField } from './kiln-utils.mjs'
 import { getItemByID } from '../../utilities/general.mjs'
+import { invalidString, invalidObject } from '../../utilities/validation.mjs'
 
 export const kilnsMW = store => next => action => {
   let _state = store.getState()
@@ -56,6 +57,22 @@ export const kilnsMW = store => next => action => {
       }
       break
 
+    case kilnActions.TMP_COMMIT:
+      // Do some validation stuff
+      // console.group('kilnsMW()')
+      // console.log('action:', action)
+      // console.log('_state.studio.kilns.tmp:', _state.studio.kilns,tmp)
+      // console.groupEnd()
+      const id = (!invalidObject('tmp', _state.studio.kilns) && !invalidString('id', _state.studio.kilns.tmp)) // eslint-disable-line
+        ? _state.studio.kilns.tmp.id
+        : ''
+      store.dispatch({
+        ...action,
+        type: '',
+        href: '/kilns/' + id
+      })
+      return next(action)
+
     case kilnActions.TMP_UPDATE_FIELD:
       tmp = isInvalidKilnField(
         action,
@@ -80,6 +97,20 @@ export const kilnsMW = store => next => action => {
           }
         })
       }
+
+    case kilnActions.TMP_UPDATE_CHECKBOX_FIELD:
+      // Because checkboxes behave a little differently we need to
+      // redo rewrite the action and dispatch it again.
+      store.dispatch({
+        ...action,
+        type: kilnActions.TMP_UPDATE_FIELD,
+        payload: {
+          ...action.payload,
+          id: action.payload.value,
+          value: action.payload.isChecked
+        }
+      })
+      return next(nonAction())
   }
 
   return next(action)

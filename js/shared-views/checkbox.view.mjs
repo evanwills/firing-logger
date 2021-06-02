@@ -103,7 +103,7 @@ export const checkboxBtnGroup = (id, label, values, btns, eventHandler, tabIndex
           id,
           btn.label,
           btn.value,
-          isChecked(btn.value, value),
+          isChecked(btn.value, values),
           eventHandler,
           tabIndex,
           badge,

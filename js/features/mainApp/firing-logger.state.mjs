@@ -60,7 +60,7 @@ const initialState = {
         rawGlaze: false,
         saggar: false,
         saltGlaze: false,
-        retired: false,
+        isRetired: false,
         isWorking: true,
         isInUse: false,
         isHot: false,
@@ -83,7 +83,7 @@ const initialState = {
     },
     firingPrograms: {
       all: [{
-        id: 'MTYyMjUyODgxMjgyNQ',
+        id: 'MTYyMjYzMjY5MDc3OA',
         kilnID: 'MTYyMjUyODg5OTI2NQ',
         controllerProgramID: 6,
         version: 0,
@@ -119,7 +119,7 @@ const initialState = {
         deleted: false,
         locked: false
       }, {
-        id: 'MTYyMjUyODk3NjgzOQ',
+        id: 'MTYyMjYzMjY3MjQ5Mw',
         name: 'Basic earthenware glaze',
         controllerProgramID: 7,
         kilnID: 'MTYyMjUyODg5OTI2NQ',

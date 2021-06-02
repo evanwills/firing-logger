@@ -14,10 +14,10 @@ const getFilteredKilns = (filters) => (kiln) => true
 
 export const kilnsView = (state, eHandler, routes) => {
   const [route, kilnID, ...subRoutes] = routes
-  console.group('kilnsView()')
-  console.log('route:', route)
-  console.log('kilnID:', kilnID)
-  console.log('subRoutes:', subRoutes)
+  // console.group('kilnsView()')
+  // console.log('route:', route)
+  // console.log('kilnID:', kilnID)
+  // console.log('subRoutes:', subRoutes)
 
   let error = ''
   let subView = ''
@@ -63,9 +63,9 @@ export const kilnsView = (state, eHandler, routes) => {
     )
   }
 
-  console.log('route:', route)
-  console.log('subRoutes:', subRoutes)
-  console.groupEnd()
+  // console.log('route:', route)
+  // console.log('subRoutes:', subRoutes)
+  // console.groupEnd()
 
   return subView
 }

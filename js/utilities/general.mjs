@@ -21,13 +21,10 @@ export const fieldHandler = (postToWorker) => function (e) {
  */
 export const getUniqueID = () => {
   // Base 64 encode timestamp
-  let now = window.btoa(Date.now())
+  const now = window.btoa(Date.now())
 
   // remove non-alphanumeric chars from end of string
-  now = now.replace(/[^a-z0-9]+$/i, '')
-
-  // Make sure output starts with an alphabetical character
-  return now.replace(/^([^a-z]+([a-z]))/i, '$2$1')
+  return now.replace(/[^a-z0-9]+$/i, '')
 }
 
 /**
@@ -39,23 +36,14 @@ export const getUniqueID = () => {
  *
  * @returns {string} time based UID
  */
-export const getID = (time, id) => {
+export const getID = (time) => {
   if (!isNumeric(time)) {
     throw Error('getID() expects first param time to be a number. ' + typeof time + ' given.')
   } else if (time < 65700000000) {
     throw Error('getID() expects first param time to be a number matching a unix timestamp more recent than 2020. ' + time + ' given.')
-  } else if (!isNonEmptyStr(id)) {
-    throw Error('getID() expects second param `id` to be a non-empty string.')
   }
-  const _time = Math.round(time / 60000)
-
-  // return window.btoa(
-  //   // remove microseconds from timestamp
-  //   window.btoa(time.toString().replace(/[0-9]{3}$/, '')) +
-  //   '-' +
-  //   window.btoa(id)
-  // )
-  return window.btoa(_time.toString() + '-' + id)
+  const _time = time.toString()
+  return btoa(_time).replace(/=+$/, '')
 }
 
 /**
@@ -205,3 +193,9 @@ const getAutoFocuser = () => {
  *                       view is rendered) giving that element focus
  */
 export const focuser = getAutoFocuser()
+
+export const replaceUpdatedById = (alls, updated) => {
+  return alls.map(item => {
+    return (item.id === updated.id) ? updated : item
+  })
+}

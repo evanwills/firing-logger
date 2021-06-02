@@ -12,6 +12,53 @@ import {
 import { getISODateStr, normalisedID } from '../../utilities/sanitisation.mjs'
 import { kilnActions } from './kilns.state.actions.mjs'
 
+export const validKilnTypes = [
+  'general',
+  'raku',
+  'platter',
+  'black firing',
+  'anagamma'
+]
+
+export const validfuelSources = [
+  'electric',
+  'gas',
+  'wood',
+  'oil'
+]
+
+export const firingTypes = [{
+  label: 'Bisque',
+  value: 'bisque'
+}, {
+  label: 'Black firing',
+  value: 'black'
+}, {
+  label: 'Glaze',
+  value: 'glaze'
+}, {
+  label: 'Luster',
+  value: 'luster'
+}, {
+  label: 'Onglaze',
+  value: 'onglaze'
+}, {
+  label: 'Pit firing',
+  value: 'pit'
+}, {
+  label: 'Raku',
+  value: 'raku'
+}, {
+  label: 'Raw glaze',
+  value: 'rawGlaze'
+}, {
+  label: 'Saggar',
+  value: 'saggar'
+}, {
+  label: 'Salt glaze',
+  value: 'saltGlaze'
+}]
+
 export const getNewKiln = () => {
   return {
     id: '',
@@ -46,10 +93,10 @@ export const getNewKiln = () => {
 }
 
 export const getTmpKiln = (kiln, mode) => {
-  console.group('getTmpKiln()')
-  console.log('kiln:', kiln)
-  console.log('mode:', mode)
-  console.groupEnd()
+  // console.group('getTmpKiln()')
+  // console.log('kiln:', kiln)
+  // console.log('mode:', mode)
+  // console.groupEnd()
   return {
     ...kiln,
     confirmed: false,
@@ -75,7 +122,7 @@ export const cloneUpdateKiln = (kiln, clone, date) => {
   const newKiln = {
     ...kiln
   }
-  console.group('cloneUpdateKiln()')
+  // console.group('cloneUpdateKiln()')
 
   if (_clone === true) {
     newKiln.name = '{{' + getISODateStr(date) + '}}' + newKiln.name
@@ -87,9 +134,9 @@ export const cloneUpdateKiln = (kiln, clone, date) => {
     newKiln.useCount = 0
   }
 
-  console.log('kiln:', kiln)
-  console.log('newKiln:', newKiln)
-  console.groupEnd()
+  // console.log('kiln:', kiln)
+  // console.log('newKiln:', newKiln)
+  // console.groupEnd()
   return newKiln
 }
 
@@ -107,46 +154,31 @@ export const getFocusID = (errors, lastID) => {
   const editableFields = ['kilnID', 'name', 'description', 'type', 'controllerProgramID']
   const errorFields = (typeof errors === 'object') ? Object.keys(errors) : []
 
-  console.group('getFocusID()')
-  console.log('editableFields:', editableFields)
-  console.log('errorFields:', errorFields)
-  console.log('lastID:', lastID)
+  // console.group('getFocusID()')
+  // console.log('editableFields:', editableFields)
+  // console.log('errorFields:', errorFields)
+  // console.log('lastID:', lastID)
 
   if (errorFields.length > 0) {
-    console.log('Go to the first field in error')
-    console.log('errorFields[0]:', errorFields[0])
-    console.groupEnd()
+    // console.log('Go to the first field in error')
+    // console.log('errorFields[0]:', errorFields[0])
+    // console.groupEnd()
     return errorFields[0]
   } else {
     const i = editableFields.indexOf(lastID)
     if (i > -1) {
       const b = (i + 1)
       if (b < editableFields.length) {
-        console.log('Go to the next field')
-        console.log('editableFields[' + b + ']:', editableFields[b])
-        console.groupEnd()
+        // console.log('Go to the next field')
+        // console.log('editableFields[' + b + ']:', editableFields[b])
+        // console.groupEnd()
         return editableFields[b]
       }
     }
   }
-  console.groupEnd()
+  // console.groupEnd()
   return ''
 }
-
-export const validKilnTypes = [
-  'general',
-  'raku',
-  'platter',
-  'black firing',
-  'anagamma'
-]
-
-export const validfuelSources = [
-  'electric',
-  'gas',
-  'wood',
-  'oil'
-]
 
 /**
  * Test whether the value for the type of kiln is valid

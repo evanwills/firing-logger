@@ -117,3 +117,7 @@
 input[type='number'] {
   text-align: right;
 }
+.input-fields__item--group .checkbox-grp__items {
+  column-width: 10rem;
+  column-gap: 2rem;
+}

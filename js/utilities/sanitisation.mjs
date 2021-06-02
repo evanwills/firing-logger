@@ -532,3 +532,8 @@ export const getVol = (x, y, z, metric) => {
   // const _s = (_vol !== 1) ? 's' : ''
   return _vol + unit
 }
+
+export const urlSafe = (input) => {
+  const output = input.replace(/[^a-z0-9_-]+/ig, '-')
+  return output.replace(/^-+|-+$/g, '')
+}

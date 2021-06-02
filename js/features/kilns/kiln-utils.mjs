@@ -6,10 +6,11 @@
 import {
   isBoolTrue,
   isInt,
-  isNumeric
+  isNumeric,
+  validateUnique
   // invalidBool
 } from '../../utilities/validation.mjs'
-import { getISODateStr, normalisedID } from '../../utilities/sanitisation.mjs'
+import { getISODateStr } from '../../utilities/sanitisation.mjs'
 import { kilnActions } from './kilns.state.actions.mjs'
 
 export const validKilnTypes = [
@@ -351,20 +352,13 @@ export const validateKilnData = (dummyKiln, kiln, isNew = false) => {
 
 const validateKilnName = (kName, allKilns) => {
   console.group('validateKilnName()')
-
-  if (kName.length > 64) {
-    console.groupEnd()
-    return 'Program name is too long. Must not exceed 64 characters'
-  } else if (kName.match(/[^a-z0-9 \-[\](),.'":&+]/i) !== null) {
-    console.groupEnd()
-    return 'Program name contains invalid characters. Allowed characters: A-Z, a-z, 0-9, " ", "[", "]", "(", ")", ",", ".", "\'", \'"\', ":", "&", "+"'
-  } else {
-    for (let a = 0; a < allKilns.length; a += 1) {
-      if (allKilns[a].kilnID + normalisedID(allKilns[a].name) === kName) {
-        console.groupEnd()
-        return 'Program name is not unique for specified kiln'
-      }
-    }
+  console.log('kName', kName)
+  console.log('allKilns', allKilns)
+  try {
+    validateUnique(kName, 'name', allKilns)
+  } catch (e) {
+    console.error('Kiln ' + e)
+    return 'Kiln ' + e
   }
   console.groupEnd()
   return false

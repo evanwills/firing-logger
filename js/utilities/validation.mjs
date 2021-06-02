@@ -21,6 +21,11 @@
  * returned so it can be used in an error message.
  */
 
+const normalisedID = (input) => {
+  const tmp = input.replace(/[^a-z0-9_-]/ig, '')
+  return tmp.toLowerCase()
+}
+
 /**
  * Check whether something is a string
  *
@@ -254,6 +259,52 @@ export const isLit = (input) => {
 
 export const isLitOrStr = (input) => {
   return (isStr(input) || isLit(input))
+}
+
+export const validateSafeStr = (input, prop, alls) => {
+  if (!isStr(input)) {
+    throw Error(' is not a string.')
+  } else if (input.length > 64) {
+    console.groupEnd()
+    throw Error(' is too long. Must not exceed 64 characters')
+  } else if (input.match(/[^a-z0-9 \-[\](),.'":&+]/i) !== null) {
+    console.groupEnd()
+    throw Error(' contains invalid characters. Allowed characters: A-Z, a-z, 0-9, " ", "[", "]", "(", ")", ",", ".", "\'", \'"\', ":", "&", "+"')
+  }
+  return true
+}
+
+export const isSafeStr = (input) => {
+  return (validateSafeStr(input) === true)
+}
+
+/**
+ * Test whether a name is valid and unique
+ *
+ * @param {string}  name Value to be convert to URL part
+ * @param {string}  prop Name of value
+ * @param {array}   alls List of all items that could have the same
+ *                       name
+ *
+ * @returns {string} URL save version of name
+ */
+export const validateUnique = (input, prop, alls) => {
+  const _prop = (isStr(prop)) ? prop : ''
+  const _ok = validateSafeStr(input)
+  const _norm = normalisedID(input)
+
+  if (_ok !== true) {
+    throw Error(_prop + _ok)
+  } else if (_prop !== '' && Array.isArray(alls)) {
+    for (let a = 0; a < alls.length; a += 1) {
+      if (!invalidString(_prop, alls[a]) &&
+          normalisedID(alls[a][prop]) === _norm
+      ) {
+        throw Error(_prop + ' is not unique')
+      }
+    }
+  }
+  return true
 }
 
 // ========================================================

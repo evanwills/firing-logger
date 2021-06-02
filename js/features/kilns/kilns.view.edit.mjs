@@ -85,12 +85,93 @@ const getKilnTypes = (kilnType) => {
   })
 }
 
+/**
+ * Get kiln edit UI action buttons (or error messages if there are
+ * errors)
+ *
+ * @param {object}   kiln     All the properties of the kiln (in edit mode)
+ * @param {function} eHandler Event handler function
+ *
+ * @returns {litHtml}
+ */
+const getKilnEditActions = (kiln, eHandler) => {
+  const nav = getErrorMsg(kiln.errors)
+  let tmp = {}
+  let extra = []
+
+  if (nav !== '') {
+    return nav
+  } else {
+    if (kiln.mode === kilnActions.UPDATE) {
+      if (kiln.installDate === '') {
+        tmp = {
+          label: 'Installed',
+          action: kilnActions.INSTALL
+        }
+      } else if (kiln.isRetired === false) {
+        tmp = {
+          label: 'Retire',
+          action: kilnActions.RETIRE
+        }
+      } else {
+        tmp = {
+          label: 'Resurect',
+          action: kilnActions.RESURECT
+        }
+      }
+      tmp = {
+        ...tmp,
+        id: kiln.id,
+        isBtn: true
+      }
+
+      extra = [
+        {
+          label: (kiln.isWorking) ? 'Set to "Being repaired"' : 'Set to "Working"',
+          path: '/kilns/not-working',
+          id: kiln.id,
+          action: kilnActions.TOGGLE_WORKING,
+          isBtn: true
+        },
+        tmp
+      ]
+    }
+
+    return getNavBar(
+      [
+        ...extra,
+        {
+          label: 'Save',
+          id: kiln.id,
+          action: kilnActions.TMP_COMMIT,
+          isBtn: true
+        }, {
+          label: 'Reset',
+          id: kiln.id,
+          action: kilnActions.TMP_CLEAR,
+          isBtn: true
+        }
+      ],
+      eHandler
+    )
+  }
+}
+
+/**
+ * Get the complete UI for editing a kiln
+ *
+ * @param {object}   kiln     Kiln to be edited
+ * @param {array}    kilns    List of all kilns
+ * @param {object}   user     All details of current user
+ * @param {function} eHandler Event handler function
+ *
+ * @returns {litHtml}
+ */
 export const editKiln = (kiln, kilns, user, eHandler) => {
   const name = (kiln.name === '') ? 'New (unamed) kiln' : kiln.name
   const focusID = getFocusID(kiln.errors, kiln.lastField)
   const extraClass = 'input-fields__item input-fields__item--07'
   const idTail = '-' + kilnActions.TMP_UPDATE_FIELD
-  let nav = ''
   let tmp
 
   // console.group('editkiln()')
@@ -315,63 +396,6 @@ export const editKiln = (kiln, kilns, user, eHandler) => {
     })
   }
 
-  nav = getErrorMsg(kiln.errors)
-
-  if (nav === '') {
-    tmp = []
-    if (kiln.mode === kilnActions.UPDATE) {
-      if (kiln.installDate === '') {
-        tmp = {
-          label: 'Installed',
-          action: kilnActions.INSTALL
-        }
-      } else if (kiln.isRetired === false) {
-        tmp = {
-          label: 'Retire',
-          action: kilnActions.RETIRE
-        }
-      } else {
-        tmp = {
-          label: 'Resurect',
-          action: kilnActions.RESURECT
-        }
-      }
-      tmp = {
-        ...tmp,
-        id: kiln.id,
-        isBtn: true
-      }
-
-      tmp = [
-        {
-          label: (kiln.isWorking) ? 'Set to "Being repaired"' : 'Set to "Working"',
-          path: '/kilns/not-working',
-          id: kiln.id,
-          action: kilnActions.TOGGLE_WORKING,
-          isBtn: true
-        },
-        tmp
-      ]
-    }
-
-    const navBtns = [
-      ...tmp,
-      {
-        label: 'Save',
-        id: kiln.id,
-        action: kilnActions.TMP_COMMIT,
-        isBtn: true
-      }, {
-        label: 'Reset',
-        id: kiln.id,
-        action: kilnActions.TMP_CLEAR,
-        isBtn: true
-      }
-    ]
-
-    nav = getNavBar(navBtns, eHandler)
-  }
-
   // console.log('nav:', nav)
   // console.log('kiln.errors:', kiln.errors)
   // console.log('Object.keys(kiln.errors):', Object.keys(kiln.errors))
@@ -382,6 +406,6 @@ export const editKiln = (kiln, kilns, user, eHandler) => {
   return getMainContent(
     html`<h2>${name}</h2>`,
     html`${getItemList(fields, '', 'input-fields', 'content--bleed')}`,
-    nav
+    getKilnEditActions(kiln, eHandler)
   )
 }

@@ -9,12 +9,14 @@ import {
   // invalidBool,
   invalidObject,
   invalidString,
-  isBoolTrue
+  isBoolTrue,
+  isObject
 } from '../../utilities/validation.mjs'
 import { kilnActions } from './kilns.state.actions.mjs'
-import { getID } from '../../utilities/general.mjs'
-import { isObject } from '../../utilities/validation.mjs'
-import { replaceUpdatedById } from '../../utilities/general.mjs'
+import {
+  getID,
+  replaceUpdatedById
+} from '../../utilities/general.mjs'
 
 const dummyKiln = {
   id: 'woodrow1',

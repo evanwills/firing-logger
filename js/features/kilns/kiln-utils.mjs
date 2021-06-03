@@ -7,7 +7,8 @@ import {
   isBoolTrue,
   isInt,
   isNumeric,
-  validateUnique
+  validateUnique,
+  validateSafeStr
   // invalidBool
 } from '../../utilities/validation.mjs'
 import { getISODateStr } from '../../utilities/sanitisation.mjs'
@@ -365,11 +366,17 @@ const validateKilnName = (kName, allKilns) => {
 }
 
 export const isInvalidKilnField = (action, tmpKiln, allKilns) => {
-  // let tmp = ''
+  const { id, value, theRest } = action.payload
+  let tmp = ''
 
-  switch (action.payload.id) {
+  switch (id) {
     case 'name':
-      return validateKilnName(action.payload.value, allKilns)
+      return validateKilnName(value, allKilns)
+    case 'brand':
+    case 'model':
+      return validateSafeStr(value)
+    case 'maxTemp':
+      return (isInt(value) && value >= 400 && value <= 1400) ? false : 'Maximium temperature must be between 400 degrees & 1400 degrees'
   }
   return false
 }

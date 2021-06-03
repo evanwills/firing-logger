@@ -537,3 +537,14 @@ export const urlSafe = (input) => {
   const output = input.replace(/[^a-z0-9_-]+/ig, '-')
   return output.replace(/^-+|-+$/g, '')
 }
+
+/**
+ * Remove bad characters from name
+ *
+ * @param {string} input Name to be cleaned up
+ *
+ * @returns {string} Cleaned up name
+ */
+export const cleanName = (input) => {
+  return input.trim().replace(/\s+/g, ' ').replace(/[a-z0-9 [\](),.'"/\\:&+]+/ig, '')
+}

@@ -2,7 +2,8 @@ import {
   // nonInputField,
   numberInputField,
   selectField,
-  textInputField
+  textInputField,
+  fieldGroup
 } from '../../shared-views/input-field.view.mjs'
 import { html } from '../../vendor/lit-html/lit-html.mjs'
 import { getMainContent } from '../main-content/main-content.view.mjs'
@@ -28,7 +29,6 @@ import {
 import { getFocusID, validKilnTypes, validfuelSources, firingTypes } from './kiln-utils.mjs'
 import { getNavBar } from '../nav-bar/nav-bar.view.mjs'
 import { checkboxBtnGroup } from '../../shared-views/checkbox.view.mjs'
-import { fieldGroup } from '../../shared-views/input-field.view.mjs'
 
 const getErrorMsg = (errors) => {
   const keys = Object.keys(errors)
@@ -99,6 +99,11 @@ const getKilnEditActions = (kiln, eHandler) => {
   let tmp = {}
   let extra = []
 
+  console.group('getKilnEditActions()')
+  console.log('kiln:', kiln)
+  console.log('kilnActions:', kilnActions)
+  console.groupEnd()
+
   if (nav !== '') {
     return nav
   } else {
@@ -122,7 +127,8 @@ const getKilnEditActions = (kiln, eHandler) => {
       tmp = {
         ...tmp,
         id: kiln.id,
-        isBtn: true
+        isBtn: true,
+        path: '/kilns/'
       }
 
       extra = [

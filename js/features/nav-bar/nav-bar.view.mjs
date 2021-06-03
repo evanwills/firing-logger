@@ -1,5 +1,10 @@
 import { html } from '../../vendor/lit-html/lit-html.mjs'
-import { isBoolTrue, isNonEmptyStr, invalidBool } from '../../utilities/validation.mjs'
+import {
+  isBoolTrue,
+  isNonEmptyStr,
+  invalidBool,
+  invalidString
+} from '../../utilities/validation.mjs'
 import { idSafe } from '../../utilities/sanitisation.mjs'
 
 export const getNavItem = (label, href, id, actionType, eHandler, active, extraClass, isBtn) => {
@@ -24,6 +29,7 @@ export const getNavItem = (label, href, id, actionType, eHandler, active, extraC
   // console.log('extraA:', extraA)
   // console.log('eHandler:', eHandler)
   // console.log('label:', label)
+  // console.log('isBtn:', isBtn)
   // console.groupEnd()
 
   return html`<li class="nav-bar__item${extraLi}">${btn}</li>`
@@ -35,23 +41,34 @@ export const getNavBar = (linkList, eHandler, extraClass, wrapClass) => {
   const extraUl = (extra !== '') ? ' ' + extra + '__' + 'list' : ''
   const wrap = isNonEmptyStr(wrapClass) ? ' ' + wrapClass : ''
 
-  console.group('getNavBar()')
-  console.log('linkList:', linkList)
-  console.groupEnd()
+  // console.group('getNavBar()')
+  // console.log('linkList:', linkList)
+  // console.groupEnd()
 
   return html`
     <nav class="nav-bar${wrap}${extraNav}">
       <ul class="nav-bar__list${extraUl}">
-        ${linkList.map(link => getNavItem(
-          link.label,
-          link.path,
-          link.id,
-          link.action,
-          eHandler,
-          !invalidBool('active', link, true),
-          extra,
-          !invalidBool('isBtn', link, true)
-        ))}
+        ${linkList.map(link => {
+          // console.group('getNavBar() map')
+          // console.log('link:', link)
+          // console.log('link.label:', link.label)
+          // console.log('link.path:', link.path)
+          // console.log('link.id:', link.id)
+          // console.log('link.action:', link.action)
+          // console.log('link.active:', link.active)
+          // console.log('link.isBtn:', link.isBtn)
+          // console.groupEnd()
+          return getNavItem(
+            link.label,
+            !invalidString('path', link) ? link.path : '',
+            link.id,
+            !invalidString('action', link) ? link.action : '',
+            eHandler,
+            !invalidBool('active', link, true),
+            extra,
+            !invalidBool('isBtn', link, true)
+          )
+        })}
       </ul>
     </nav>
   `
